@@ -3614,52 +3614,51 @@ function renderMonthlyTransactionList(monthlyTransactions) {
     }
 
 <script>
-    // ===== Inicialização da Aplicação =====
-    async function init() {
-        showLoading();
-        console.log("Iniciando aplicação...");
+// ===== Inicialização da Aplicação =====
+async function init() {
+    showLoading();
+    console.log("Iniciando aplicação...");
 
-        try {
-            // 1. Configurar Tema
-            setupTheme();
+    try {
+        // 1. Configurar Tema
+        setupTheme();
 
-            // 2. Carregar Categorias (Garantindo Padrões se necessário)
-            await loadCategories(); // Espera carregar antes de continuar
+        // 2. Carregar Categorias (Garantindo Padrões se necessário)
+        await loadCategories(); // Espera carregar antes de continuar
 
-            // 3. Inicializar Componentes da UI (Filtros, Modais, Tabs)
-            initTabs();
-            populateMonthYearFilter(); // Popula filtro de Mês/Ano
-            setupEventListeners(); // Configura todos os listeners
-            initCharts(); // Inicializa gráficos
+        // 3. Inicializar Componentes da UI (Filtros, Modais, Tabs)
+        initTabs();
+        populateMonthYearFilter(); // Popula filtro de Ano/Mês
+        setupEventListeners(); // Configura todos os listeners
+        initCharts(); // Inicializa gráficos
 
-            // 4. Listeners do Firestore
-            setupFirestoreListeners();
+        // 4. Listeners do Firestore
+        setupFirestoreListeners();
 
-            console.log("Aplicação inicializada com sucesso!");
+        console.log("Aplicação inicializada com sucesso!");
 
-        } catch (error) {
-            console.error("Erro fatal durante a inicialização:", error);
-            showToast("Erro grave ao iniciar...", "danger", 10000);
-            initTabs();
+    } catch (error) {
+        console.error("Erro fatal durante a inicialização:", error);
+        showToast("Erro grave ao iniciar...", "danger", 10000);
+        initTabs();
 
-            const year = document.getElementById('analysis-year');
-            const month = document.getElementById('analysis-month');
+        const year = document.getElementById('analysis-year');
+        const month = document.getElementById('analysis-month');
 
-            if (year && month) {
-                setupEventListeners();
-            } else {
-                console.warn("Filtros de Ano/Mês não encontrados no DOM. Ignorando setupEventListeners.");
-            }
-
-        } finally {
-            // Garante que o loading seja escondido mesmo se houver erro parcial
-            setTimeout(hideLoading, 300);
+        if (year && month) {
+            setupEventListeners();
+        } else {
+            console.warn("Filtros de Ano/Mês não encontrados no DOM. Ignorando setupEventListeners.");
         }
+
+    } finally {
+        // Garante que o loading seja escondido mesmo se houver erro parcial
+        setTimeout(hideLoading, 300);
     }
+}
 
-    // --- Ponto de Entrada ---
-    document.addEventListener('DOMContentLoaded', init);
+// --- Ponto de Entrada ---
+document.addEventListener('DOMContentLoaded', init);
 
-    // --- Limpeza ao Sair ---
-    window.addEventListener('beforeunload', stopFirestoreListeners);
-</script>
+// --- Limpeza ao Sair ---
+window.addEventListener('beforeunload', stopFirestoreListeners);

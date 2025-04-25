@@ -1,1090 +1,2364 @@
-/* ===== Variáveis e Temas Apple ===== */
-:root {
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, Helvetica, Arial, sans-serif;
-  --radius-sm: 0.75rem;
-  --radius: 1.125rem;
-  --radius-lg: 1.5rem;
-  --shadow: 0 2px 14px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04);
-  --shadow-hover: 0 4px 18px rgba(0,0,0,0.08), 0 10px 28px rgba(0,0,0,0.06);
-  --shadow-dropdown: 0 4px 20px rgba(0,0,0,0.1);
-  --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  
-  /* Cores iOS/macOS Light */
-  --bg: #F5F5F7;
-  --card-bg: #FFFFFF;
-  --input-bg: rgba(142, 142, 147, 0.12);
-  --text: #1D1D1F;
-  --text-secondary: #86868B;
-  --primary: #0066CC;
-  --primary-light: #147CE5;
-  --success: #34C759;
-  --warning: #FF9F0A;
-  --danger: #FF3B30;
-  --info: #5AC8FA;
-  --purple: #AF52DE;
-  --teal: #64D2FF;
-  --border: rgba(0,0,0,0.08);
-  --chart-grid: rgba(0,0,0,0.04);
-  --menu-bg: rgba(255, 255, 255, 0.9);
-  --receipt-bg: #FBFBFD;
-}
-
-[data-theme="dark"] {
-  /* Cores iOS/macOS Dark */
-  --bg: #1D1D1F;
-  --card-bg: #2C2C2E;
-  --input-bg: rgba(142, 142, 147, 0.18);
-  --text: #F5F5F7;
-  --text-secondary: #98989D;
-  --primary: #0A84FF;
-  --primary-light: #5AC8FA;
-  --success: #30D158;
-  --warning: #FF9F0A;
-  --danger: #FF453A;
-  --info: #64D2FF;
-  --purple: #BF5AF2;
-  --teal: #6AC4DC;
-  --border: rgba(255,255,255,0.12);
-  --chart-grid: rgba(255,255,255,0.06);
-  --menu-bg: rgba(44, 44, 46, 0.9);
-  --receipt-bg: #323234;
-}
-
-/* ===== Reset e Configurações Base ===== */
-*, *::before, *::after { 
-  box-sizing: border-box; 
-  margin: 0;
-  padding: 0;
-}
-
-html, body { 
-  font-family: var(--font-sans); 
-  background: var(--bg); 
-  color: var(--text); 
-  transition: var(--transition);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-size: 16px;
-  line-height: 1.5;
-  width: 100%;
-  overflow-x: hidden;
-}
-
-/* ===== Layout e Componentes ===== */
-.container { 
-  max-width: 1280px; 
-  margin: 0 auto; 
-  padding: 2rem; 
-}
-
-.header { 
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center; 
-  margin-bottom: 2rem; 
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.header-title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-h1 { 
-  font-size: 1.75rem; 
-  font-weight: 700;
-  margin: 0;
-  letter-spacing: -0.025em;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.filters { 
-  display: flex; 
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-/* Select estilo Apple */
-select { 
-  appearance: none;
-  -webkit-appearance: none;
-  padding: 0.625rem 2rem 0.625rem 1rem;
-  border-radius: var(--radius-sm); 
-  border: none;
-  background: var(--input-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6' fill='none'%3E%3Cpath fill='%2386868b' d='M6 6 0 0h12L6 6Z'/%3E%3C/svg%3E") no-repeat;
-  background-position: right 0.75rem center;
-  color: var(--text);
-  font-family: var(--font-sans);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-select:hover {
-  background-color: rgba(142, 142, 147, 0.18);
-}
-
-select option {
-  background-color: var(--card-bg);
-  color: var(--text);
-}
-
-/* Botões */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  border-radius: var(--radius-sm);
-  font-weight: 500;
-  font-size: 0.9375rem;
-  cursor: pointer;
-  transition: var(--transition);
-  border: none;
-  color: #fff;
-  background-color: var(--primary);
-}
-
-.btn:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.btn-primary {
-  background-color: var(--primary);
-}
-
-.btn-success {
-  background-color: var(--success);
-}
-
-.btn-warning {
-  background-color: var(--warning);
-}
-
-.btn-danger {
-  background-color: var(--danger);
-}
-
-.btn-icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  padding: 0;
-  border-radius: 50%;
-  background: var(--input-bg);
-  color: var(--text);
-}
-
-.btn-icon:hover {
-  background-color: rgba(142, 142, 147, 0.2);
-}
-
-.btn-icon svg {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-/* Botão toggle theme */
-.theme-toggle {
-  background: var(--input-bg);
-  border: none;
-  border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--text);
-  transition: var(--transition);
-}
-
-.theme-toggle:hover {
-  background-color: rgba(142, 142, 147, 0.2);
-}
-
-.theme-toggle svg {
-  width: 1.25rem;
-  height: 1.25rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* Cards de KPIs */
-.kpis { 
-  display: grid; 
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-  gap: 1rem; 
-  margin-bottom: 2rem; 
-}
-
-.card {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 1.5rem;
-  transition: var(--transition);
-  overflow: hidden;
-  position: relative;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hover);
-}
-
-.kpi-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.kpi-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.kpi-title {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-
-.kpi-value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.kpi-footer {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-}
-
-.kpi-trend {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.kpi-trend.up {
-  color: var(--success);
-}
-
-.kpi-trend.down {
-  color: var(--danger);
-}
-
-.kpi-trend svg {
-  width: 0.875rem;
-  height: 0.875rem;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.kpi-meta {
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  margin-top: 0.5rem;
-}
-
-/* Tabs */
-.tabs {
-  display: flex;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 1.5rem;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.tabs::-webkit-scrollbar {
-  display: none;
-}
-
-.tab {
-  padding: 0.75rem 1.25rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  cursor: pointer;
-  white-space: nowrap;
-  border-bottom: 2px solid transparent;
-  transition: var(--transition);
-}
-
-.tab:hover {
-  color: var(--text);
-}
-
-.tab.active {
-  color: var(--primary);
-  border-color: var(--primary);
-}
-
-/* Gráficos */
-.charts-grid { 
-  display: grid; 
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); 
-  gap: 1.5rem; 
-  margin-bottom: 2rem;
-}
-
-.chart-container {
-  position: relative;
-  margin-top: 0.5rem;
-  height: 260px;
-}
-
-.chart-title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  letter-spacing: -0.01em;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.chart-title-actions {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.chart-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-}
-
-.chart-legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.chart-legend-color {
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 50%;
-}
-
-.full-width { 
-  grid-column: 1 / -1; 
-}
-
-.full-width .chart-container {
-  height: 300px;
-}
-
-/* Formulário */
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-
-.form-control {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 0.9375rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background-color: var(--input-bg);
-  color: var(--text);
-  transition: var(--transition);
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.1);
-}
-
-/* Loading Estado */
-.loading-indicator {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.loading-indicator.active {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.spinner {
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: #fff;
-  animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Modais */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.modal.active {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.modal-content {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-hover);
-  width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-  transform: translateY(20px);
-  transition: transform 0.3s ease;
-}
-
-.modal.active .modal-content {
-  transform: translateY(0);
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.modal-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0;
-  letter-spacing: -0.01em;
-}
-
-.modal-close {
-  background: var(--input-bg);
-  border: none;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--text);
-  transition: var(--transition);
-}
-
-.modal-close:hover {
-  background-color: rgba(142, 142, 147, 0.3);
-}
-
-.modal-body {
-  padding: 1.5rem;
-}
-
-.modal-footer {
-  padding: 1.25rem 1.5rem;
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  border-top: 1px solid var(--border);
-}
-
-/* Status e Tags */
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.status.status-paid {
-  background-color: rgba(52, 199, 89, 0.1);
-  color: var(--success);
-}
-
-.status.status-pending {
-  background-color: rgba(255, 159, 10, 0.1);
-  color: var(--warning);
-}
-
-.status.status-overdue {
-  background-color: rgba(255, 59, 48, 0.1);
-  color: var(--danger);
-}
-
-.status.status-scheduled {
-  background-color: rgba(90, 200, 250, 0.1);
-  color: var(--info);
-}
-
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  background-color: var(--input-bg);
-  color: var(--text-secondary);
-}
-
-/* Fluxo de Caixa */
-.cash-flow-items {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.flow-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  background-color: var(--input-bg);
-  border-radius: var(--radius-sm);
-  transition: var(--transition);
-  cursor: pointer;
-}
-
-.flow-item:hover {
-  background-color: rgba(142, 142, 147, 0.2);
-}
-
-.flow-item-left {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.flow-item-icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-}
-
-.flow-item-icon.income {
-  background-color: var(--success);
-}
-
-.flow-item-icon.expense {
-  background-color: var(--danger);
-}
-
-.flow-item-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.flow-item-title {
-  font-weight: 500;
-}
-
-.flow-item-meta {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-}
-
-.flow-item-amount {
-  font-weight: 600;
-}
-
-.flow-item-amount.income {
-  color: var(--success);
-}
-
-.flow-item-amount.expense {
-  color: var(--danger);
-}
-
-/* Progress & Metas */
-.progress-container {
-  width: 100%;
-  height: 0.5rem;
-  background-color: var(--input-bg);
-  border-radius: 1rem;
-  overflow: hidden;
-  margin-top: 0.5rem;
-}
-
-.progress-bar {
-  height: 100%;
-  border-radius: 1rem;
-  transition: width 0.5s ease;
-}
-
-.progress-bar.success {
-  background-color: var(--success);
-}
-
-.progress-bar.warning {
-  background-color: var(--warning);
-}
-
-.progress-bar.danger {
-  background-color: var(--danger);
-}
-
-/* Insights */
-.insight-item {
-  display: flex;
-  gap: 0.75rem;
-  padding: 0.875rem;
-  border-radius: var(--radius-sm);
-  background-color: var(--input-bg);
-  transition: var(--transition);
-}
-
-.insight-item:hover {
-  background-color: rgba(142, 142, 147, 0.2);
-}
-
-.insight-icon {
-  flex-shrink: 0;
-  width: 1.5rem;
-  height: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-}
-
-.insight-content {
-  flex: 1;
-  font-size: 0.875rem;
-}
-
-.insight-title {
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-}
-
-.insight-description {
-  color: var(--text-secondary);
-}
-
-.insight-item.success {
-  border-left: 3px solid var(--success);
-}
-
-.insight-item.warning {
-  border-left: 3px solid var(--warning);
-}
-
-.insight-item.danger {
-  border-left: 3px solid var(--danger);
-}
-
-.insight-item.info {
-  border-left: 3px solid var(--info);
-}
-
-/* Responsividade */
-@media (max-width: 1024px) {
-  .container {
-    padding: 1.5rem;
-  }
-  
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .header-right {
-    width: 100%;
-    justify-content: space-between;
-  }
-  
-  .charts-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .kpis {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  }
-  
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 576px) {
-  .container {
-    padding: 1rem;
-  }
-  
-  .kpis {
-    grid-template-columns: 1fr;
-  }
-  
-  .flow-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  
-  .flow-item-left {
-    width: 100%;
-    justify-content: space-between;
-  }
-}
-
-<!-- ===== Seção 1: Modais e Loading ===== -->
-<div class="modal" id="category-modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3 class="modal-title" id="category-modal-title">Nova Categoria</h3>
-      <button class="modal-close" id="category-modal-close">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle Financeiro Familiar</title>
+
+  <!-- ===== Seção 2: TODO o CSS (Conteúdo de seção 2.txt) ===== -->
+  <style>
+    /* ===== Variáveis e Temas Apple ===== */
+    :root {
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, Helvetica, Arial, sans-serif;
+      --radius-sm: 0.75rem;
+      --radius: 1.125rem;
+      --radius-lg: 1.5rem;
+      --shadow: 0 2px 14px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04);
+      --shadow-hover: 0 4px 18px rgba(0,0,0,0.08), 0 10px 28px rgba(0,0,0,0.06);
+      --shadow-dropdown: 0 4px 20px rgba(0,0,0,0.1);
+      --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      
+      /* Cores iOS/macOS Light */
+      --bg: #F5F5F7;
+      --card-bg: #FFFFFF;
+      --input-bg: rgba(142, 142, 147, 0.12);
+      --text: #1D1D1F;
+      --text-secondary: #86868B;
+      --primary: #0066CC;
+      --primary-light: #147CE5;
+      --success: #34C759;
+      --warning: #FF9F0A;
+      --danger: #FF3B30;
+      --info: #5AC8FA;
+      --purple: #AF52DE;
+      --teal: #64D2FF;
+      --border: rgba(0,0,0,0.08);
+      --chart-grid: rgba(0,0,0,0.04);
+      --menu-bg: rgba(255, 255, 255, 0.9);
+      --receipt-bg: #FBFBFD;
+    }
+
+    [data-theme="dark"] {
+      /* Cores iOS/macOS Dark */
+      --bg: #1D1D1F;
+      --card-bg: #2C2C2E;
+      --input-bg: rgba(142, 142, 147, 0.18);
+      --text: #F5F5F7;
+      --text-secondary: #98989D;
+      --primary: #0A84FF;
+      --primary-light: #5AC8FA;
+      --success: #30D158;
+      --warning: #FF9F0A;
+      --danger: #FF453A;
+      --info: #64D2FF;
+      --purple: #BF5AF2;
+      --teal: #6AC4DC;
+      --border: rgba(255,255,255,0.12);
+      --chart-grid: rgba(255,255,255,0.06);
+      --menu-bg: rgba(44, 44, 46, 0.9);
+      --receipt-bg: #323234;
+    }
+
+    /* ===== Reset e Configurações Base ===== */
+    *, *::before, *::after { 
+      box-sizing: border-box; 
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body { 
+      font-family: var(--font-sans); 
+      background: var(--bg); 
+      color: var(--text); 
+      transition: var(--transition);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-size: 16px;
+      line-height: 1.5;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* ===== Layout e Componentes ===== */
+    .container { 
+      max-width: 1280px; 
+      margin: 0 auto; 
+      padding: 2rem; 
+    }
+
+    .header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 2rem; 
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    h1 { 
+      font-size: 1.75rem; 
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -0.025em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .filters { 
+      display: flex; 
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    /* Select estilo Apple */
+    select { 
+      appearance: none;
+      -webkit-appearance: none;
+      padding: 0.625rem 2rem 0.625rem 1rem;
+      border-radius: var(--radius-sm); 
+      border: none;
+      background: var(--input-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6' fill='none'%3E%3Cpath fill='%2386868b' d='M6 6 0 0h12L6 6Z'/%3E%3C/svg%3E") no-repeat;
+      background-position: right 0.75rem center;
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 0.9375rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    select:hover {
+      background-color: rgba(142, 142, 147, 0.18);
+    }
+
+    select option {
+      background-color: var(--card-bg);
+      color: var(--text);
+    }
+
+    /* Botões */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      font-size: 0.9375rem;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      color: #fff;
+      background-color: var(--primary);
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+    }
+
+    .btn-success {
+      background-color: var(--success);
+    }
+
+    .btn-warning {
+      background-color: var(--warning);
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+    }
+
+    .btn-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      padding: 0;
+      border-radius: 50%;
+      background: var(--input-bg);
+      color: var(--text);
+    }
+
+    .btn-icon:hover {
+      background-color: rgba(142, 142, 147, 0.2);
+    }
+
+    .btn-icon svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    /* Botão toggle theme */
+    .theme-toggle {
+      background: var(--input-bg);
+      border: none;
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text);
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      background-color: rgba(142, 142, 147, 0.2);
+    }
+
+    .theme-toggle svg { /* Ajustado para funcionar com o span/emoji inicial */
+      width: 1.25rem;
+      height: 1.25rem;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .theme-toggle #theme-icon { /* Para garantir que o emoji/svg dentro do span funcione */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    /* Cards de KPIs */
+    .kpis { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+      gap: 1rem; 
+      margin-bottom: 2rem; 
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      transition: var(--transition);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .kpi-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .kpi-title {
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .kpi-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .kpi-footer {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .kpi-trend {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .kpi-trend.up {
+      color: var(--success);
+    }
+
+    .kpi-trend.down {
+      color: var(--danger);
+    }
+
+    .kpi-trend svg {
+      width: 0.875rem;
+      height: 0.875rem;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .kpi-meta {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab {
+      padding: 0.75rem 1.25rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: var(--transition);
+    }
+
+    .tab:hover {
+      color: var(--text);
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Gráficos */
+    .charts-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); 
+      gap: 1.5rem; 
+      margin-bottom: 2rem;
+    }
+
+    .chart-container {
+      position: relative;
+      margin-top: 0.5rem;
+      height: 260px;
+    }
+
+    .chart-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chart-title-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .chart-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .chart-legend-color {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+    }
+
+    .full-width { 
+      grid-column: 1 / -1; 
+    }
+
+    .full-width .chart-container {
+      height: 300px;
+    }
+
+    /* Formulário */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 0.9375rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background-color: var(--input-bg);
+      color: var(--text);
+      transition: var(--transition);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.1);
+    }
+
+    /* Loading Estado */
+    .loading-indicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .loading-indicator.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .spinner {
+      width: 2.5rem;
+      height: 2.5rem;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Modais */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-hover);
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal.active .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    .modal-close {
+      background: var(--input-bg);
+      border: none;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text);
+      transition: var(--transition);
+    }
+
+    .modal-close:hover {
+      background-color: rgba(142, 142, 147, 0.3);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Status e Tags */
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .status.status-paid {
+      background-color: rgba(52, 199, 89, 0.1);
+      color: var(--success);
+    }
+
+    .status.status-pending {
+      background-color: rgba(255, 159, 10, 0.1);
+      color: var(--warning);
+    }
+
+    .status.status-overdue {
+      background-color: rgba(255, 59, 48, 0.1);
+      color: var(--danger);
+    }
+
+    .status.status-scheduled {
+      background-color: rgba(90, 200, 250, 0.1);
+      color: var(--info);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      background-color: var(--input-bg);
+      color: var(--text-secondary);
+    }
+
+    /* Fluxo de Caixa */
+    .cash-flow-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .flow-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background-color: var(--input-bg);
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .flow-item:hover {
+      background-color: rgba(142, 142, 147, 0.2);
+    }
+
+    .flow-item-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .flow-item-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .flow-item-icon.income {
+      background-color: var(--success);
+    }
+
+    .flow-item-icon.expense {
+      background-color: var(--danger);
+    }
+
+    .flow-item-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .flow-item-title {
+      font-weight: 500;
+    }
+
+    .flow-item-meta {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .flow-item-amount {
+      font-weight: 600;
+    }
+
+    .flow-item-amount.income {
+      color: var(--success);
+    }
+
+    .flow-item-amount.expense {
+      color: var(--danger);
+    }
+
+    /* Progress & Metas */
+    .progress-container {
+      width: 100%;
+      height: 0.5rem;
+      background-color: var(--input-bg);
+      border-radius: 1rem;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 1rem;
+      transition: width 0.5s ease;
+    }
+
+    .progress-bar.success {
+      background-color: var(--success);
+    }
+
+    .progress-bar.warning {
+      background-color: var(--warning);
+    }
+     
+    .progress-bar.danger {
+      background-color: var(--danger);
+    }
+
+    /* Insights */
+    .insight-item {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.875rem;
+      border-radius: var(--radius-sm);
+      background-color: var(--input-bg);
+      transition: var(--transition);
+    }
+
+    .insight-item:hover {
+      background-color: rgba(142, 142, 147, 0.2);
+    }
+
+    .insight-icon {
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .insight-content {
+      flex: 1;
+      font-size: 0.875rem;
+    }
+
+    .insight-title {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .insight-description {
+      color: var(--text-secondary);
+    }
+
+    .insight-item.success {
+      border-left: 3px solid var(--success);
+    }
+
+    .insight-item.warning {
+      border-left: 3px solid var(--warning);
+    }
+
+    .insight-item.danger {
+      border-left: 3px solid var(--danger);
+    }
+
+    .insight-item.info {
+      border-left: 3px solid var(--info);
+    }
+    
+    /* Alert (Adicionado para a função showAlert no JS) */
+    .alert {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      padding: 0.875rem 1.25rem;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-dropdown);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9375rem;
+      max-width: 400px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform: translateY(100px);
+      opacity: 0;
+    }
+    
+    .alert-icon {
+      flex-shrink: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+    
+    .alert-content {
+      flex-grow: 1;
+    }
+
+    .alert-info { background-color: var(--info); color: #fff; }
+    .alert-success { background-color: var(--success); color: #fff; }
+    .alert-warning { background-color: var(--warning); color: var(--text); } /* Ajuste para legibilidade */
+    .alert-danger { background-color: var(--danger); color: #fff; }
+
+    [data-theme="dark"] .alert-warning { color: #000; } /* Ajuste para legibilidade no modo escuro */
+
+
+    /* Responsividade */
+    @media (max-width: 1024px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .kpis {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .kpis {
+        grid-template-columns: 1fr;
+      }
+      
+      .flow-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      
+      .flow-item-left {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Seu HTML “visível”: container, header, filtros, KPIs, charts ===== -->
+  <div class="container">
+    <header class="header">
+      <div class="header-title">
+        <h1>Controle Financeiro Familiar</h1>
+      </div>
+      <div class="header-right">
+        <!-- Adicione aqui botões principais se necessário, como "Nova Transação" -->
+         <button class="btn btn-primary" id="btn-new-transaction">Nova Transação</button> 
+        <button class="theme-toggle" id="theme-toggle"><span id="theme-icon">🌙</span></button>
+      </div>
+    </header>
+    
+    <!-- ==================================================================== -->
+    <!-- ==                                                                == -->
+    <!-- ==  ATENÇÃO: O CONTEÚDO PRINCIPAL DA INTERFACE VEM AQUI.          == -->
+    <!-- ==  (Filtros, KPIs, Gráficos, Lista de Transações, etc.)          == -->
+    <!-- ==  Este conteúdo não foi fornecido nos arquivos de seção.        == -->
+    <!-- ==  Você precisa adicionar o HTML correspondente para que         == -->
+    <!-- ==  os elementos referenciados no JavaScript funcionem            == -->
+    <!-- ==  corretamente (ex: .kpis, .charts-grid, #transaction-table).   == -->
+    <!-- ==                                                                == -->
+    <!-- ==================================================================== -->
+    <div class="main-content">
+        <!-- Exemplo de onde poderiam entrar os KPIs -->
+        <div class="kpis" id="kpi-container">
+            <!-- Cards de KPI seriam gerados aqui pelo JS ou inseridos manualmente -->
+        </div>
+
+        <!-- Exemplo de onde poderiam entrar os Gráficos -->
+        <div class="charts-grid" id="charts-container">
+            <!-- Cards com <canvas> para Chart.js seriam inseridos aqui -->
+        </div>
+        
+        <!-- Exemplo de onde poderia entrar a lista de transações -->
+        <div class="card" id="transactions-list-card">
+             <h2 class="chart-title">Últimas Transações</h2>
+             <div id="transaction-list-container">
+                 <!-- Tabela ou lista de transações seria inserida aqui -->
+             </div>
+        </div>
+
+        <!-- Adicione aqui outros elementos da UI como filtros, tabs, etc. -->
+         <div class="tabs" id="main-tabs">
+             <div class="tab active" data-tab="overview">Visão Geral</div>
+             <div class="tab" data-tab="transactions">Transações</div>
+             <div class="tab" data-tab="analysis">Análise</div>
+             <div class="tab" data-tab="settings">Configurações</div>
+         </div>
+         <div class="tab-content active" id="overview-content">Conteúdo Visão Geral...</div>
+         <div class="tab-content" id="transactions-content">Conteúdo Transações...</div>
+         <div class="tab-content" id="analysis-content">Conteúdo Análise... <button id="btn-new-transaction-analysis">Nova Transação (Análise)</button> </div>
+         <div class="tab-content" id="settings-content">Conteúdo Configurações... <button id="btn-add-category">Add Categoria</button> <button id="btn-delete-category">Del Categoria</button></div>
     </div>
-    <div class="modal-body">
-      <form id="category-form">
-        <div class="form-group">
-          <label for="category-name">Nome da Categoria</label>
-          <input type="text" class="form-control" id="category-name" placeholder="Ex: Alimentação, Transporte, Salário." required>
-        </div>
-        <div class="form-group">
-          <label for="category-color">Cor</label>
-          <input type="color" class="form-control" id="category-color" value="#30D158">
-        </div>
-        <div class="form-group">
-          <label for="category-icon">Ícone (emoji)</label>
-          <input type="text" class="form-control" id="category-icon" placeholder="Ex: 🍔, 🚗, 💰." maxlength="2">
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" id="category-modal-cancel">Cancelar</button>
-      <button class="btn btn-primary" id="category-modal-save">Salvar</button>
+
+  </div> <!-- Fim .container -->
+
+  <!-- ===== Seção 1: Modais e Loading (Estrutura base + Conteúdo de seção 1.txt) ===== -->
+  
+  <!-- Modal de Transação (Estrutura básica, conteúdo completo pode precisar ser adicionado) -->
+  <div class="modal" id="transaction-modal">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h3 class="modal-title" id="transaction-modal-title">Nova Transação</h3>
+         <button class="modal-close" id="transaction-modal-close">×</button> 
+       </div>
+       <div class="modal-body">
+         <form id="transaction-form">
+           <!-- Campos do formulário de transação (tipo, valor, data, categoria, etc.) devem ser adicionados aqui -->
+           <div class="form-group">
+                <label for="transaction-type">Tipo</label>
+                <select id="transaction-type" class="form-control" required>
+                    <option value="expense">Despesa</option>
+                    <option value="income">Receita</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="transaction-amount">Valor</label>
+                <input type="number" step="0.01" id="transaction-amount" class="form-control" placeholder="0,00" required>
+            </div>
+            <div class="form-group">
+                <label for="transaction-date">Data</label>
+                <input type="date" id="transaction-date" class="form-control" required>
+            </div>
+             <div class="form-group">
+                <label for="transaction-description">Descrição</label>
+                <input type="text" id="transaction-description" class="form-control" placeholder="Ex: Compras no mercado" required>
+            </div>
+            <div class="form-group">
+                 <label for="transaction-category">Categoria</label>
+                 <select id="transaction-category" class="form-control" required>
+                     <!-- Opções de categoria serão populadas pelo JS -->
+                 </select>
+            </div>
+           <!-- Adicionar mais campos conforme necessário -->
+         </form>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn" id="transaction-modal-cancel">Cancelar</button>
+         <button type="submit" form="transaction-form" class="btn btn-primary" id="transaction-modal-save">Salvar</button>
+       </div>
+     </div>
+  </div>
+
+  <!-- Modal de Categoria (Conteúdo de seção 1.txt inserido) -->
+  <div class="modal" id="category-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="category-modal-title">Adicionar/Editar Categoria</h3>
+        <button class="modal-close" id="category-modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="category-form">
+          <div class="form-group">
+            <!-- Conteúdo de seção 1.txt -->
+            <label for="category-name">Nome da Categoria</label>
+            <input type="text" class="form-control" id="category-name" placeholder="Ex: Alimentação, Transporte, Salário..." required>
+          </div>
+          
+          <div class="form-group">
+            <label for="category-color">Cor</label>
+            <input type="color" class="form-control" id="category-color" value="#30D158">
+          </div>
+          
+          <div class="form-group">
+            <label for="category-icon">Ícone (emoji)</label>
+            <input type="text" class="form-control" id="category-icon" placeholder="Ex: 🍔, 🚗, 💰..." maxlength="2">
+          </div>
+          <!-- Fim do conteúdo de seção 1.txt -->
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" id="category-modal-cancel">Cancelar</button>
+        <button type="submit" form="category-form" class="btn btn-primary" id="category-modal-save">Salvar</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Modal de Confirmação -->
-<div class="modal" id="confirm-modal">
-  <div class="modal-content" style="max-width: 400px;">
-    <div class="modal-header">
-      <h3 class="modal-title" id="confirm-modal-title">Confirmação</h3>
-      <button class="modal-close" id="confirm-modal-close">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <p id="confirm-modal-message">Tem certeza que deseja realizar esta ação?</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" id="confirm-modal-cancel">Cancelar</button>
-      <button class="btn btn-danger" id="confirm-modal-confirm">Confirmar</button>
+  <!-- Modal de Confirmação (Conteúdo de seção 1.txt inserido/confirmado) -->
+  <div class="modal" id="confirm-modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="confirm-modal-title">Confirmação</h3>
+        <button class="modal-close" id="confirm-modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Conteúdo de seção 1.txt (confirmado) -->
+        <p id="confirm-modal-message">Tem certeza que deseja realizar esta ação?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" id="confirm-modal-cancel">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirm-modal-confirm">Confirmar</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Loading Indicator -->
-<div class="loading-indicator" id="loading">
-  <div class="spinner"></div>
-</div>
+  <!-- Loading Indicator (Conteúdo de seção 1.txt confirmado) -->
+  <div class="loading-indicator" id="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- ===== Bibliotecas externas ===== -->
+  <!-- Nota: Considere usar versões específicas do Firebase em vez de '9.x.x' -->
+  <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment/moment.min.js"></script> <!-- URL Corrigida -->
+  <script src="https://cdn.jsdelivr.net/npm/moment/locale/pt-br.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuid.min.js"></script>
+
+  <!-- ===== Seção 11: TODO o JS interno (Conteúdo de seção 11.txt) ===== -->
+  <script>
+    // ===== Instruções de Implementação =====
+    // Este arquivo deve ser colocado como app.js na raiz do projeto
+    // Ele contém todas as funções JavaScript necessárias para o funcionamento da aplicação
+
+    // Configuração do Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDvL_nYWhy_8rPouejiWbDZtDCKHYOQyEY", // ATENÇÃO: Esta chave parece ser pública/exemplo. Use sua própria chave.
+      authDomain: "calculadora-da-familia.firebaseapp.com",
+      projectId: "calculadora-da-familia",
+      storageBucket: "calculadora-da-familia.appspot.com",
+      messagingSenderId: "69721783786",
+      appId: "1:69721783786:web:c4703b5c182e3681e8c693",
+      measurementId: "G-YM5TR661S6"
+    };
+
+    // Inicializar Firebase
+    let app, analytics, db, transactionsRef, categoriesRef;
+    try {
+        app = firebase.initializeApp(firebaseConfig);
+        analytics = firebase.analytics(); // Nota: 'analytics' não é mais importado/inicializado assim na v9+ modular. Ajustar se usar v9+.
+        db = firebase.firestore(); // Nota: 'firestore' é inicializado de forma diferente na v9+ modular.
+        transactionsRef = db.collection('transactions');
+        categoriesRef = db.collection('categories');
+        console.log("Firebase inicializado com sucesso.");
+    } catch (error) {
+        console.error("Erro ao inicializar o Firebase:", error);
+        // Adicionar um alerta visual para o usuário
+        showAlert('Erro ao conectar com a base de dados. Verifique sua conexão ou a configuração do Firebase.', 'danger', 10000);
+    }
+
+
+    // ===== Variáveis Globais =====
+    const root = document.documentElement;
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const loading = document.getElementById('loading');
+
+    // Tabs (Exemplo - IDs baseados no HTML adicionado acima)
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const mainTabs = document.getElementById('main-tabs'); // Container das tabs
+
+    // Modais
+    const transactionModal = document.getElementById('transaction-modal');
+    const transactionForm = document.getElementById('transaction-form');
+    const categoryModal = document.getElementById('category-modal');
+    const categoryForm = document.getElementById('category-form'); // Adicionado ID ao form no HTML
+    const confirmModal = document.getElementById('confirm-modal');
+    
+    // Inputs e Elementos dos Modais (Exemplos)
+    const transactionModalTitle = document.getElementById('transaction-modal-title');
+    const transactionModalClose = document.getElementById('transaction-modal-close');
+    const transactionModalCancel = document.getElementById('transaction-modal-cancel');
+    const transactionModalSave = document.getElementById('transaction-modal-save');
+    // --- Campos form transação ---
+    const transactionTypeInput = document.getElementById('transaction-type');
+    const transactionAmountInput = document.getElementById('transaction-amount');
+    const transactionDateInput = document.getElementById('transaction-date');
+    const transactionDescriptionInput = document.getElementById('transaction-description');
+    const transactionCategoryInput = document.getElementById('transaction-category');
+    let currentEditingTransactionId = null; // Para saber se estamos editando
+    
+    // --- Campos/Botões form categoria ---
+    const categoryModalTitle = document.getElementById('category-modal-title');
+    const categoryModalClose = document.getElementById('category-modal-close');
+    const categoryNameInput = document.getElementById('category-name');
+    const categoryColorInput = document.getElementById('category-color');
+    const categoryIconInput = document.getElementById('category-icon');
+    const categoryModalCancel = document.getElementById('category-modal-cancel');
+    const categoryModalSave = document.getElementById('category-modal-save');
+    let currentEditingCategoryId = null; // Para saber se estamos editando
+
+    // --- Elementos modal confirmação ---
+    const confirmModalTitle = document.getElementById('confirm-modal-title');
+    const confirmModalMessage = document.getElementById('confirm-modal-message');
+    const confirmModalClose = document.getElementById('confirm-modal-close');
+    const confirmModalCancel = document.getElementById('confirm-modal-cancel');
+    const confirmModalConfirm = document.getElementById('confirm-modal-confirm');
+    let confirmActionCallback = null; // Função a ser chamada na confirmação
+
+    // Botões (Exemplo - IDs baseados no HTML adicionado acima)
+    const btnNewTransaction = document.getElementById('btn-new-transaction');
+    const btnNewTransactionAnalysis = document.getElementById('btn-new-transaction-analysis'); // Exemplo, pode não existir
+    const btnAddCategory = document.getElementById('btn-add-category'); // Exemplo
+    const btnDeleteCategory = document.getElementById('btn-delete-category'); // Exemplo, perigoso sem confirmação
+
+    // Containers de conteúdo (Exemplo - IDs baseados no HTML adicionado acima)
+    const kpiContainer = document.getElementById('kpi-container');
+    const chartsContainer = document.getElementById('charts-container');
+    const transactionListContainer = document.getElementById('transaction-list-container');
+
+
+    // Estados da Aplicação
+    let transactions = [];
+    let categories = [];
+    let currentTab = 'overview'; // Tab inicial
+    let charts = {}; // Para armazenar instâncias dos gráficos Chart.js
+
+    // Configurações (Já fornecidas no seu Bloco 11)
+    const TRANSACTION_TYPES = { /* ... seu código ... */ };
+    const EXPENSE_CATEGORIES = [ /* ... seu código ... */ ];
+    const INCOME_CATEGORIES = [ /* ... seu código ... */ ];
+    const PAYMENT_METHODS = { /* ... seu código ... */ };
+    const TRANSACTION_STATUS = { /* ... seu código ... */ };
+    const IMPORTANCE_LEVELS = { /* ... seu código ... */ };
+    const MONTHS = [ /* ... seu código ... */ ];
+    
+    // (Cole aqui as constantes TRANSACTION_TYPES, EXPENSE_CATEGORIES, etc. do seu arquivo seção 11.txt)
+    // INÍCIO - Constantes coladas de seção 11.txt
+    // Configurações
+    const TRANSACTION_TYPES_CONFIG = { // Renomeado para evitar conflito com variável global
+      income: {
+        name: 'Receita',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>',
+        color: 'var(--success)'
+      },
+      expense: {
+        name: 'Despesa',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>',
+        color: 'var(--danger)'
+      }
+    };
+
+    const DEFAULT_EXPENSE_CATEGORIES = [ // Renomeado
+      { id: 'housing', name: 'Moradia', color: '#FF9F0A', icon: '🏠' },
+      { id: 'food', name: 'Alimentação', color: '#30D158', icon: '🍔' },
+      { id: 'transportation', name: 'Transporte', color: '#0A84FF', icon: '🚗' },
+      { id: 'health', name: 'Saúde', color: '#FF453A', icon: '🏥' },
+      { id: 'leisure', name: 'Lazer', color: '#BF5AF2', icon: '🎮' },
+      { id: 'education', name: 'Educação', color: '#5E5CE6', icon: '📚' },
+      { id: 'shopping', name: 'Compras', color: '#FF375F', icon: '🛍️' },
+      { id: 'bills', name: 'Contas', color: '#64D2FF', icon: '📝' },
+      { id: 'unexpected', name: 'Inesperadas', color: '#FF2D55', icon: '⚠️' },
+      { id: 'other_expenses', name: 'Outras Despesas', color: '#86868B', icon: '📋' }
+    ];
+
+    const DEFAULT_INCOME_CATEGORIES = [ // Renomeado
+      { id: 'salary', name: 'Salário', color: '#30D158', icon: '💰' },
+      { id: 'bonus', name: 'Bônus', color: '#5E5CE6', icon: '🎁' },
+      { id: 'investments', name: 'Investimentos', color: '#0A84FF', icon: '📈' },
+      { id: 'other_income', name: 'Outras Receitas', color: '#FF9F0A', icon: '💸' }
+    ];
+
+    const PAYMENT_METHODS_CONFIG = { // Renomeado
+      'cash': 'Dinheiro',
+      'credit_card': 'Cartão de Crédito',
+      'debit_card': 'Cartão de Débito',
+      'bank_transfer': 'Transferência Bancária',
+      'pix': 'PIX',
+      'other': 'Outro'
+    };
+
+    const TRANSACTION_STATUS_CONFIG = { // Renomeado
+      'paid': { name: 'Pago', class: 'status-paid' },
+      'pending': { name: 'Pendente', class: 'status-pending' },
+      'scheduled': { name: 'Agendado', class: 'status-scheduled' },
+      'overdue': { name: 'Atrasado', class: 'status-overdue' }
+    };
+
+    const IMPORTANCE_LEVELS_CONFIG = { // Renomeado
+      'normal': { name: 'Normal', weight: 1 },
+      'important': { name: 'Importante', weight: 2 },
+      'urgent': { name: 'Urgente', weight: 3 },
+      'critical': { name: 'Extrema', weight: 4 }
+    };
+
+    // Meses
+    const MONTHS_CONFIG = [ // Renomeado
+      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+    // FIM - Constantes coladas de seção 11.txt
+
+
+    // ===== Utilitários e Helpers =====
+
+    // Formatar moeda
+    function formatCurrency(value) {
+      if (typeof value !== 'number') {
+          value = parseFloat(value) || 0;
+      }
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      }).format(value);
+    }
+
+    // Formatar data
+    function formatDate(date) {
+      if (!date) return '';
+      // Tentar converter para objeto Date se for string ou timestamp
+      let d;
+      if (date instanceof Date) {
+          d = date;
+      } else if (typeof date === 'string' || typeof date === 'number') {
+          d = new Date(date);
+      } else if (date && typeof date.toDate === 'function') { // Handle Firebase Timestamp
+          d = date.toDate();
+      } else {
+          return ''; // Data inválida
+      }
+      
+      if (isNaN(d.getTime())) return ''; // Verifica se a data é válida
+
+      return new Intl.DateTimeFormat('pt-BR').format(d);
+    }
+
+    // Formatar Datas para o atributo value do input[type=date]
+    function formatDateForInput(date) {
+        if (!date) return '';
+        let d;
+        if (date instanceof Date) {
+            d = date;
+        } else if (typeof date === 'string' || typeof date === 'number') {
+            d = new Date(date);
+        } else if (date && typeof date.toDate === 'function') { // Handle Firebase Timestamp
+            d = date.toDate();
+        } else {
+            return ''; // Data inválida
+        }
+
+        if (isNaN(d.getTime())) return ''; // Verifica se a data é válida
+
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+
+    // Mostrar indicador de carregamento
+    function showLoading() {
+      if(loading) loading.classList.add('active');
+    }
+
+    // Esconder indicador de carregamento
+    function hideLoading() {
+      if(loading) loading.classList.remove('active');
+    }
+
+    // Mostrar alerta
+    function showAlert(message, type = 'info', duration = 3000) {
+      // Criar elemento de alerta
+      const alertElement = document.createElement('div');
+      alertElement.className = `alert alert-${type}`;
+      
+      let iconSvg = '';
+      switch(type) {
+          case 'success': iconSvg = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>'; break;
+          case 'warning': iconSvg = '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>'; break;
+          case 'danger': iconSvg = '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>'; break; // Ícone de erro/danger
+          case 'info': 
+          default:
+              iconSvg = '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>'; break;
+      }
+
+      alertElement.innerHTML = `
+        <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          ${iconSvg}
+        </svg>
+        <div class="alert-content">${message}</div>
+      `;
+      
+      // Adicionar ao DOM
+      document.body.appendChild(alertElement);
+      
+      // Mostrar com efeito
+      setTimeout(() => {
+        alertElement.style.transform = 'translateY(0)';
+        alertElement.style.opacity = '1';
+      }, 10);
+      
+      // Remover após a duração
+      setTimeout(() => {
+        alertElement.style.transform = 'translateY(100px)';
+        alertElement.style.opacity = '0';
+        
+        setTimeout(() => {
+          if (alertElement.parentNode === document.body) {
+              document.body.removeChild(alertElement);
+          }
+        }, 300); // Tempo para a animação de saída terminar
+      }, duration);
+    }
+
+    // Atualizar ícone do toggle de tema
+    function updateThemeIcon(theme) {
+      if (!themeIcon) return;
+      if (theme === 'dark') {
+          // Usando SVG diretamente no innerHTML
+         themeIcon.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1.993C11.33 1.993 11.08.46 11.08.46C11.08.46 11.33 0 12 0s.92.46.92.46s-.25 1.533-.92 1.533zm0 20.014c-.67 0-.92 1.533-.92 1.533s.25.46.92.46s.92-.46.92-.46s-.25-1.533-.92-1.533zM3.515 3.515c-.474-.474-.46-1.238 0-1.712s1.238-.474 1.712 0l1.07 1.07c.474.474.46 1.238 0 1.712s-1.238.474-1.712 0l-1.07-1.07zm15.9 15.9c-.474-.474-.46-1.238 0-1.712s1.238-.474 1.712 0l1.07 1.07c.474.474.46 1.238 0 1.712s-1.238.474-1.712 0l-1.07-1.07zm1.07-15.9c.474-.474 1.238-.46 1.712 0s.474 1.238 0 1.712l-1.07 1.07c-.474.474-1.238.46-1.712 0s-.474-1.238 0-1.712l1.07-1.07zm-15.9 15.9c.474-.474 1.238-.46 1.712 0s.474 1.238 0 1.712l-1.07 1.07c-.474.474-1.238.46-1.712 0s-.474-1.238 0-1.712l1.07-1.07zM22.007 12c0 .67-1.533.92-1.533.92s-.46-.25-.46-.92s.46-.92.46-.92s1.533.25 1.533.92zM1.993 12c0 .67 1.533.92 1.533.92S4 12.67 4 12s-.46-.92-.46-.92S1.993 11.33 1.993 12zM12 5.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 0 0 0-13zM12 4a8 8 0 1 1 0 16A8 8 0 0 1 12 4z"/></svg>'; // Sol (Sun icon)
+      } else {
+          themeIcon.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>'; // Lua (Moon icon)
+      }
+    }
+
+    // Setup do tema baseado em preferências do sistema e localStorage
+    function setupTheme() {
+      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+      const savedTheme = localStorage.getItem('theme');
+      
+      if (savedTheme) {
+          root.setAttribute('data-theme', savedTheme);
+          updateThemeIcon(savedTheme);
+      } else {
+          const systemTheme = prefersDarkScheme.matches ? 'dark' : 'light';
+          root.setAttribute('data-theme', systemTheme);
+          updateThemeIcon(systemTheme);
+      }
+      
+      // Listener para mudanças no tema do sistema operacional
+        prefersDarkScheme.addEventListener('change', (e) => {
+            // Só muda se não houver tema salvo manualmente
+            if (!localStorage.getItem('theme')) {
+                const newSystemTheme = e.matches ? 'dark' : 'light';
+                root.setAttribute('data-theme', newSystemTheme);
+                updateThemeIcon(newSystemTheme);
+                // Atualizar gráficos se necessário
+                updateChartsTheme();
+            }
+        });
+    }
+
+    // Toggle de tema claro/escuro
+    function toggleTheme() {
+      const currentTheme = root.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      
+      root.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme); // Salva a preferência manual
+      updateThemeIcon(newTheme);
+      
+      // Atualizar gráficos para o novo tema
+      updateChartsTheme();
+    }
+    
+    // Função auxiliar para atualizar cores dos gráficos no toggle
+    function updateChartsTheme() {
+        const isDarkMode = root.getAttribute('data-theme') === 'dark';
+        const gridColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+        const textColor = isDarkMode ? '#F5F5F7' : '#1D1D1F';
+
+        for (const chartId in charts) {
+            if (charts.hasOwnProperty(chartId) && charts[chartId]) {
+                const chart = charts[chartId];
+                // Atualiza cores comuns
+                if (chart.options.scales) {
+                    Object.values(chart.options.scales).forEach(scale => {
+                        if (scale.grid) scale.grid.color = gridColor;
+                        if (scale.ticks) scale.ticks.color = textColor;
+                        if (scale.title) scale.title.color = textColor;
+                    });
+                }
+                 if (chart.options.plugins && chart.options.plugins.legend) {
+                    chart.options.plugins.legend.labels.color = textColor;
+                }
+                 if (chart.options.plugins && chart.options.plugins.title) {
+                    chart.options.plugins.title.color = textColor;
+                }
+                chart.update();
+            }
+        }
+    }
+
+    // Retorna um UUID v4 (requer a biblioteca UUID)
+    function generateUUID() {
+      if (typeof uuid !== 'undefined' && typeof uuid.v4 === 'function') {
+          return uuid.v4();
+      } else {
+          console.error("Biblioteca UUID não encontrada ou não carregada corretamente.");
+          // Fallback muito simples (NÃO use em produção para IDs únicos reais)
+          return Date.now().toString(36) + Math.random().toString(36).substr(2);
+      }
+    }
+
+    // Verifica se uma string de data é válida no formato YYYY-MM-DD
+    function isValidDate(dateString) {
+      const regEx = /^\d{4}-\d{2}-\d{2}$/;
+      if (!dateString || !dateString.match(regEx)) return false; // Verifica formato
+      const d = new Date(dateString + 'T00:00:00'); // Adiciona T00:00:00 para evitar problemas de fuso horário na validação
+      const dNum = d.getTime();
+      if (!dNum && dNum !== 0) return false; // Verifica se é um número válido
+      return d.toISOString().slice(0, 10) === dateString; // Compara se a data reconstruída é a mesma
+    }
+
+    // Criar entrada no histórico para auditoria (simples console.log)
+    function logActivity(action, details) {
+      const timestamp = new Date().toISOString();
+      const activity = {
+        action,
+        details: details || {},
+        timestamp
+      };
+      
+      console.log('Atividade:', activity);
+      
+      // Opcional: Enviar para uma coleção 'activity_log' no Firestore
+      // if (db) {
+      //   db.collection('activity_log').add(activity).catch(err => console.error("Erro ao logar atividade:", err));
+      // }
+    }
+    
+    // ===== Gerenciamento de Modais =====
+
+    function openModal(modalElement) {
+        if (modalElement) {
+            modalElement.classList.add('active');
+        }
+    }
+
+    function closeModal(modalElement) {
+        if (modalElement) {
+            modalElement.classList.remove('active');
+        }
+    }
+
+    function openTransactionModal(transactionData = null) {
+        transactionForm.reset(); // Limpa o formulário
+        populateCategoryOptions(transactionTypeInput.value); // Popula categorias iniciais
+
+        if (transactionData) {
+            // Modo Edição
+            currentEditingTransactionId = transactionData.id;
+            transactionModalTitle.textContent = 'Editar Transação';
+            transactionTypeInput.value = transactionData.type;
+            transactionAmountInput.value = transactionData.amount;
+            transactionDateInput.value = formatDateForInput(transactionData.date); // Usa a função de formatação
+            transactionDescriptionInput.value = transactionData.description;
+            // Garante que as categorias corretas estão populadas ANTES de selecionar
+            populateCategoryOptions(transactionData.type); 
+            transactionCategoryInput.value = transactionData.categoryId;
+            // Adicionar outros campos se existirem (status, paymentMethod, etc.)
+        } else {
+            // Modo Criação
+            currentEditingTransactionId = null;
+            transactionModalTitle.textContent = 'Nova Transação';
+            transactionDateInput.value = formatDateForInput(new Date()); // Data atual por padrão
+        }
+        openModal(transactionModal);
+    }
+
+    function openCategoryModal(categoryData = null) {
+        categoryForm.reset();
+        if (categoryData) {
+            // Modo Edição
+            currentEditingCategoryId = categoryData.id;
+            categoryModalTitle.textContent = 'Editar Categoria';
+            categoryNameInput.value = categoryData.name;
+            categoryColorInput.value = categoryData.color || '#86868B'; // Cor padrão se não houver
+            categoryIconInput.value = categoryData.icon || '';
+        } else {
+            // Modo Criação
+            currentEditingCategoryId = null;
+            categoryModalTitle.textContent = 'Nova Categoria';
+             categoryColorInput.value = '#86868B'; // Resetar cor padrão
+        }
+        openModal(categoryModal);
+    }
+
+    function openConfirmModal(message, title = 'Confirmação', onConfirmCallback) {
+        confirmModalMessage.textContent = message;
+        confirmModalTitle.textContent = title;
+        confirmActionCallback = onConfirmCallback; // Armazena a função a ser chamada
+        openModal(confirmModal);
+    }
+    
+    // ===== Gerenciamento de Dados (Firebase) =====
+
+    async function loadInitialData() {
+        if (!db) {
+            console.error("Firestore não inicializado. Não é possível carregar dados.");
+            showAlert("Não foi possível carregar os dados iniciais.", "danger");
+            return;
+        }
+        showLoading();
+        try {
+            // Carregar Categorias Primeiro
+            const categoriesSnapshot = await categoriesRef.orderBy('name').get();
+            categories = categoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            console.log("Categorias carregadas:", categories);
+            
+            // Se não houver categorias, adicionar as padrões (opcional)
+            if (categories.length === 0) {
+                console.log("Nenhuma categoria encontrada, adicionando padrões...");
+                await addDefaultCategories();
+                // Recarregar categorias após adicionar as padrões
+                const updatedCategoriesSnapshot = await categoriesRef.orderBy('name').get();
+                categories = updatedCategoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            }
+
+            // Carregar Transações
+            const transactionsSnapshot = await transactionsRef.orderBy('date', 'desc').get();
+            transactions = transactionsSnapshot.docs.map(doc => {
+                 const data = doc.data();
+                 // Converte Timestamp do Firebase para Date do JS, se necessário
+                 const date = data.date && typeof data.date.toDate === 'function' ? data.date.toDate() : data.date;
+                 return { id: doc.id, ...data, date: date };
+            });
+            console.log("Transações carregadas:", transactions);
+
+            updateUI(); // Atualiza toda a interface com os dados carregados
+            
+        } catch (error) {
+            console.error("Erro ao carregar dados iniciais:", error);
+            showAlert("Erro ao carregar dados do Firestore.", "danger");
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // Adiciona categorias padrão se o banco estiver vazio
+    async function addDefaultCategories() {
+        if (!db) return;
+        const batch = db.batch();
+        const allDefaultCategories = [...DEFAULT_INCOME_CATEGORIES, ...DEFAULT_EXPENSE_CATEGORIES];
+        
+        allDefaultCategories.forEach(cat => {
+            // Usar o 'id' da constante como ID do documento no Firestore
+            const docRef = categoriesRef.doc(cat.id); 
+            batch.set(docRef, { 
+                name: cat.name, 
+                color: cat.color, 
+                icon: cat.icon,
+                // Adicionar tipo (income/expense) se necessário para filtragem posterior
+                type: DEFAULT_INCOME_CATEGORIES.some(ic => ic.id === cat.id) ? 'income' : 'expense' 
+            });
+        });
+
+        try {
+            await batch.commit();
+            console.log("Categorias padrão adicionadas.");
+            logActivity('add_default_categories');
+        } catch (error) {
+            console.error("Erro ao adicionar categorias padrão:", error);
+            showAlert("Erro ao configurar categorias iniciais.", "danger");
+        }
+    }
+    
+    // Adicionar ou Atualizar Transação
+    async function saveTransaction(event) {
+        event.preventDefault();
+        if (!db) return;
+        
+        const transactionData = {
+            type: transactionTypeInput.value,
+            amount: parseFloat(transactionAmountInput.value),
+            date: new Date(transactionDateInput.value + 'T00:00:00'), // Garante que a data seja local
+            description: transactionDescriptionInput.value.trim(),
+            categoryId: transactionCategoryInput.value,
+            // Adicionar outros campos conforme necessário (status, paymentMethod, userId, etc.)
+            // status: 'paid', // Exemplo
+            // paymentMethod: 'pix', // Exemplo
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp() // Timestamp do servidor
+        };
+
+        // Validação básica
+        if (!transactionData.type || isNaN(transactionData.amount) || transactionData.amount <= 0 || !isValidDate(transactionDateInput.value) || !transactionData.description || !transactionData.categoryId) {
+            showAlert("Por favor, preencha todos os campos obrigatórios corretamente.", "warning");
+            return;
+        }
+
+        showLoading();
+        try {
+            if (currentEditingTransactionId) {
+                // Atualizar transação existente
+                await transactionsRef.doc(currentEditingTransactionId).update(transactionData);
+                showAlert("Transação atualizada com sucesso!", "success");
+                logActivity('update_transaction', { id: currentEditingTransactionId });
+            } else {
+                // Adicionar nova transação
+                transactionData.createdAt = firebase.firestore.FieldValue.serverTimestamp(); // Timestamp para criação
+                transactionData.id = generateUUID(); // Gerar ID único no cliente
+                // Usar o ID gerado no cliente para o documento
+                await transactionsRef.doc(transactionData.id).set(transactionData); 
+                showAlert("Transação adicionada com sucesso!", "success");
+                logActivity('add_transaction', { id: transactionData.id });
+            }
+            closeModal(transactionModal);
+            // Não precisa chamar loadInitialData() se tivermos realtime updates.
+            // Se não tiver realtime, descomente a linha abaixo:
+            // await loadInitialData(); 
+        } catch (error) {
+            console.error("Erro ao salvar transação:", error);
+            showAlert("Erro ao salvar transação. Tente novamente.", "danger");
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // Adicionar ou Atualizar Categoria
+    async function saveCategory(event) {
+        event.preventDefault();
+        if (!db) return;
+
+        const categoryData = {
+            name: categoryNameInput.value.trim(),
+            color: categoryColorInput.value,
+            icon: categoryIconInput.value.trim()
+            // Adicionar 'type' (income/expense) se for relevante para sua lógica
+        };
+
+        if (!categoryData.name) {
+            showAlert("O nome da categoria é obrigatório.", "warning");
+            return;
+        }
+        
+        // Validação simples de emoji (1 ou 2 caracteres)
+        if (categoryData.icon && categoryData.icon.length > 2) {
+             showAlert("O ícone deve ser um emoji válido (1 ou 2 caracteres).", "warning");
+             return;
+        }
+
+        showLoading();
+        try {
+            if (currentEditingCategoryId) {
+                // Atualizar categoria existente
+                await categoriesRef.doc(currentEditingCategoryId).update(categoryData);
+                showAlert("Categoria atualizada com sucesso!", "success");
+                logActivity('update_category', { id: currentEditingCategoryId });
+            } else {
+                 // Adicionar nova categoria - Gerar ID automaticamente pelo Firestore
+                 // const newCategoryRef = await categoriesRef.add(categoryData);
+                 // OU gerar ID no cliente para consistência:
+                 categoryData.id = generateUUID();
+                 await categoriesRef.doc(categoryData.id).set(categoryData);
+                 showAlert("Categoria adicionada com sucesso!", "success");
+                 logActivity('add_category', { id: categoryData.id });
+            }
+            closeModal(categoryModal);
+            // await loadInitialData(); // Descomente se não usar realtime updates
+        } catch (error) {
+            console.error("Erro ao salvar categoria:", error);
+            showAlert("Erro ao salvar categoria. Tente novamente.", "danger");
+        } finally {
+            hideLoading();
+        }
+    }
+    
+     // Deletar Transação
+    async function deleteTransaction(transactionId) {
+        if (!db || !transactionId) return;
+
+        openConfirmModal(
+            "Tem certeza que deseja excluir esta transação? Esta ação não pode ser desfeita.",
+            "Excluir Transação",
+            async () => { // Callback de confirmação
+                showLoading();
+                try {
+                    await transactionsRef.doc(transactionId).delete();
+                    showAlert("Transação excluída com sucesso!", "success");
+                    logActivity('delete_transaction', { id: transactionId });
+                    // await loadInitialData(); // Descomente se não usar realtime updates
+                } catch (error) {
+                    console.error("Erro ao excluir transação:", error);
+                    showAlert("Erro ao excluir transação. Tente novamente.", "danger");
+                } finally {
+                    hideLoading();
+                }
+            }
+        );
+    }
+
+    // Deletar Categoria (CUIDADO: Verificar se há transações usando-a)
+    async function deleteCategory(categoryId) {
+        if (!db || !categoryId) return;
+        
+        // **Verificação Crítica:** Checar se a categoria está em uso
+        const transactionsUsingCategory = transactions.filter(t => t.categoryId === categoryId);
+        if (transactionsUsingCategory.length > 0) {
+            showAlert(`Não é possível excluir esta categoria. Existem ${transactionsUsingCategory.length} transações associadas a ela.`, "warning", 5000);
+            return;
+        }
+
+        // Se não estiver em uso, prosseguir com a confirmação
+        openConfirmModal(
+            "Tem certeza que deseja excluir esta categoria? Esta ação não pode ser desfeita.",
+            "Excluir Categoria",
+            async () => { // Callback de confirmação
+                showLoading();
+                try {
+                    await categoriesRef.doc(categoryId).delete();
+                    showAlert("Categoria excluída com sucesso!", "success");
+                    logActivity('delete_category', { id: categoryId });
+                    // await loadInitialData(); // Descomente se não usar realtime updates
+                } catch (error) {
+                    console.error("Erro ao excluir categoria:", error);
+                    showAlert("Erro ao excluir categoria. Tente novamente.", "danger");
+                } finally {
+                    hideLoading();
+                }
+            }
+        );
+    }
+
+    // Configurar Listener para Atualizações em Tempo Real (Firestore)
+    function setupRealtimeUpdates() {
+        if (!db) {
+            console.warn("Firestore não inicializado. Atualizações em tempo real desativadas.");
+            return;
+        }
+
+        // Listener para Transações
+        transactionsRef.orderBy('date', 'desc').onSnapshot(snapshot => {
+            console.log("Recebida atualização de transações...");
+            transactions = snapshot.docs.map(doc => {
+                 const data = doc.data();
+                 const date = data.date && typeof data.date.toDate === 'function' ? data.date.toDate() : data.date;
+                 return { id: doc.id, ...data, date: date };
+            });
+            updateUI(); // Atualiza a UI sempre que houver mudança nas transações
+            checkScheduledTransactions(); // Re-verificar agendadas
+            checkOverdueTransactions(); // Re-verificar atrasadas
+        }, error => {
+            console.error("Erro no listener de transações:", error);
+            showAlert("Erro ao receber atualizações de transações.", "danger");
+        });
+
+        // Listener para Categorias
+        categoriesRef.orderBy('name').onSnapshot(snapshot => {
+            console.log("Recebida atualização de categorias...");
+            categories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            // Atualizar partes da UI que dependem das categorias (ex: dropdowns, legendas)
+            populateCategoryOptions(transactionTypeInput ? transactionTypeInput.value : 'expense'); // Atualiza dropdown no modal
+            updateUI(); // Atualiza a UI geral (pode ser otimizado para atualizar só o necessário)
+        }, error => {
+            console.error("Erro no listener de categorias:", error);
+            showAlert("Erro ao receber atualizações de categorias.", "danger");
+        });
+    }
+
+    // ===== Funções de Interface do Usuário (UI Update) =====
+    
+    // Função principal para atualizar toda a interface
+    function updateUI() {
+        console.log("Atualizando UI...");
+        // Atualizar KPIs (precisa da função renderKPIs)
+        if (typeof renderKPIs === 'function') renderKPIs(); else console.warn("Função renderKPIs não definida.");
+        
+        // Atualizar Lista de Transações (precisa da função renderTransactionList)
+        if (typeof renderTransactionList === 'function') renderTransactionList(); else console.warn("Função renderTransactionList não definida.");
+
+        // Atualizar Gráficos (precisa da função updateCharts)
+        if (typeof updateCharts === 'function') updateCharts(); else console.warn("Função updateCharts não definida.");
+        
+        // Atualizar outras partes da UI se necessário (ex: filtros, etc.)
+    }
+    
+    // Popula o <select> de categorias no modal de transação
+    function populateCategoryOptions(transactionType) {
+        if (!transactionCategoryInput) return;
+        
+        transactionCategoryInput.innerHTML = '<option value="">Selecione...</option>'; // Opção padrão
+        
+        const relevantCategories = categories.filter(cat => {
+            // Filtrar por tipo se a categoria tiver essa informação
+            // Se não tiver 'type', incluir todas (ou adaptar a lógica)
+             if (cat.type) {
+                 return cat.type === transactionType;
+             }
+             // Fallback: Adivinhar tipo com base nas listas padrão (menos ideal)
+             if (transactionType === 'income') {
+                 return DEFAULT_INCOME_CATEGORIES.some(dic => dic.id === cat.id || dic.name === cat.name);
+             } else {
+                  return DEFAULT_EXPENSE_CATEGORIES.some(dec => dec.id === cat.id || dec.name === cat.name);
+             }
+        });
+
+        relevantCategories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat.id;
+            option.textContent = `${cat.icon ? cat.icon + ' ' : ''}${cat.name}`;
+            transactionCategoryInput.appendChild(option);
+        });
+    }
+
+    // Encontrar nome da categoria pelo ID
+    function getCategoryNameById(categoryId) {
+        const category = categories.find(cat => cat.id === categoryId);
+        return category ? category.name : 'Desconhecida';
+    }
+    
+    // Encontrar ícone da categoria pelo ID
+     function getCategoryIconById(categoryId) {
+        const category = categories.find(cat => cat.id === categoryId);
+        return category ? category.icon || '❔' : '❔';
+    }
+
+    // Renderizar KPIs (Exemplo - precisa ser implementada)
+    function renderKPIs() {
+        if (!kpiContainer) return;
+        
+        const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+        const totalExpense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+        const balance = totalIncome - totalExpense;
+        const totalTransactions = transactions.length;
+
+        // Exemplo simples de HTML para KPIs
+        kpiContainer.innerHTML = `
+            <div class="card kpi-card">
+                <div class="kpi-header">
+                    <span class="kpi-title">Saldo Atual</span>
+                </div>
+                <div class="kpi-value">${formatCurrency(balance)}</div>
+                <div class="kpi-footer">
+                   <span style="color: var(--success)">${formatCurrency(totalIncome)} Receitas</span>
+                </div>
+            </div>
+            <div class="card kpi-card">
+                <div class="kpi-header">
+                    <span class="kpi-title">Total Despesas</span>
+                    <span class="kpi-icon" style="color: var(--danger)">💸</span>
+                </div>
+                <div class="kpi-value">${formatCurrency(totalExpense)}</div>
+                 <div class="kpi-footer">
+                   <span>${totalTransactions} Transações</span>
+                </div>
+            </div>
+             <div class="card kpi-card">
+                <div class="kpi-header">
+                    <span class="kpi-title">Total Receitas</span>
+                     <span class="kpi-icon" style="color: var(--success)">💰</span>
+                </div>
+                <div class="kpi-value">${formatCurrency(totalIncome)}</div>
+            </div>
+            
+            <!-- Adicionar mais KPIs conforme necessário -->
+        `;
+         logActivity('render_kpis');
+    }
+    
+    // Renderizar Lista de Transações (Exemplo - precisa ser implementada)
+    function renderTransactionList(filteredTransactions = transactions) {
+        if (!transactionListContainer) return;
+
+        if (filteredTransactions.length === 0) {
+            transactionListContainer.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 1rem;">Nenhuma transação encontrada.</p>';
+            return;
+        }
+
+        // Ordenar por data decrescente (mais recentes primeiro) se já não estiver ordenado
+        filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // Usar a estrutura de flow-item do CSS
+        transactionListContainer.innerHTML = `
+            <div class="cash-flow-items">
+                ${filteredTransactions.map(t => `
+                    <div class="flow-item" data-transaction-id="${t.id}">
+                        <div class="flow-item-left">
+                            <div class="flow-item-icon ${t.type}">
+                                ${t.type === 'income' ? TRANSACTION_TYPES_CONFIG.income.icon : TRANSACTION_TYPES_CONFIG.expense.icon}
+                            </div>
+                            <div class="flow-item-info">
+                                <span class="flow-item-title">${t.description || 'Sem descrição'}</span>
+                                <span class="flow-item-meta">
+                                    ${getCategoryIconById(t.categoryId)} ${getCategoryNameById(t.categoryId)} - ${formatDate(t.date)} 
+                                    ${t.status ? `<span class="status ${TRANSACTION_STATUS_CONFIG[t.status]?.class || ''}">${TRANSACTION_STATUS_CONFIG[t.status]?.name || t.status}</span>` : ''}
+                                </span>
+                            </div>
+                        </div>
+                         <div class="flow-item-right">
+                            <span class="flow-item-amount ${t.type}">${t.type === 'income' ? '+' : '-'}${formatCurrency(t.amount)}</span>
+                             <button class="btn-icon btn-edit-transaction" title="Editar">✎</button> <!-- Ícone de lápis -->
+                             <button class="btn-icon btn-delete-transaction" title="Excluir">×</button> <!-- Ícone de X -->
+                         </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        
+         // Adicionar event listeners para os botões de editar/excluir na lista
+         attachTransactionListActionListeners();
+         logActivity('render_transaction_list', { count: filteredTransactions.length });
+    }
+    
+    // Adiciona listeners aos botões da lista de transações
+    function attachTransactionListActionListeners() {
+        const editButtons = transactionListContainer.querySelectorAll('.btn-edit-transaction');
+        const deleteButtons = transactionListContainer.querySelectorAll('.btn-delete-transaction');
+
+        editButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Impede que o clique no botão também clique no item
+                const flowItem = e.target.closest('.flow-item');
+                const transactionId = flowItem.dataset.transactionId;
+                const transaction = transactions.find(t => t.id === transactionId);
+                if (transaction) {
+                    openTransactionModal(transaction);
+                } else {
+                     console.error("Transação não encontrada para edição:", transactionId);
+                     showAlert("Não foi possível encontrar a transação para editar.", "warning");
+                }
+            });
+        });
+
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                const flowItem = e.target.closest('.flow-item');
+                const transactionId = flowItem.dataset.transactionId;
+                 if (transactionId) {
+                    deleteTransaction(transactionId);
+                 } else {
+                     console.error("ID da transação não encontrado para exclusão.");
+                 }
+            });
+        });
+        
+        // Opcional: Adicionar listener ao item inteiro para ver detalhes
+        // const flowItems = transactionListContainer.querySelectorAll('.flow-item');
+        // flowItems.forEach(item => {
+        //     item.addEventListener('click', (e) => {
+        //         // Não fazer nada se o clique foi em um botão dentro do item
+        //         if (e.target.closest('button')) return; 
+        //         const transactionId = item.dataset.transactionId;
+        //         console.log("Clicou no item:", transactionId);
+        //         // Implementar lógica para mostrar detalhes da transação, talvez em outro modal
+        //     });
+        // });
+    }
+
+    // ===== Funções de Gráficos (Chart.js) =====
+    
+    // Função principal para criar/atualizar todos os gráficos
+    function updateCharts() {
+        if (typeof Chart === 'undefined') {
+            console.warn("Chart.js não carregado. Gráficos desativados.");
+            return;
+        }
+        
+        // Exemplo: Gráfico de Despesas por Categoria (Pizza)
+        renderExpenseByCategoryChart();
+
+        // Exemplo: Gráfico de Receitas vs Despesas (Linha/Barra)
+        renderIncomeVsExpenseChart();
+
+        // Adicionar chamadas para outras funções de gráfico aqui
+        
+        updateChartsTheme(); // Garante que o tema está aplicado
+        logActivity('update_charts');
+    }
+
+    // Gráfico de Despesas por Categoria (Pizza)
+    function renderExpenseByCategoryChart() {
+         // Verificar se o container do gráfico existe no HTML (você precisa criá-lo)
+        const canvasId = 'expenseChart'; // ID do elemento <canvas>
+        const ctx = document.getElementById(canvasId); 
+        if (!ctx) {
+            console.warn(`Elemento canvas com ID "${canvasId}" não encontrado para o gráfico de despesas.`);
+            // Opcional: Criar dinamicamente se não existir
+            if (chartsContainer) {
+                 const chartCard = document.createElement('div');
+                 chartCard.className = 'card';
+                 chartCard.innerHTML = `
+                    <h2 class="chart-title">Despesas por Categoria</h2>
+                    <div class="chart-container">
+                        <canvas id="${canvasId}"></canvas>
+                    </div>
+                 `;
+                 chartsContainer.appendChild(chartCard);
+                 // Tentar obter o contexto novamente após adicionar
+                  const newCtx = document.getElementById(canvasId);
+                  if (!newCtx) return; // Ainda não conseguiu, desistir
+                  renderChartInternal(newCtx); // Chamar função interna com o novo contexto
+            } else {
+                 return; // Não há onde colocar o gráfico
+            }
+        } else {
+             renderChartInternal(ctx); // Chamar função interna com contexto existente
+        }
+        
+        // Função interna para evitar repetição
+        function renderChartInternal(context) {
+            const expenses = transactions.filter(t => t.type === 'expense');
+            const expensesByCategory = expenses.reduce((acc, t) => {
+                const categoryId = t.categoryId || 'unknown';
+                acc[categoryId] = (acc[categoryId] || 0) + t.amount;
+                return acc;
+            }, {});
+
+            const labels = Object.keys(expensesByCategory).map(id => getCategoryNameById(id));
+            const data = Object.values(expensesByCategory);
+            const backgroundColors = Object.keys(expensesByCategory).map(id => {
+                const category = categories.find(c => c.id === id);
+                return category ? category.color : '#86868B'; // Cor padrão
+            });
+
+            // Destruir gráfico anterior se existir para evitar sobreposição
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+            
+            const isDarkMode = root.getAttribute('data-theme') === 'dark';
+            const textColor = isDarkMode ? '#F5F5F7' : '#1D1D1F';
+
+            charts[canvasId] = new Chart(context, {
+                type: 'doughnut', // Ou 'pie'
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Despesas',
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        borderColor: isDarkMode ? 'var(--card-bg)' : '#fff', // Borda para separar fatias
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                             labels: {
+                                color: textColor // Cor da legenda
+                            }
+                        },
+                        title: {
+                            display: false // Título já está no card
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += formatCurrency(context.parsed);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+    
+    // Gráfico de Receitas vs Despesas (Linha ou Barra Mensal)
+    function renderIncomeVsExpenseChart() {
+        const canvasId = 'incomeExpenseChart';
+        const ctx = document.getElementById(canvasId);
+        if (!ctx) {
+            console.warn(`Elemento canvas com ID "${canvasId}" não encontrado.`);
+             if (chartsContainer) {
+                 const chartCard = document.createElement('div');
+                 chartCard.className = 'card full-width'; // Ocupa largura total
+                 chartCard.innerHTML = `
+                    <h2 class="chart-title">Receitas vs Despesas (Mensal)</h2>
+                    <div class="chart-container">
+                        <canvas id="${canvasId}"></canvas>
+                    </div>
+                 `;
+                 chartsContainer.appendChild(chartCard);
+                  const newCtx = document.getElementById(canvasId);
+                  if (!newCtx) return;
+                  renderChartInternal(newCtx);
+            } else {
+                 return;
+            }
+        } else {
+            renderChartInternal(ctx);
+        }
+
+        function renderChartInternal(context) {
+            // Agrupar transações por mês
+            const monthlyData = transactions.reduce((acc, t) => {
+                // Usar moment.js se disponível para facilitar formatação da chave
+                const monthKey = moment(t.date).format('YYYY-MM'); 
+                
+                if (!acc[monthKey]) {
+                    acc[monthKey] = { income: 0, expense: 0 };
+                }
+                
+                if (t.type === 'income') {
+                    acc[monthKey].income += t.amount;
+                } else {
+                    acc[monthKey].expense += t.amount;
+                }
+                return acc;
+            }, {});
+
+            // Ordenar meses e extrair dados
+            const sortedMonths = Object.keys(monthlyData).sort();
+            const labels = sortedMonths.map(monthKey => moment(monthKey + '-01').format('MMM/YY')); // Formato ex: Jan/24
+            const incomeData = sortedMonths.map(monthKey => monthlyData[monthKey].income);
+            const expenseData = sortedMonths.map(monthKey => monthlyData[monthKey].expense);
+
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+
+            const isDarkMode = root.getAttribute('data-theme') === 'dark';
+            const gridColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+            const textColor = isDarkMode ? '#F5F5F7' : '#1D1D1F';
+
+            charts[canvasId] = new Chart(context, {
+                type: 'bar', // Ou 'line'
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Receitas',
+                            data: incomeData,
+                            backgroundColor: 'rgba(52, 199, 89, 0.6)', // Verde com transparência
+                            borderColor: 'rgba(52, 199, 89, 1)',
+                            borderWidth: 1,
+                            tension: 0.1 // Para gráfico de linha suave
+                        },
+                        {
+                            label: 'Despesas',
+                            data: expenseData,
+                            backgroundColor: 'rgba(255, 59, 48, 0.6)', // Vermelho com transparência
+                            borderColor: 'rgba(255, 59, 48, 1)',
+                            borderWidth: 1,
+                            tension: 0.1 // Para gráfico de linha suave
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { 
+                                color: textColor, // Cor dos ticks do eixo Y
+                                callback: function(value) { return formatCurrency(value); } 
+                            },
+                            grid: { color: gridColor } // Cor das linhas de grade Y
+                        },
+                        x: {
+                             ticks: { color: textColor }, // Cor dos ticks do eixo X
+                             grid: { color: gridColor } // Cor das linhas de grade X
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                             position: 'top',
+                             labels: { color: textColor }
+                        },
+                         tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) {
+                                        label += formatCurrency(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+
+    // ===== Lógica Adicional =====
+
+    // Verificar transações agendadas e mudar status se necessário
+    function checkScheduledTransactions() {
+        // Implementar lógica para verificar transações com status 'scheduled'
+        // e data no passado ou presente, mudando o status para 'pending' ou 'paid'
+        // e talvez notificando o usuário.
+        // Exemplo:
+        // const now = new Date();
+        // transactions.forEach(t => {
+        //     if (t.status === 'scheduled' && new Date(t.date) <= now) {
+        //         // Mudar status para 'pending' ou 'paid' via update no Firestore
+        //         // updateTransactionStatus(t.id, 'pending'); 
+        //     }
+        // });
+         logActivity('check_scheduled_transactions');
+    }
+
+    // Verificar transações pendentes e atrasadas
+    function checkOverdueTransactions() {
+        // Implementar lógica para verificar transações com status 'pending'
+        // e data no passado, mudando o status para 'overdue'.
+         logActivity('check_overdue_transactions');
+    }
+    
+     // Lógica de Tabs
+    function setupTabs() {
+        if (!mainTabs) return;
+
+        mainTabs.addEventListener('click', (e) => {
+            if (e.target.classList.contains('tab')) {
+                const targetTab = e.target.dataset.tab;
+                if (targetTab === currentTab) return; // Já está na tab ativa
+
+                // Desativar tab e conteúdo antigos
+                mainTabs.querySelector('.tab.active')?.classList.remove('active');
+                document.querySelector('.tab-content.active')?.classList.remove('active');
+
+                // Ativar nova tab e conteúdo
+                e.target.classList.add('active');
+                const newContent = document.getElementById(`${targetTab}-content`);
+                if (newContent) {
+                    newContent.classList.add('active');
+                } else {
+                    console.warn(`Conteúdo para a tab "${targetTab}" não encontrado.`);
+                }
+                
+                currentTab = targetTab;
+                logActivity('switch_tab', { tab: currentTab });
+                
+                // Atualizar UI específica da tab se necessário
+                 if (currentTab === 'analysis') {
+                     // Talvez renderizar gráficos específicos da análise
+                 }
+            }
+        });
+        
+        // Ativar a tab inicial definida em currentTab
+        const initialTabElement = mainTabs.querySelector(`.tab[data-tab="${currentTab}"]`);
+        const initialContentElement = document.getElementById(`${currentTab}-content`);
+        if (initialTabElement) initialTabElement.classList.add('active');
+        if (initialContentElement) initialContentElement.classList.add('active');
+
+    }
+
+
+    // ===== Inicialização da Aplicação =====
+    
+    async function init() {
+        console.log("Iniciando aplicação...");
+        showLoading();
+        
+        // 1. Configurar Tema
+        setupTheme();
+
+        // 2. Configurar Listeners Globais (Modais, Botões principais, etc.)
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        } else {
+            console.warn("Botão de toggle de tema não encontrado.");
+        }
+
+        // Listeners Modais
+        // -- Transação --
+        if(btnNewTransaction) btnNewTransaction.addEventListener('click', () => openTransactionModal());
+        // Exemplo de outro botão que abre o modal
+         if(btnNewTransactionAnalysis) btnNewTransactionAnalysis.addEventListener('click', () => openTransactionModal()); 
+        if(transactionModalClose) transactionModalClose.addEventListener('click', () => closeModal(transactionModal));
+        if(transactionModalCancel) transactionModalCancel.addEventListener('click', () => closeModal(transactionModal));
+        if(transactionForm) transactionForm.addEventListener('submit', saveTransaction);
+         // Atualizar categorias quando o tipo de transação muda no formulário
+        if (transactionTypeInput) {
+            transactionTypeInput.addEventListener('change', (e) => populateCategoryOptions(e.target.value));
+        }
+
+        // -- Categoria --
+         if(btnAddCategory) btnAddCategory.addEventListener('click', () => openCategoryModal());
+         // Exemplo de botão perigoso sem confirmação - Idealmente abriria lista de categorias para selecionar qual deletar
+         if(btnDeleteCategory) btnDeleteCategory.addEventListener('click', () => {
+              // Precisa de lógica para SELECIONAR qual categoria deletar antes de chamar deleteCategory(id)
+              showAlert("Selecione uma categoria para deletar.", "info"); 
+         }); 
+        if(categoryModalClose) categoryModalClose.addEventListener('click', () => closeModal(categoryModal));
+        if(categoryModalCancel) categoryModalCancel.addEventListener('click', () => closeModal(categoryModal));
+        if(categoryForm) categoryForm.addEventListener('submit', saveCategory);
+
+        // -- Confirmação --
+        if(confirmModalClose) confirmModalClose.addEventListener('click', () => { closeModal(confirmModal); confirmActionCallback = null; });
+        if(confirmModalCancel) confirmModalCancel.addEventListener('click', () => { closeModal(confirmModal); confirmActionCallback = null; });
+        if(confirmModalConfirm) confirmModalConfirm.addEventListener('click', () => {
+            if (typeof confirmActionCallback === 'function') {
+                confirmActionCallback(); // Executa a ação de confirmação
+            }
+            closeModal(confirmModal);
+            confirmActionCallback = null; // Limpa o callback
+        });
+
+        // 3. Configurar Tabs
+        setupTabs();
+
+        // 4. Carregar Dados Iniciais (aguarda o carregamento)
+        if (db) { // Só carrega se o Firebase inicializou
+             await loadInitialData();
+        } else {
+             console.error("Não foi possível carregar dados pois o DB não está inicializado.");
+             hideLoading(); // Esconde o loading mesmo se falhar
+        }
+
+        // 5. Configurar Atualizações Realtime (depois do load inicial)
+         if (db) {
+            setupRealtimeUpdates();
+         }
+
+        console.log("Aplicação inicializada.");
+        logActivity('app_initialized');
+        hideLoading(); // Esconde o loading no final da inicialização
+        
+        // 6. Verificações pós-inicialização (Opcional, movido do DOMContentLoaded)
+        // checkScheduledTransactions();
+        // checkOverdueTransactions();
+    }
+
+
+    // Iniciar aplicação quando o DOM estiver carregado
+    document.addEventListener('DOMContentLoaded', () => {
+        // A inicialização agora é feita pela função init()
+         init().catch(error => {
+             console.error("Erro fatal durante a inicialização:", error);
+             showAlert("Ocorreu um erro inesperado ao iniciar a aplicação.", "danger", 10000);
+             hideLoading(); // Garante que o loading suma em caso de erro fatal no init
+         });
+        
+        // A configuração de realtime e verificações agora estão dentro de init() ou são chamadas por ele
+    });
+
+    // ===== Fim do Script =====
+  </script>
+
 </body>
 </html>
-
-// ===== app.js =====
-
-// Configuração do Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyDvL_nYWhy_8rPouejiWbDZtDCKHYOQyEY",
-  authDomain: "calculadora-da-familia.firebaseapp.com",
-  projectId: "calculadora-da-familia",
-  storageBucket: "calculadora-da-familia.appspot.com",
-  messagingSenderId: "69721783786",
-  appId: "1:69721783786:web:c4703b5c182e3681e8c693",
-  measurementId: "G-YM5TR661S6"
-};
-// Inicializar Firebase
-firebase.initializeApp(firebaseConfig);
-firebase.analytics();
-const db = firebase.firestore();
-const transactionsRef = db.collection('transactions');
-const categoriesRef = db.collection('categories');
-
-// ===== Globais & Seletores =====
-const root = document.documentElement;
-const themeToggle = document.getElementById('theme-toggle');
-const themeIcon = document.getElementById('theme-icon');
-const loading = document.getElementById('loading');
-
-const tabs = document.querySelectorAll('.tab');
-const tabContents = document.querySelectorAll('.tab-content');
-
-const btnNewTransaction = document.getElementById('btn-new-transaction');
-const btnAddCategory     = document.getElementById('btn-add-category');
-const btnDeleteCategory  = document.getElementById('btn-delete-category');
-
-const categoryModal      = document.getElementById('category-modal');
-const confirmModal       = document.getElementById('confirm-modal');
-
-let transactions = [];
-let categories   = [];
-let charts       = {};
-let currentTab   = 'overview';
-
-// ===== Constantes de Configuração =====
-const TRANSACTION_TYPES = { /* conforme Seção 11 */ /* … */ };
-const EXPENSE_CATEGORIES = [ /* … */ ];
-const INCOME_CATEGORIES  = [ /* … */ ];
-const PAYMENT_METHODS    = { /* … */ };
-const TRANSACTION_STATUS = { /* … */ };
-const IMPORTANCE_LEVELS  = { /* … */ };
-const MONTHS             = [ /* … */ ];
-
-// ===== Helpers de UI & Dados =====
-function showLoading()     { loading.classList.add('active'); }
-function hideLoading()     { loading.classList.remove('active'); }
-function formatCurrency(v){ return new Intl.NumberFormat('pt-BR', { style:'currency',currency:'BRL' }).format(v); }
-function formatDate(d){ if(!d) return ''; return new Intl.DateTimeFormat('pt-BR').format(new Date(d)); }
-function generateUUID()    { return uuid.v4(); }
-function showAlert(msg,type='info',duration=3000){
-  const alertEl = document.createElement('div');
-  alertEl.className = `alert alert-${type}`;
-  alertEl.innerHTML = `<div class="alert-content">${msg}</div>`;
-  Object.assign(alertEl.style, {
-    position:'fixed',bottom:'20px',right:'20px',zIndex:'9999',
-    transform:'translateY(100px)',opacity:'0',transition:'all .3s'
-  });
-  document.body.appendChild(alertEl);
-  setTimeout(()=>{
-    alertEl.style.transform='translateY(0)';
-    alertEl.style.opacity='1';
-  },10);
-  setTimeout(()=>{
-    alertEl.style.transform='translateY(100px)';
-    alertEl.style.opacity='0';
-    setTimeout(()=>document.body.removeChild(alertEl),300);
-  },duration);
-}
-
-// ===== Modais =====
-function openModal(modal){ modal.classList.add('active'); }
-function closeModal(modal){ modal.classList.remove('active'); }
-
-// ===== CRUD Categorias =====
-async function loadCategories(){
-  showLoading();
-  const snap = await categoriesRef.get();
-  categories = snap.docs.map(doc=>({ id: doc.id, ...doc.data() }));
-  renderCategoryOptions();
-  hideLoading();
-}
-async function addCategory(data){
-  await categoriesRef.add({ ...data });
-}
-async function deleteCategory(id){
-  await categoriesRef.doc(id).delete();
-}
-
-// Renderiza opções de categoria em formulários
-function renderCategoryOptions(){
-  const selects = document.querySelectorAll('.category-select');
-  selects.forEach(sel=>{
-    sel.innerHTML = `<option value="">Selecione</option>` +
-      categories.map(c=>`<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
-  });
-}
-
-// ===== CRUD Transações =====
-async function loadTransactions(){
-  showLoading();
-  const snap = await transactionsRef.get();
-  transactions = snap.docs.map(doc=>({ id: doc.id, ...doc.data() }));
-  renderTransactionsTable();
-  updateKPI();
-  updateCharts();
-  hideLoading();
-}
-async function addTransaction(data){
-  await transactionsRef.add({ ...data, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-}
-async function updateTransaction(id, data){
-  await transactionsRef.doc(id).update(data);
-}
-async function deleteTransaction(id){
-  await transactionsRef.doc(id).delete();
-}
-
-// Renderiza tabela de transações
-function renderTransactionsTable(){
-  const tbody = document.getElementById('transactions-body');
-  tbody.innerHTML = transactions.map(tx=>{
-    return `
-      <tr>
-        <td>${formatDate(tx.date)}</td>
-        <td><span class="status ${TRANSACTION_STATUS[tx.status].class}">${TRANSACTION_STATUS[tx.status].name}</span></td>
-        <td>${tx.icon} ${tx.categoryName}</td>
-        <td>${tx.typeName}</td>
-        <td>${formatCurrency(tx.amount)}</td>
-      </tr>
-    `;
-  }).join('');
-}
-
-// ===== KPIs =====
-function updateKPI(){
-  const totalIncome = transactions.filter(t=>t.type==='income').reduce((sum,t)=>sum+t.amount,0);
-  const totalExpense= transactions.filter(t=>t.type==='expense').reduce((sum,t)=>sum+t.amount,0);
-  document.getElementById('kpi-income').textContent  = formatCurrency(totalIncome);
-  document.getElementById('kpi-expense').textContent = formatCurrency(totalExpense);
-  document.getElementById('kpi-balance').textContent = formatCurrency(totalIncome - totalExpense);
-}
-
-// ===== Gráficos =====
-function updateCharts(){
-  // Exemplo: gráfico de tendência mensal
-  const ctx = document.getElementById('trend-chart').getContext('2d');
-  const dataByMonth = MONTHS.map((m,i)=>{
-    const sum = transactions
-      .filter(t => new Date(t.date).getMonth()===i)
-      .reduce((s,t)=>t.type==='income'?s+t.amount:s-t.amount,0);
-    return sum;
-  });
-  if (charts.trend) charts.trend.destroy();
-  charts.trend = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: MONTHS,
-      datasets: [{ label: 'Fluxo Mensal', data: dataByMonth, fill: false }]
-    },
-    options: { responsive: true }
-  });
-}
-
-// ===== Verificações =====
-function checkScheduledTransactions(){
-  const today = new Date();
-  transactions.filter(t=>t.status==='scheduled' && new Date(t.date)<=today)
-    .forEach(t=> showAlert(`Transação agendada para hoje: ${t.categoryName}`, 'info'));
-}
-function checkOverdueTransactions(){
-  const today = new Date();
-  transactions.filter(t=>t.status==='pending' && new Date(t.date)<today)
-    .forEach(t=> showAlert(`Transação atrasada: ${t.categoryName}`, 'warning'));
-}
-
-// ===== Tempo real =====
-function setupRealtimeUpdates(){
-  categoriesRef.onSnapshot(loadCategories);
-  transactionsRef.onSnapshot(loadTransactions);
-}
-
-// ===== Navegação de Tabs =====
-tabs.forEach(tab=>{
-  tab.addEventListener('click',()=>{
-    tabs.forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
-    currentTab = tab.dataset.tab;
-    tabContents.forEach(c=> c.id===currentTab ? c.classList.remove('hidden') : c.classList.add('hidden'));
-  });
-});
-
-// Toggle de tema
-themeToggle.addEventListener('click',()=>{
-  const t = root.getAttribute('data-theme')==='light'?'dark':'light';
-  root.setAttribute('data-theme', t);
-  localStorage.setItem('theme', t);
-  updateCharts();
-});
-
-// ===== Inicialização =====
-async function init(){
-  showLoading();
-  setupTheme();
-  await Promise.all([ loadCategories(), loadTransactions() ]);
-  hideLoading();
-}
-
-document.addEventListener('DOMContentLoaded', ()=>{
-  init()
-    .then(()=>{
-      checkScheduledTransactions();
-      checkOverdueTransactions();
-      setupRealtimeUpdates();
-    });
-});

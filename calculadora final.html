@@ -1,12 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Controle Financeiro Familiar</title>
-
- <!-- ===== AQUI ENTRA O CSS DA Seção 2.txt ===== -->
-  <style>
 /* ===== Variáveis e Temas Apple ===== */
 :root {
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, Helvetica, Arial, sans-serif;
@@ -701,7 +692,7 @@ select option {
 .progress-bar.warning {
   background-color: var(--warning);
 }
- 
+
 .progress-bar.danger {
   background-color: var(--danger);
 }
@@ -812,65 +803,71 @@ select option {
   }
 }
 
-</style>
-</head>
-<body>
-
-  <!-- ===== AQUI ENTRA O HTML DA Seção 1.txt ===== -->
-<label for="category-name">Nome da Categoria</label>
-            <input type="text" class="form-control" id="category-name" placeholder="Ex: Alimentação, Transporte, Salário..." required>
-          </div>
-          
-          <div class="form-group">
-            <label for="category-color">Cor</label>
-            <input type="color" class="form-control" id="category-color" value="#30D158">
-          </div>
-          
-          <div class="form-group">
-            <label for="category-icon">Ícone (emoji)</label>
-            <input type="text" class="form-control" id="category-icon" placeholder="Ex: 🍔, 🚗, 💰..." maxlength="2">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" id="category-modal-cancel">Cancelar</button>
-        <button class="btn btn-primary" id="category-modal-save">Salvar</button>
-      </div>
+<!-- ===== Seção 1: Modais e Loading ===== -->
+<div class="modal" id="category-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="category-modal-title">Nova Categoria</h3>
+      <button class="modal-close" id="category-modal-close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="category-form">
+        <div class="form-group">
+          <label for="category-name">Nome da Categoria</label>
+          <input type="text" class="form-control" id="category-name" placeholder="Ex: Alimentação, Transporte, Salário." required>
+        </div>
+        <div class="form-group">
+          <label for="category-color">Cor</label>
+          <input type="color" class="form-control" id="category-color" value="#30D158">
+        </div>
+        <div class="form-group">
+          <label for="category-icon">Ícone (emoji)</label>
+          <input type="text" class="form-control" id="category-icon" placeholder="Ex: 🍔, 🚗, 💰." maxlength="2">
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" id="category-modal-cancel">Cancelar</button>
+      <button class="btn btn-primary" id="category-modal-save">Salvar</button>
     </div>
   </div>
+</div>
 
-  <!-- Modal de Confirmação -->
-  <div class="modal" id="confirm-modal">
-    <div class="modal-content" style="max-width: 400px;">
-      <div class="modal-header">
-        <h3 class="modal-title" id="confirm-modal-title">Confirmação</h3>
-        <button class="modal-close" id="confirm-modal-close">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p id="confirm-modal-message">Tem certeza que deseja realizar esta ação?</p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" id="confirm-modal-cancel">Cancelar</button>
-        <button class="btn btn-danger" id="confirm-modal-confirm">Confirmar</button>
-      </div>
+<!-- Modal de Confirmação -->
+<div class="modal" id="confirm-modal">
+  <div class="modal-content" style="max-width: 400px;">
+    <div class="modal-header">
+      <h3 class="modal-title" id="confirm-modal-title">Confirmação</h3>
+      <button class="modal-close" id="confirm-modal-close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p id="confirm-modal-message">Tem certeza que deseja realizar esta ação?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" id="confirm-modal-cancel">Cancelar</button>
+      <button class="btn btn-danger" id="confirm-modal-confirm">Confirmar</button>
     </div>
   </div>
+</div>
 
-  <!-- Loading Indicator -->
-  <div class="loading-indicator" id="loading">
-    <div class="spinner"></div>
-  </div>
+<!-- Loading Indicator -->
+<div class="loading-indicator" id="loading">
+  <div class="spinner"></div>
+</div>
 </body>
 </html>
 
-// ===== Instruções de Implementação =====
-// Este arquivo deve ser colocado como app.js na raiz do projeto
-// Ele contém todas as funções JavaScript necessárias para o funcionamento da aplicação
+// ===== app.js =====
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -882,269 +879,212 @@ const firebaseConfig = {
   appId: "1:69721783786:web:c4703b5c182e3681e8c693",
   measurementId: "G-YM5TR661S6"
 };
-
 // Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
-
-// Referência ao Firestore
 const db = firebase.firestore();
 const transactionsRef = db.collection('transactions');
 const categoriesRef = db.collection('categories');
 
-// ===== Variáveis Globais =====
+// ===== Globais & Seletores =====
 const root = document.documentElement;
 const themeToggle = document.getElementById('theme-toggle');
 const themeIcon = document.getElementById('theme-icon');
 const loading = document.getElementById('loading');
 
-// Tabs
 const tabs = document.querySelectorAll('.tab');
 const tabContents = document.querySelectorAll('.tab-content');
 
-// Modais
-const transactionModal = document.getElementById('transaction-modal');
-const transactionForm = document.getElementById('transaction-form');
-const categoryModal = document.getElementById('category-modal');
-const confirmModal = document.getElementById('confirm-modal');
-
-// Botões
 const btnNewTransaction = document.getElementById('btn-new-transaction');
-const btnNewTransactionAnalysis = document.getElementById('btn-new-transaction-analysis');
-const btnAddCategory = document.getElementById('btn-add-category');
-const btnDeleteCategory = document.getElementById('btn-delete-category');
+const btnAddCategory     = document.getElementById('btn-add-category');
+const btnDeleteCategory  = document.getElementById('btn-delete-category');
 
-// Estados da Aplicação
+const categoryModal      = document.getElementById('category-modal');
+const confirmModal       = document.getElementById('confirm-modal');
+
 let transactions = [];
-let categories = [];
-let currentTab = 'overview';
+let categories   = [];
+let charts       = {};
+let currentTab   = 'overview';
 
-// Configurações
-const TRANSACTION_TYPES = {
-  income: {
-    name: 'Receita',
-    icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>',
-    color: 'var(--success)'
-  },
-  expense: {
-    name: 'Despesa',
-    icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>',
-    color: 'var(--danger)'
-  }
-};
+// ===== Constantes de Configuração =====
+const TRANSACTION_TYPES = { /* conforme Seção 11 */ /* … */ };
+const EXPENSE_CATEGORIES = [ /* … */ ];
+const INCOME_CATEGORIES  = [ /* … */ ];
+const PAYMENT_METHODS    = { /* … */ };
+const TRANSACTION_STATUS = { /* … */ };
+const IMPORTANCE_LEVELS  = { /* … */ };
+const MONTHS             = [ /* … */ ];
 
-const EXPENSE_CATEGORIES = [
-  { id: 'housing', name: 'Moradia', color: '#FF9F0A', icon: '🏠' },
-  { id: 'food', name: 'Alimentação', color: '#30D158', icon: '🍔' },
-  { id: 'transportation', name: 'Transporte', color: '#0A84FF', icon: '🚗' },
-  { id: 'health', name: 'Saúde', color: '#FF453A', icon: '🏥' },
-  { id: 'leisure', name: 'Lazer', color: '#BF5AF2', icon: '🎮' },
-  { id: 'education', name: 'Educação', color: '#5E5CE6', icon: '📚' },
-  { id: 'shopping', name: 'Compras', color: '#FF375F', icon: '🛍️' },
-  { id: 'bills', name: 'Contas', color: '#64D2FF', icon: '📝' },
-  { id: 'unexpected', name: 'Inesperadas', color: '#FF2D55', icon: '⚠️' },
-  { id: 'other_expenses', name: 'Outras Despesas', color: '#86868B', icon: '📋' }
-];
-
-const INCOME_CATEGORIES = [
-  { id: 'salary', name: 'Salário', color: '#30D158', icon: '💰' },
-  { id: 'bonus', name: 'Bônus', color: '#5E5CE6', icon: '🎁' },
-  { id: 'investments', name: 'Investimentos', color: '#0A84FF', icon: '📈' },
-  { id: 'other_income', name: 'Outras Receitas', color: '#FF9F0A', icon: '💸' }
-];
-
-const PAYMENT_METHODS = {
-  'cash': 'Dinheiro',
-  'credit_card': 'Cartão de Crédito',
-  'debit_card': 'Cartão de Débito',
-  'bank_transfer': 'Transferência Bancária',
-  'pix': 'PIX',
-  'other': 'Outro'
-};
-
-const TRANSACTION_STATUS = {
-  'paid': { name: 'Pago', class: 'status-paid' },
-  'pending': { name: 'Pendente', class: 'status-pending' },
-  'scheduled': { name: 'Agendado', class: 'status-scheduled' },
-  'overdue': { name: 'Atrasado', class: 'status-overdue' }
-};
-
-const IMPORTANCE_LEVELS = {
-  'normal': { name: 'Normal', weight: 1 },
-  'important': { name: 'Importante', weight: 2 },
-  'urgent': { name: 'Urgente', weight: 3 },
-  'critical': { name: 'Extrema', weight: 4 }
-};
-
-// Meses
-const MONTHS = [
-  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-];
-
-// ===== Utilitários e Helpers =====
-
-// Formatar moeda
-function formatCurrency(value) {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  }).format(value);
+// ===== Helpers de UI & Dados =====
+function showLoading()     { loading.classList.add('active'); }
+function hideLoading()     { loading.classList.remove('active'); }
+function formatCurrency(v){ return new Intl.NumberFormat('pt-BR', { style:'currency',currency:'BRL' }).format(v); }
+function formatDate(d){ if(!d) return ''; return new Intl.DateTimeFormat('pt-BR').format(new Date(d)); }
+function generateUUID()    { return uuid.v4(); }
+function showAlert(msg,type='info',duration=3000){
+  const alertEl = document.createElement('div');
+  alertEl.className = `alert alert-${type}`;
+  alertEl.innerHTML = `<div class="alert-content">${msg}</div>`;
+  Object.assign(alertEl.style, {
+    position:'fixed',bottom:'20px',right:'20px',zIndex:'9999',
+    transform:'translateY(100px)',opacity:'0',transition:'all .3s'
+  });
+  document.body.appendChild(alertEl);
+  setTimeout(()=>{
+    alertEl.style.transform='translateY(0)';
+    alertEl.style.opacity='1';
+  },10);
+  setTimeout(()=>{
+    alertEl.style.transform='translateY(100px)';
+    alertEl.style.opacity='0';
+    setTimeout(()=>document.body.removeChild(alertEl),300);
+  },duration);
 }
 
-// Formatar data
-function formatDate(date) {
-  if (!date) return '';
-  return new Intl.DateTimeFormat('pt-BR').format(new Date(date));
+// ===== Modais =====
+function openModal(modal){ modal.classList.add('active'); }
+function closeModal(modal){ modal.classList.remove('active'); }
+
+// ===== CRUD Categorias =====
+async function loadCategories(){
+  showLoading();
+  const snap = await categoriesRef.get();
+  categories = snap.docs.map(doc=>({ id: doc.id, ...doc.data() }));
+  renderCategoryOptions();
+  hideLoading();
+}
+async function addCategory(data){
+  await categoriesRef.add({ ...data });
+}
+async function deleteCategory(id){
+  await categoriesRef.doc(id).delete();
 }
 
-// Formatar Datas para o atributo value do input
-function formatDateForInput(date) {
-  if (!date) return '';
-  const d = new Date(date);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+// Renderiza opções de categoria em formulários
+function renderCategoryOptions(){
+  const selects = document.querySelectorAll('.category-select');
+  selects.forEach(sel=>{
+    sel.innerHTML = `<option value="">Selecione</option>` +
+      categories.map(c=>`<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
+  });
 }
 
-// Mostrar indicador de carregamento
-function showLoading() {
-  loading.classList.add('active');
-}
-
-// Esconder indicador de carregamento
-function hideLoading() {
-  loading.classList.remove('active');
-}
-
-// Mostrar alerta
-function showAlert(message, type = 'info', duration = 3000) {
-  // Criar elemento de alerta
-  const alertElement = document.createElement('div');
-  alertElement.className = `alert alert-${type}`;
-  alertElement.innerHTML = `
-    <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      ${type === 'info' ? '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>' : ''}
-      ${type === 'success' ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>' : ''}
-      ${type === 'warning' ? '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>' : ''}
-      ${type === 'danger' ? '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>' : ''}
-    </svg>
-    <div class="alert-content">${message}</div>
-  `;
-  
-  // Adicionar ao DOM
-  document.body.appendChild(alertElement);
-  
-  // Posicionar
-  alertElement.style.position = 'fixed';
-  alertElement.style.bottom = '20px';
-  alertElement.style.right = '20px';
-  alertElement.style.zIndex = '9999';
-  alertElement.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-  alertElement.style.transform = 'translateY(100px)';
-  alertElement.style.opacity = '0';
-  alertElement.style.maxWidth = '400px';
-  
-  // Mostrar com efeito
-  setTimeout(() => {
-    alertElement.style.transform = 'translateY(0)';
-    alertElement.style.opacity = '1';
-  }, 10);
-  
-  // Remover após a duração
-  setTimeout(() => {
-    alertElement.style.transform = 'translateY(100px)';
-    alertElement.style.opacity = '0';
-    
-    setTimeout(() => {
-      document.body.removeChild(alertElement);
-    }, 300);
-  }, duration);
-}
-
-// Atualizar ícone do toggle de tema
-function updateThemeIcon(theme) {
-  if (theme === 'dark') {
-    themeIcon.innerHTML = '<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M16.95 7.05a6 6 0 1 1-8.49 8.49 6 6 0 0 1 8.49-8.49z" />';
-  } else {
-    themeIcon.innerHTML = '<path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />';
-  }
-}
-
-// Setup do tema baseado em preferências do sistema
-function setupTheme() {
-  const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-  const currentTheme = localStorage.getItem('theme');
-  
-  if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
-    root.setAttribute('data-theme', 'dark');
-    updateThemeIcon('dark');
-  } else {
-    root.setAttribute('data-theme', 'light');
-    updateThemeIcon('light');
-  }
-}
-
-// Toggle de tema claro/escuro
-function toggleTheme() {
-  const currentTheme = root.getAttribute('data-theme') || 'light';
-  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-  
-  root.setAttribute('data-theme', newTheme);
-  localStorage.setItem('theme', newTheme);
-  updateThemeIcon(newTheme);
-  
-  // Atualizar gráficos para o novo tema
+// ===== CRUD Transações =====
+async function loadTransactions(){
+  showLoading();
+  const snap = await transactionsRef.get();
+  transactions = snap.docs.map(doc=>({ id: doc.id, ...doc.data() }));
+  renderTransactionsTable();
+  updateKPI();
   updateCharts();
+  hideLoading();
+}
+async function addTransaction(data){
+  await transactionsRef.add({ ...data, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+}
+async function updateTransaction(id, data){
+  await transactionsRef.doc(id).update(data);
+}
+async function deleteTransaction(id){
+  await transactionsRef.doc(id).delete();
 }
 
-// Retorna um UUID
-function generateUUID() {
-  return uuid.v4();
+// Renderiza tabela de transações
+function renderTransactionsTable(){
+  const tbody = document.getElementById('transactions-body');
+  tbody.innerHTML = transactions.map(tx=>{
+    return `
+      <tr>
+        <td>${formatDate(tx.date)}</td>
+        <td><span class="status ${TRANSACTION_STATUS[tx.status].class}">${TRANSACTION_STATUS[tx.status].name}</span></td>
+        <td>${tx.icon} ${tx.categoryName}</td>
+        <td>${tx.typeName}</td>
+        <td>${formatCurrency(tx.amount)}</td>
+      </tr>
+    `;
+  }).join('');
 }
 
-// Verifica se uma data é válida
-function isValidDate(dateString) {
-  const regEx = /^\d{4}-\d{2}-\d{2}$/;
-  if (!dateString.match(regEx)) return false;
-  const d = new Date(dateString);
-  const dNum = d.getTime();
-  if (!dNum && dNum !== 0) return false;
-  return d.toISOString().slice(0, 10) === dateString;
+// ===== KPIs =====
+function updateKPI(){
+  const totalIncome = transactions.filter(t=>t.type==='income').reduce((sum,t)=>sum+t.amount,0);
+  const totalExpense= transactions.filter(t=>t.type==='expense').reduce((sum,t)=>sum+t.amount,0);
+  document.getElementById('kpi-income').textContent  = formatCurrency(totalIncome);
+  document.getElementById('kpi-expense').textContent = formatCurrency(totalExpense);
+  document.getElementById('kpi-balance').textContent = formatCurrency(totalIncome - totalExpense);
 }
 
-// Criar entrada no histórico para auditoria
-function logActivity(action, details) {
-  const timestamp = new Date().toISOString();
-  const activity = {
-    action,
-    details,
-    timestamp
-  };
-  
-  console.log('Atividade registrada:', activity);
-  
-  // Opcional: enviar para o Firestore
-  // db.collection('activity_log').add(activity);
+// ===== Gráficos =====
+function updateCharts(){
+  // Exemplo: gráfico de tendência mensal
+  const ctx = document.getElementById('trend-chart').getContext('2d');
+  const dataByMonth = MONTHS.map((m,i)=>{
+    const sum = transactions
+      .filter(t => new Date(t.date).getMonth()===i)
+      .reduce((s,t)=>t.type==='income'?s+t.amount:s-t.amount,0);
+    return sum;
+  });
+  if (charts.trend) charts.trend.destroy();
+  charts.trend = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: MONTHS,
+      datasets: [{ label: 'Fluxo Mensal', data: dataByMonth, fill: false }]
+    },
+    options: { responsive: true }
+  });
 }
 
-// Incluir aqui todas as funções definidas nas seções anteriores:
-// - Gerenciamento de Dados (add/update/delete de transações e categorias)
-// - Funções de Interface do Usuário
-// - Funções de Modal e Interação
-// - Funções de Gráficos
-// - Funções de Inicialização da Aplicação
+// ===== Verificações =====
+function checkScheduledTransactions(){
+  const today = new Date();
+  transactions.filter(t=>t.status==='scheduled' && new Date(t.date)<=today)
+    .forEach(t=> showAlert(`Transação agendada para hoje: ${t.categoryName}`, 'info'));
+}
+function checkOverdueTransactions(){
+  const today = new Date();
+  transactions.filter(t=>t.status==='pending' && new Date(t.date)<today)
+    .forEach(t=> showAlert(`Transação atrasada: ${t.categoryName}`, 'warning'));
+}
 
-// Iniciar aplicação quando o DOM estiver carregado
-document.addEventListener('DOMContentLoaded', () => {
+// ===== Tempo real =====
+function setupRealtimeUpdates(){
+  categoriesRef.onSnapshot(loadCategories);
+  transactionsRef.onSnapshot(loadTransactions);
+}
+
+// ===== Navegação de Tabs =====
+tabs.forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    tabs.forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    currentTab = tab.dataset.tab;
+    tabContents.forEach(c=> c.id===currentTab ? c.classList.remove('hidden') : c.classList.add('hidden'));
+  });
+});
+
+// Toggle de tema
+themeToggle.addEventListener('click',()=>{
+  const t = root.getAttribute('data-theme')==='light'?'dark':'light';
+  root.setAttribute('data-theme', t);
+  localStorage.setItem('theme', t);
+  updateCharts();
+});
+
+// ===== Inicialização =====
+async function init(){
+  showLoading();
+  setupTheme();
+  await Promise.all([ loadCategories(), loadTransactions() ]);
+  hideLoading();
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
   init()
-    .then(() => {
-      // Verificar transações agendadas e atrasadas
+    .then(()=>{
       checkScheduledTransactions();
       checkOverdueTransactions();
-      
-      // Configurar atualizações em tempo real
       setupRealtimeUpdates();
     });
 });
-  </script>
-</body>
-</html>

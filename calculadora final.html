@@ -328,13 +328,6 @@
         align-items: center;
     }
 
-    .filters-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        width: 100%;
-    }
-
     .category-filter-group {
         display: flex;
         gap: 0.5rem;
@@ -486,14 +479,12 @@
     .insight-item.neutral { color: var(--text-secondary); background-color: var(--input-bg); }
 
     /* Simple Transaction List (Análise Mensal) */
-.transaction-list-container {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 0 1.5rem 1.5rem 1.5rem; /* No top padding */
-  max-width: 100%;
-  overflow-x: hidden; /* Prevenir rolagem horizontal desnecessária */
-}
+    .transaction-list-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 0 1.5rem 1.5rem 1.5rem; /* No top padding */
+    }
 
     .transaction-list-title {
         font-size: 1.125rem;
@@ -501,15 +492,13 @@
         padding: 1.5rem 0 1rem 0;
     }
 
-.transaction-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0px; /* No gap, dividers handle spacing */
-    max-height: 450px; /* Altura adequada */
-    overflow-y: auto;
-    padding-right: 0.5rem; /* Espaço para barra de rolagem */
-    width: 100%;
-}
+    .transaction-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0px; /* No gap, dividers handle spacing */
+        max-height: 500px; /* Limit height */
+        overflow-y: auto;
+    }
 
     .transaction-item {
         display: flex;
@@ -550,30 +539,24 @@
         color: #fff; /* Icon color */
     }
 
-.transaction-info {
-    display: flex;
-    flex-direction: column;
-    min-width: 0; /* Permitir que o texto seja truncado */
-    flex: 1;
-}
+    .transaction-info {
+        display: flex;
+        flex-direction: column;
+    }
 
-.transaction-description {
-    font-weight: 500;
-    font-size: 0.9375rem; /* 15px */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
+    .transaction-description {
+        font-weight: 500;
+        font-size: 0.9375rem; /* 15px */
+    }
 
-.transaction-category {
-    font-size: 0.8125rem; /* 13px */
-    color: var(--text-secondary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
+    .transaction-category {
+        font-size: 0.8125rem; /* 13px */
+        color: var(--text-secondary);
+    }
+
+     .transaction-item-right {
+        text-align: right;
+    }
 
     .transaction-amount {
         font-weight: 600;
@@ -586,35 +569,6 @@
         font-size: 0.8125rem; /* 13px */
         color: var(--text-secondary);
     }
-
-.btn-action {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: var(--transition);
-    opacity: 0.7;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-action:hover {
-    background-color: var(--input-bg);
-    opacity: 1;
-}
-
-.btn-delete-transaction {
-    color: var(--danger);
-    margin-left: 0.5rem;
-}
-
-.transaction-item-right {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
 
     .transaction-importance {
         display: inline-block;
@@ -1250,8 +1204,7 @@
                     <div class="kpi-header">
                         <div class="kpi-title">Economia do Mês</div>
                         <svg class="kpi-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 0 1 0V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5z"/>
                         </svg>
                     </div>
                     <div class="kpi-value" id="kpi-savings">R$ 0,00</div>
@@ -1330,58 +1283,56 @@
         <div class="tab-content" id="tab-analysis">
             <!-- Filtros Inteligentes -->
             <div class="analysis-header">
-<div class="filters">
-    <div class="filters-row">
-        <div class="form-group" style="margin-bottom: 0;">
-            <label for="analysis-year" style="margin-bottom: 0.25rem;">Ano</label>
-            <select id="analysis-year"></select>
-        </div>
-        <div class="form-group" style="margin-bottom: 0;">
-            <label for="analysis-month" style="margin-bottom: 0.25rem;">Mês</label>
-            <select id="analysis-month"></select>
-        </div>
-        <div class="form-group" style="margin-bottom: 0;">
-            <label for="analysis-category" style="margin-bottom: 0.25rem;">Filtrar Categoria</label>
-            <div class="category-filter-group">
-                <select id="analysis-category">
-                    <option value="all">Todas as Categorias</option>
-                    <!-- Categorias carregadas via JS -->
-                </select>
-                <button class="btn-icon-small" id="btn-add-category" title="Nova Categoria">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                    </svg>
-                </button>
-                <button class="btn-icon-small btn-delete-category" id="btn-delete-category" title="Excluir Categoria Selecionada" style="display: none;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                    </svg>
-                </button>
+                <div class="filters">
+                    <div class="filters-row">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="analysis-month-year" style="margin-bottom: 0.25rem;">Mês de Análise</label>
+                            <select id="analysis-month-year"></select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                             <label for="analysis-category" style="margin-bottom: 0.25rem;">Filtrar Categoria</label>
+                             <div class="category-filter-group">
+                                <select id="analysis-category">
+                                    <option value="all">Todas as Categorias</option>
+                                    <!-- Categorias carregadas via JS -->
+                                </select>
+                                <button class="btn-icon-small" id="btn-add-category" title="Nova Categoria">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                    </svg>
+                                </button>
+                                <button class="btn-icon-small btn-delete-category" id="btn-delete-category" title="Excluir Categoria Selecionada" style="display: none;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filters-row">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="analysis-type" style="margin-bottom: 0.25rem;">Tipo de Transação</label>
+                            <select id="analysis-type">
+                                <option value="all">Todas</option>
+                                <option value="income">Receitas</option>
+                                <option value="expense">Despesas</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="analysis-importance" style="margin-bottom: 0.25rem;">Importância</label>
+                            <select id="analysis-importance">
+                                <option value="all">Todas</option>
+                                <option value="extrema">Extrema</option>
+                                <option value="urgente">Urgente</option>
+                                <option value="importante">Importante</option>
+                                <option value="none">Sem importância</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="filters-row">
-        <div class="form-group" style="margin-bottom: 0;">
-            <label for="analysis-type" style="margin-bottom: 0.25rem;">Tipo de Transação</label>
-            <select id="analysis-type">
-                <option value="all">Todas</option>
-                <option value="income">Receitas</option>
-                <option value="expense">Despesas</option>
-            </select>
-        </div>
-        <div class="form-group" style="margin-bottom: 0;">
-            <label for="analysis-importance" style="margin-bottom: 0.25rem;">Importância</label>
-            <select id="analysis-importance">
-                <option value="all">Todas</option>
-                <option value="extrema">Extrema</option>
-                <option value="urgente">Urgente</option>
-                <option value="importante">Importante</option>
-                <option value="none">Sem importância</option>
-            </select>
-        </div>
-    </div>
-</div>
+
             <!-- Indicadores e Inteligência Mensal -->
             <div class="analysis-indicators">
                 <div class="indicator-card">
@@ -2545,48 +2496,30 @@
         }
     }
 
-// Popular filtros de Ano e Mês separados para Análise
-function populateMonthYearFilter() {
-    const yearSelect = document.getElementById('analysis-year');
-    const monthSelect = document.getElementById('analysis-month');
-    
-    // Limpa os selects
-    yearSelect.innerHTML = '';
-    monthSelect.innerHTML = '';
-    
-    // Anos (atual +/- 2 anos)
-    const currentYear = moment().year();
-    for (let year = currentYear - 2; year <= currentYear + 2; year++) {
-        const option = document.createElement('option');
-        option.value = year;
-        option.textContent = year;
-        yearSelect.appendChild(option);
-    }
-    
-    // Meses
-    const months = moment.months();
-    months.forEach((month, index) => {
-        const option = document.createElement('option');
-        option.value = index; // 0-11
-        option.textContent = month.charAt(0).toUpperCase() + month.slice(1); // Capitalize
-        monthSelect.appendChild(option);
-    });
-    
-    // Define valores atuais
-    yearSelect.value = moment().year();
-    monthSelect.value = moment().month();
-    
-    // Atualiza a variável de estado com o formato YYYY-MM
-    updateCurrentAnalysisDate();
-}
+     // Popular select de Mês/Ano para Análise
+    function populateMonthYearFilter() {
+        const select = document.getElementById('analysis-month-year');
+        select.innerHTML = ''; // Limpa
 
-// Função para atualizar a data de análise atual
-function updateCurrentAnalysisDate() {
-    const year = document.getElementById('analysis-year').value;
-    const month = document.getElementById('analysis-month').value;
-    currentAnalysisMonthYear = `${year}-${String(Number(month) + 1).padStart(2, '0')}`;
-    updateMonthlyAnalysis();
-}
+        // Gera opções para os últimos 12 meses + próximos 6 meses
+        const startMonth = moment().subtract(12, 'months');
+        const endMonth = moment().add(6, 'months');
+
+        let current = startMonth.clone();
+        while (current.isSameOrBefore(endMonth, 'month')) {
+            const value = current.format('YYYY-MM');
+            const text = current.format('MMMM YYYY');
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = text.charAt(0).toUpperCase() + text.slice(1); // Capitalize
+            select.appendChild(option);
+            current.add(1, 'month');
+        }
+
+        // Define o mês atual como padrão
+        select.value = moment().format('YYYY-MM');
+        currentAnalysisMonthYear = select.value;
+    }
 
      // Setup dos Event Listeners
     function setupEventListeners() {
@@ -2606,10 +2539,11 @@ function updateCurrentAnalysisDate() {
             document.getElementById('recurring-options').style.display = e.target.checked ? 'block' : 'none';
         });
 
-         // Filtros Análise Mensal - Novo formato de Ano/Mês
-        document.getElementById('analysis-year').addEventListener('change', updateCurrentAnalysisDate);
-        document.getElementById('analysis-month').addEventListener('change', updateCurrentAnalysisDate);
-
+        // Filtros Análise Mensal
+        document.getElementById('analysis-month-year').addEventListener('change', (e) => {
+            currentAnalysisMonthYear = e.target.value;
+            updateMonthlyAnalysis();
+        });
         document.getElementById('analysis-category').addEventListener('change', (e) => {
             currentAnalysisCategory = e.target.value;
             toggleDeleteCategoryButton();
@@ -3005,69 +2939,51 @@ function updateCurrentAnalysisDate() {
         }
     }
 
-function renderMonthlyTransactionList(monthlyTransactions) {
-    const listContainer = document.getElementById('analysis-transaction-list');
-    const noTransactionsMessage = document.getElementById('analysis-no-transactions');
-    listContainer.innerHTML = ''; // Limpa a lista
+    function renderMonthlyTransactionList(monthlyTransactions) {
+        const listContainer = document.getElementById('analysis-transaction-list');
+        const noTransactionsMessage = document.getElementById('analysis-no-transactions');
+        listContainer.innerHTML = ''; // Limpa a lista
 
-    if (monthlyTransactions.length === 0) {
-        listContainer.appendChild(noTransactionsMessage); // Mostra mensagem se vazio
-        noTransactionsMessage.style.display = 'block';
-        return;
+        if (monthlyTransactions.length === 0) {
+            listContainer.appendChild(noTransactionsMessage); // Mostra mensagem se vazio
+            noTransactionsMessage.style.display = 'block';
+            return;
+        }
+         noTransactionsMessage.style.display = 'none'; // Esconde mensagem
+
+        monthlyTransactions.sort((a, b) => moment(b.date).diff(moment(a.date))); // Mais recentes primeiro
+
+        monthlyTransactions.forEach(t => {
+            const category = categories.find(c => c.id === t.category) || { name: '?', icon: '❓', color: '#8E8E93' };
+            const item = document.createElement('div');
+            item.className = 'transaction-item';
+            item.onclick = () => openTransactionModal(t); // Abre edição ao clicar
+
+            const amountPrefix = t.type === 'income' ? '+' : '-';
+            const importanceClass = t.importance ? `transaction-importance ${t.importance}` : '';
+
+
+            item.innerHTML = `
+                <div class="transaction-item-left">
+                    <div class="transaction-icon" style="background-color: ${category.color};">
+                        ${category.icon}
+                    </div>
+                    <div class="transaction-info">
+                        <div class="transaction-description">${t.description || category.name}</div>
+                        <div class="transaction-category">${category.name}</div>
+                    </div>
+                </div>
+                <div class="transaction-item-right">
+                    <div class="transaction-amount ${t.type}">
+                        ${amountPrefix} ${formatCurrency(t.amount)}
+                         ${importanceClass ? `<span class="${importanceClass}" title="Importância: ${t.importance}"></span>` : ''}
+                    </div>
+                    <div class="transaction-date">${formatDate(t.date)}</div>
+                </div>
+            `;
+            listContainer.appendChild(item);
+        });
     }
-     noTransactionsMessage.style.display = 'none'; // Esconde mensagem
-
-    monthlyTransactions.sort((a, b) => moment(b.date).diff(moment(a.date))); // Mais recentes primeiro
-
-    monthlyTransactions.forEach(t => {
-        const category = categories.find(c => c.id === t.category) || { name: '?', icon: '❓', color: '#8E8E93' };
-        const item = document.createElement('div');
-        item.className = 'transaction-item';
-        
-        const amountPrefix = t.type === 'income' ? '+' : '-';
-        const importanceClass = t.importance ? `transaction-importance ${t.importance}` : '';
-
-        item.innerHTML = `
-            <div class="transaction-item-left">
-                <div class="transaction-icon" style="background-color: ${category.color};">
-                    ${category.icon}
-                </div>
-                <div class="transaction-info">
-                    <div class="transaction-description">${t.description || category.name}</div>
-                    <div class="transaction-category">${category.name}</div>
-                </div>
-            </div>
-            <div class="transaction-item-right">
-                <div class="transaction-amount ${t.type}">
-                    ${amountPrefix} ${formatCurrency(t.amount)}
-                     ${importanceClass ? `<span class="${importanceClass}" title="Importância: ${t.importance}"></span>` : ''}
-                </div>
-                <div class="transaction-date">${formatDate(t.date)}</div>
-                <button class="btn-action btn-delete-transaction" data-id="${t.id}" title="Excluir Transação">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                    </svg>
-                </button>
-            </div>
-        `;
-        
-        // Adiciona evento de clique no botão excluir
-        item.querySelector('.btn-delete-transaction').addEventListener('click', (e) => {
-            e.stopPropagation(); // Impede que o clique propague para o item
-            confirmDeleteTransaction(t.id);
-        });
-        
-        // Manter o evento de edição ao clicar no resto do item
-        item.addEventListener('click', (e) => {
-            if (!e.target.closest('.btn-delete-transaction')) {
-                openTransactionModal(t);
-            }
-        });
-        
-        listContainer.appendChild(item);
-    });
-}
 
      function generateAndRenderInsights(monthlyTransactions, selectedMonthYear) {
         const insightsList = document.getElementById('analysis-insights-list');
@@ -3645,18 +3561,20 @@ function renderMonthlyTransactionList(monthlyTransactions) {
 
             console.log("Aplicação inicializada com sucesso!");
 
-        } catch (error) {
-            console.error("Erro fatal durante a inicialização:", error);
-            showToast("Erro grave ao iniciar. Recarregue a página ou contate o suporte.", "danger", 10000);
-             // Tentar mostrar algo minimamente funcional, mesmo que vazio
-             initTabs();
-             setupEventListeners();
-        } finally {
-             // Garante que o loading seja escondido mesmo se houver erro parcial
-             // Um pequeno delay pode ajudar a UI a renderizar antes de esconder
-             setTimeout(hideLoading, 300);
-        }
+} catch (error) {
+    console.error("Erro fatal durante a inicialização:", error);
+    showToast("Erro grave ao iniciar...", "danger", 10000);
+    initTabs();
+
+    const year = document.getElementById('analysis-year');
+    const month = document.getElementById('analysis-month');
+
+    if (year && month) {
+        setupEventListeners();
+    } else {
+        console.warn("Filtros de Ano/Mês não encontrados no DOM. Ignorando setupEventListeners.");
     }
+}
 
     // --- Ponto de Entrada ---
     document.addEventListener('DOMContentLoaded', init);

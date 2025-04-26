@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
@@ -2363,27 +2364,22 @@
         if (analysisCategorySelect.querySelector(`option[value="${selectedAnalysisCategory}"]`)) { analysisCategorySelect.value = selectedAnalysisCategory; } else { analysisCategorySelect.value = 'all'; }
         toggleDeleteCategoryButton();
     }
+
     function populateCategorySelect(type = 'expense') {
     const select = document.getElementById('transaction-category'); 
-    if (!select) return;
+    if (!select) return; 
     
-    // Limpa o select
     select.innerHTML = '';
     
-    // Filtra categorias pelo tipo (receita ou despesa)
     const filteredCategories = categories.filter(cat => cat.type === type);
     
     if (filteredCategories.length === 0) { 
-        // Mensagem quando não há categorias do tipo selecionado
         const option = document.createElement('option'); 
         option.value = ""; 
         option.textContent = `Nenhuma categoria de ${type === 'income' ? 'receita' : 'despesa'} encontrada`; 
         option.disabled = true; 
         select.appendChild(option); 
-        console.warn(`Nenhuma categoria do tipo '${type}' encontrada. Total de categorias: ${categories.length}`);
     } else { 
-        // Adiciona cada categoria encontrada ao select
-        console.log(`Populando ${filteredCategories.length} categorias do tipo '${type}'`);
         filteredCategories.forEach(cat => { 
             const option = document.createElement('option'); 
             option.value = cat.id; 
@@ -2391,6 +2387,7 @@
             select.appendChild(option); 
         }); 
     }
+}
     
     // Certifica-se de que ao menos uma opção esteja selecionada
     if (select.options.length > 0 && !select.value) {

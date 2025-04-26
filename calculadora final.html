@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
@@ -2288,7 +2289,7 @@
         } finally {
             updateMonthlyAnalysis();
             hideLoading();
-            }
+        }
     async function generateFutureInstallments(batch, baseData, baseId, frequency, totalInstallments, startDate, startInstallmentNum) {
          if (!transactionsCollection || !db) return;
         const freqInfo = RECURRENCE_FREQUENCY[frequency]; if (!freqInfo) { console.error(`Frequência inválida: ${frequency}`); return; }

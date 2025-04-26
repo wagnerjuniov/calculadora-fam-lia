@@ -276,7 +276,7 @@
     /* Gráficos */
     .charts-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
       gap: 1.5rem;
       margin-bottom: 2rem;
     }
@@ -284,7 +284,7 @@
      .chart-container {
       position: relative;
       margin-top: 1rem;
-      height: 320px; /* Increased height for better visibility */
+      height: 280px; /* Increased height */
     }
 
     .chart-title {
@@ -306,7 +306,7 @@
       grid-column: 1 / -1;
     }
     .full-width .chart-container {
-      height: 350px; /* Even taller for full width */
+      height: 320px;
     }
 
 
@@ -328,24 +328,10 @@
         align-items: center;
     }
 
-    .filters-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        width: 100%;
-    }
-
     .category-filter-group {
         display: flex;
         gap: 0.5rem;
         align-items: center;
-    }
-
-    .filters-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        width: 100%;
     }
 
     .btn-icon-small {
@@ -486,14 +472,12 @@
     .insight-item.neutral { color: var(--text-secondary); background-color: var(--input-bg); }
 
     /* Simple Transaction List (Análise Mensal) */
-.transaction-list-container {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 0 1.5rem 1.5rem 1.5rem; /* No top padding */
-  max-width: 100%;
-  overflow-x: hidden; /* Prevenir rolagem horizontal desnecessária */
-}
+    .transaction-list-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 0 1.5rem 1.5rem 1.5rem; /* No top padding */
+    }
 
     .transaction-list-title {
         font-size: 1.125rem;
@@ -501,15 +485,13 @@
         padding: 1.5rem 0 1rem 0;
     }
 
-.transaction-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0px; /* No gap, dividers handle spacing */
-    max-height: 450px; /* Altura adequada */
-    overflow-y: auto;
-    padding-right: 0.5rem; /* Espaço para barra de rolagem */
-    width: 100%;
-}
+    .transaction-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0px; /* No gap, dividers handle spacing */
+        max-height: 500px; /* Limit height */
+        overflow-y: auto;
+    }
 
     .transaction-item {
         display: flex;
@@ -550,30 +532,24 @@
         color: #fff; /* Icon color */
     }
 
-.transaction-info {
-    display: flex;
-    flex-direction: column;
-    min-width: 0; /* Permitir que o texto seja truncado */
-    flex: 1;
-}
+    .transaction-info {
+        display: flex;
+        flex-direction: column;
+    }
 
-.transaction-description {
-    font-weight: 500;
-    font-size: 0.9375rem; /* 15px */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
+    .transaction-description {
+        font-weight: 500;
+        font-size: 0.9375rem; /* 15px */
+    }
 
-.transaction-category {
-    font-size: 0.8125rem; /* 13px */
-    color: var(--text-secondary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
+    .transaction-category {
+        font-size: 0.8125rem; /* 13px */
+        color: var(--text-secondary);
+    }
+
+     .transaction-item-right {
+        text-align: right;
+    }
 
     .transaction-amount {
         font-weight: 600;
@@ -586,35 +562,6 @@
         font-size: 0.8125rem; /* 13px */
         color: var(--text-secondary);
     }
-
-.btn-action {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: var(--transition);
-    opacity: 0.7;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-action:hover {
-    background-color: var(--input-bg);
-    opacity: 1;
-}
-
-.btn-delete-transaction {
-    color: var(--danger);
-    margin-left: 0.5rem;
-}
-
-.transaction-item-right {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
 
     .transaction-importance {
         display: inline-block;
@@ -745,7 +692,7 @@
       bottom: 0;
       background: rgba(0, 0, 0, 0.6); /* Darker backdrop */
       backdrop-filter: blur(5px);
-      display: flex;
+      display: none; /* Hidden by default, JS controls display */
       align-items: center;
       justify-content: center;
       z-index: 1000;
@@ -755,6 +702,7 @@
     }
 
     .modal.active {
+      display: flex; /* Show when active */
       opacity: 1;
       pointer-events: all;
     }
@@ -818,7 +766,6 @@
       padding: 1.75rem;
       overflow-y: auto; /* Enable scroll only for body */
       flex-grow: 1;
-      max-height: 65vh; /* Limit height to ensure it fits on screen */
     }
 
     .modal-footer {
@@ -879,9 +826,9 @@
     }
 
     /* Transaction Modal Specifics */
-    #transaction-modal .modal-content { max-width: 550px; } /* Slightly larger modal */
+    #transaction-modal .modal-content { max-width: 500px; } /* Smaller modal */
 
-.input-group {
+    .input-group {
         display: flex;
         align-items: center;
     }
@@ -918,7 +865,7 @@
 
      @keyframes slideDown {
         from { opacity: 0; transform: translateY(-10px); max-height: 0; }
-        to { opacity: 1; transform: translateY(0); max-height: 1000px; /* Increased for more content */ }
+        to { opacity: 1; transform: translateY(0); max-height: 500px; /* Adjust as needed */ }
      }
 
     .btn-link {
@@ -940,7 +887,6 @@
         display: flex;
         gap: 0.5rem;
         margin-top: 0.5rem;
-        flex-wrap: wrap; /* Allow wrapping on small screens */
     }
     .importance-group input[type="radio"] {
         opacity: 0;
@@ -992,7 +938,7 @@
       bottom: 0;
       background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(3px);
-      display: flex;
+      display: none; /* Hidden by default */
       align-items: center;
       justify-content: center;
       z-index: 9999;
@@ -1002,6 +948,7 @@
     }
 
     .loading-indicator.active {
+      display: flex; /* Show when active */
       opacity: 1;
       pointer-events: all;
     }
@@ -1015,8 +962,8 @@
       animation: spin 0.8s ease-in-out infinite;
     }
     [data-theme="dark"] .spinner {
-        border-color: rgba(0, 0, 0, 0.2);
-        border-top-color: #000;
+        border-color: rgba(0, 0, 0, 0.2); /* Corrigido para tema escuro */
+        border-top-color: #fff; /* Mantido branco para contraste no fundo escuro */
     }
 
 
@@ -1051,11 +998,13 @@
         transform: translateX(100%);
         transition: all 0.4s cubic-bezier(0.215, 0.610, 0.355, 1.000); /* EaseOutBack */
         border-left: 4px solid var(--primary); /* Default */
+        pointer-events: none; /* Prevent interaction while hidden */
     }
 
     .toast.show {
         opacity: 1;
         transform: translateX(0);
+        pointer-events: all; /* Allow interaction when shown */
     }
 
     .toast-icon {
@@ -1077,9 +1026,6 @@
         .analysis-sidebar {
             grid-row: 2; /* Move sidebar down */
         }
-        .charts-grid {
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Adjust for better sizing */
-        }
     }
 
     @media (max-width: 992px) {
@@ -1087,8 +1033,8 @@
       .header { flex-direction: column; align-items: flex-start; }
       .header-right { width: 100%; justify-content: space-between; }
       .charts-grid { grid-template-columns: 1fr; } /* Single column charts */
-      .chart-container { height: 300px; } /* Adequate height for mobile */
-      .full-width .chart-container { height: 320px; }
+      .chart-container { height: 260px; }
+      .full-width .chart-container { height: 300px; }
     }
 
     @media (max-width: 768px) {
@@ -1105,6 +1051,8 @@
       .modal-body, .modal-header, .modal-footer { padding: 1.25rem; }
       .tabs { margin-bottom: 1.5rem; }
       .tab { padding: 0.75rem 1rem; font-size: 0.875rem; }
+      .analysis-content { grid-template-columns: 1fr; } /* Ensure sidebar stacks */
+      .analysis-main, .analysis-sidebar { grid-column: 1 / -1; } /* Span full width */
     }
 
     @media (max-width: 576px) {
@@ -1118,15 +1066,16 @@
         .theme-toggle { align-self: flex-end; }
         .importance-group { flex-wrap: wrap; } /* Allow wrapping */
         .toast-container { right: 1rem; bottom: 1rem; left: 1rem; align-items: stretch; }
-        .toast { width: 100%; }
+        .toast { width: 100%; max-width: 100%; }
+        .analysis-header { flex-direction: column; align-items: stretch; } /* Stack filters */
     }
 
     /* Print styles */
     @media print {
         body { background-color: #fff; color: #000; }
-        .header, .tabs, .theme-toggle, .btn, .modal, .loading-indicator, .toast-container, .analysis-sidebar { display: none !important; }
+        .header, .tabs, .theme-toggle, .btn, .modal, .loading-indicator, .toast-container, .analysis-sidebar, .analysis-header .filters button { display: none !important; } /* Esconde filtros interativos */
         .container { max-width: 100%; padding: 0; }
-        .card, .kpi-card, .indicator-card, .transaction-list-container, .insights-feed {
+        .card, .kpi-card, .indicator-card, .transaction-list-container, .insights-feed, .analysis-header {
             box-shadow: none;
             border: 1px solid #ddd;
             border-radius: 0;
@@ -1134,9 +1083,12 @@
             page-break-inside: avoid;
             background-color: #fff !important;
         }
+        .analysis-header { border-bottom: 1px solid #ddd; } /* Manter divisor */
         .kpis, .charts-grid, .analysis-indicators, .analysis-content, .analysis-main { grid-template-columns: 1fr !important; gap: 1rem; }
+        .analysis-content { display: block; } /* Remove grid layout for print */
+        .analysis-main { margin-bottom: 1rem; }
         canvas { max-width: 100%; }
-        select { border: none; appearance: none; -webkit-appearance: none; padding-right: 1rem; background: none; }
+        select { border: none; appearance: none; -webkit-appearance: none; padding-right: 1rem; background: none; font-weight: bold; } /* Mostrar seleção atual */
         .transaction-item { border-bottom: 1px solid #eee; }
         .transaction-item:hover { background-color: transparent; margin: 0; padding: 1rem 0; border-radius: 0; }
         :root { /* Override colors for print */
@@ -1250,8 +1202,7 @@
                     <div class="kpi-header">
                         <div class="kpi-title">Economia do Mês</div>
                         <svg class="kpi-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 0 1 0V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5z"/>
                         </svg>
                     </div>
                     <div class="kpi-value" id="kpi-savings">R$ 0,00</div>
@@ -1330,58 +1281,34 @@
         <div class="tab-content" id="tab-analysis">
             <!-- Filtros Inteligentes -->
             <div class="analysis-header">
-<div class="filters">
-    <div class="filters-row">
-        <div class="form-group" style="margin-bottom: 0;">
-            <label for="analysis-year" style="margin-bottom: 0.25rem;">Ano</label>
-            <select id="analysis-year"></select>
-        </div>
-        <div class="form-group" style="margin-bottom: 0;">
-            <label for="analysis-month" style="margin-bottom: 0.25rem;">Mês</label>
-            <select id="analysis-month"></select>
-        </div>
-        <div class="form-group" style="margin-bottom: 0;">
-            <label for="analysis-category" style="margin-bottom: 0.25rem;">Filtrar Categoria</label>
-            <div class="category-filter-group">
-                <select id="analysis-category">
-                    <option value="all">Todas as Categorias</option>
-                    <!-- Categorias carregadas via JS -->
-                </select>
-                <button class="btn-icon-small" id="btn-add-category" title="Nova Categoria">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                    </svg>
-                </button>
-                <button class="btn-icon-small btn-delete-category" id="btn-delete-category" title="Excluir Categoria Selecionada" style="display: none;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                    </svg>
-                </button>
+                 <div class="filters">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="analysis-month-year" style="margin-bottom: 0.25rem;">Mês de Análise</label>
+                        <select id="analysis-month-year"></select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                         <label for="analysis-category" style="margin-bottom: 0.25rem;">Filtrar Categoria</label>
+                         <div class="category-filter-group">
+                            <select id="analysis-category">
+                                <option value="all">Todas as Categorias</option>
+                                <!-- Categorias carregadas via JS -->
+                            </select>
+                            <button class="btn-icon-small" id="btn-add-category" title="Nova Categoria">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                </svg>
+                            </button>
+                            <button class="btn-icon-small btn-delete-category" id="btn-delete-category" title="Excluir Categoria Selecionada" style="display: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="filters-row">
-        <div class="form-group" style="margin-bottom: 0;">
-            <label for="analysis-type" style="margin-bottom: 0.25rem;">Tipo de Transação</label>
-            <select id="analysis-type">
-                <option value="all">Todas</option>
-                <option value="income">Receitas</option>
-                <option value="expense">Despesas</option>
-            </select>
-        </div>
-        <div class="form-group" style="margin-bottom: 0;">
-            <label for="analysis-importance" style="margin-bottom: 0.25rem;">Importância</label>
-            <select id="analysis-importance">
-                <option value="all">Todas</option>
-                <option value="extrema">Extrema</option>
-                <option value="urgente">Urgente</option>
-                <option value="importante">Importante</option>
-                <option value="none">Sem importância</option>
-            </select>
-        </div>
-    </div>
-</div>
+
             <!-- Indicadores e Inteligência Mensal -->
             <div class="analysis-indicators">
                 <div class="indicator-card">
@@ -1435,7 +1362,7 @@
                         <div class="transaction-list-title">Transações do Mês</div>
                         <div id="analysis-transaction-list" class="transaction-list">
                             <!-- Transações carregadas via JS -->
-                            <div style="text-align: center; padding: 2rem 0; color: var(--text-secondary);" id="analysis-no-transactions">
+                            <div style="text-align: center; padding: 2rem 0; color: var(--text-secondary); display: none;" id="analysis-no-transactions">
                                 Nenhuma transação encontrada para este período/categoria.
                             </div>
                         </div>
@@ -1471,7 +1398,7 @@
             <input type="hidden" id="transaction-recurring-base-id"> <!-- Para saber se é edição de recorrente -->
             <div class="modal-header">
                 <h3 class="modal-title" id="transaction-modal-title">Nova Transação</h3>
-                <button type="button" class="modal-close" id="transaction-modal-close">
+                <button type="button" class="modal-close" id="transaction-modal-close" data-dismiss="modal"> <!-- Adicionado data-dismiss -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
                     </svg>
@@ -1525,9 +1452,6 @@
 
                         <input type="radio" id="importance-importante" name="transaction-importance" value="importante">
                         <label for="importance-importante">Importante</label>
-
-                        <input type="radio" id="importance-nenhuma" name="transaction-importance" value="">
-                        <label for="importance-nenhuma">Nenhuma</label>
                     </div>
                 </div>
 
@@ -1619,7 +1543,7 @@
             </div> <!-- Fim .modal-body -->
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="transaction-modal-cancel">Cancelar</button>
+                <button type="button" class="btn btn-secondary" id="transaction-modal-cancel" data-dismiss="modal">Cancelar</button> <!-- Adicionado data-dismiss -->
                 <button type="submit" class="btn btn-primary" id="transaction-modal-save">Salvar Transação</button>
             </div>
         </form>
@@ -1653,7 +1577,7 @@
                 </div>
                 <div class="form-group">
                     <label for="category-icon">Ícone (Emoji)</label>
-                    <input type="text" class="form-control" id="category-icon" placeholder="Ex: 🎓, 📱, 🏠" maxlength="2">
+                    <input type="text" class="form-control" id="category-icon" placeholder="Ex: 🎓,  assinatura  assinatura" maxlength="2">
                 </div>
                  <div class="form-group">
                     <label for="category-color">Cor</label>
@@ -1719,17 +1643,24 @@
     let app;
     let db;
     try {
-        app = firebase.initializeApp(firebaseConfig);
+        // Verifica se o Firebase já foi inicializado para evitar erros de recarregamento (hot reload)
+        if (!firebase.apps.length) {
+            app = firebase.initializeApp(firebaseConfig);
+        } else {
+            app = firebase.app(); // Pega a instância existente
+        }
         db = firebase.firestore();
         console.log("Firebase inicializado com sucesso!");
     } catch (error) {
         console.error("Erro ao inicializar Firebase:", error);
         showToast("Erro crítico ao conectar com o banco de dados. A aplicação pode não funcionar corretamente.", "danger", 10000);
+        // É importante não tentar usar 'db' se a inicialização falhar
+        db = null; // Define db como null para que outras partes do código possam verificar
     }
 
-    // Coleções Firestore
-    const transactionsCollection = db.collection('transactions');
-    const categoriesCollection = db.collection('categories');
+    // Coleções Firestore (Verifica se 'db' foi inicializado)
+    const transactionsCollection = db ? db.collection('transactions') : null;
+    const categoriesCollection = db ? db.collection('categories') : null;
 
     // ===== Estados da Aplicação =====
     let transactions = []; // Array local para manipulação e exibição, sincronizado com Firestore
@@ -1737,10 +1668,10 @@
     let currentTab = 'overview';
     let currentAnalysisMonthYear = moment().format('YYYY-MM'); // Mês atual por padrão
     let currentAnalysisCategory = 'all';
-    let currentAnalysisType = 'all';
-    let currentAnalysisImportance = 'all';
     let unsubscribeTransactions = null; // Para desligar o listener do Firestore
     let unsubscribeCategories = null;   // Para desligar o listener do Firestore
+    let overviewCharts = {}; // Armazena instâncias dos gráficos de Overview
+    let analysisCharts = {}; // Armazena instâncias dos gráficos de Análise
 
     // ===== Constantes e Mapas =====
     const TRANSACTION_TYPES = {
@@ -1792,7 +1723,12 @@
     // ===== Utilitários =====
 
     // Formatar moeda
-    const formatCurrency = (value) => value?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) ?? 'R$ 0,00';
+    const formatCurrency = (value) => {
+        if (typeof value !== 'number' || isNaN(value)) {
+            return 'R$ 0,00'; // Retorna valor padrão se inválido
+        }
+        return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
 
     // Formatar data (DD/MM/YYYY)
     const formatDate = (dateString) => dateString ? moment(dateString).format('DD/MM/YYYY') : '--';
@@ -1832,26 +1768,26 @@
         }, 10); // Small delay to allow CSS transition
 
         // Remove toast after duration
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
             toast.classList.remove('show');
             // Remove element after transition ends
-            toast.addEventListener('transitionend', () => {
-                if(toast.parentNode) { // Check if still exists before removing
-                   toast.parentNode.removeChild(toast);
-                }
-            });
-             // Failsafe removal if transitionend doesn't fire reliably
-            setTimeout(() => {
+            const removeElement = () => {
                  if(toast.parentNode) {
-                   toast.parentNode.removeChild(toast);
-                }
-            }, 500); // Should match transition duration
+                     toast.removeEventListener('transitionend', removeElement);
+                     toast.parentNode.removeChild(toast);
+                 }
+                 // Clear failsafe timeout if transitionend fired
+                 clearTimeout(failsafeTimeoutId);
+            };
+             const failsafeTimeoutId = setTimeout(removeElement, 500); // Failsafe (match transition duration)
+            toast.addEventListener('transitionend', removeElement);
         }, duration);
     }
 
     // Atualizar ícone do tema
     function updateThemeIcon(theme) {
         const themeIcon = document.getElementById('theme-icon');
+        if (!themeIcon) return; // Verifica se o elemento existe
         if (theme === 'dark') {
             // Sun icon
              themeIcon.innerHTML = `<path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.708l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707z"/>`;
@@ -1884,13 +1820,22 @@
 
     // Carregar categorias do Firestore e garantir padrões
     async function loadCategories() {
+        if (!categoriesCollection) {
+             console.error("Coleção de Categorias não inicializada.");
+             showToast("Erro: Não foi possível conectar à base de dados de categorias.", "danger");
+             // Usar padrões locais como fallback
+             categories = [...DEFAULT_INCOME_CATEGORIES, ...DEFAULT_EXPENSE_CATEGORIES].sort((a, b) => a.name.localeCompare(b.name));
+             populateCategoryFilters();
+             return;
+        }
+
         return new Promise(async (resolve, reject) => {
             try {
                 const snapshot = await categoriesCollection.get();
                 let loadedCategories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
                 // Se vazio, adiciona categorias padrão
-                if (loadedCategories.length === 0) {
+                if (loadedCategories.length === 0 && db) { // Verifica db para poder usar batch
                     console.log("Nenhuma categoria encontrada, adicionando padrões...");
                     const batch = db.batch();
                     const defaultCategories = [...DEFAULT_INCOME_CATEGORIES, ...DEFAULT_EXPENSE_CATEGORIES];
@@ -1921,6 +1866,10 @@
 
     // Adicionar nova categoria
     async function addCategory(name, type, icon, color) {
+        if (!categoriesCollection) {
+             showToast("Erro: Não é possível adicionar categoria (sem conexão).", "danger");
+             return false;
+        }
         showLoading();
         try {
             const newCategory = {
@@ -1934,7 +1883,7 @@
             const docRef = await categoriesCollection.add(newCategory);
             console.log("Categoria adicionada com ID: ", docRef.id);
             showToast("Categoria adicionada com sucesso!", "success");
-            // O listener onSnapshot atualizará a UI
+            // O listener onSnapshot atualizará a UI (se ativo)
             return true;
         } catch (error) {
             console.error("Erro ao adicionar categoria: ", error);
@@ -1947,6 +1896,10 @@
 
     // Excluir categoria (com verificação de transações)
     async function deleteCategory(categoryId) {
+         if (!categoriesCollection || !transactionsCollection) {
+             showToast("Erro: Não é possível excluir categoria (sem conexão).", "danger");
+             return false;
+         }
         showLoading();
         try {
              // 1. Verificar se a categoria é padrão (não permitir exclusão)
@@ -1970,7 +1923,7 @@
             await categoriesCollection.doc(categoryId).delete();
             console.log("Categoria excluída: ", categoryId);
             showToast("Categoria excluída com sucesso!", "success");
-             // O listener onSnapshot atualizará a UI
+             // O listener onSnapshot atualizará a UI (se ativo)
             return true;
 
         } catch (error) {
@@ -1986,7 +1939,12 @@
     // Carregar transações (chamado pelo listener)
     function processTransactionSnapshot(snapshot) {
         transactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        transactions.sort((a, b) => moment(b.date).diff(moment(a.date))); // Mais recentes primeiro
+        // Adiciona validação para garantir que date existe antes de ordenar
+        transactions.sort((a, b) => {
+            const dateA = a.date ? moment(a.date) : moment(0); // Data mínima se ausente
+            const dateB = b.date ? moment(b.date) : moment(0);
+            return dateB.diff(dateA); // Mais recentes primeiro
+        });
         console.log(`Transações atualizadas: ${transactions.length} encontradas.`);
         updateDashboard(); // Atualiza toda a UI que depende das transações
     }
@@ -2007,31 +1965,58 @@
 
     // Configurar listeners do Firestore
     function setupFirestoreListeners() {
-        // Listener para transações
-        if (unsubscribeTransactions) unsubscribeTransactions(); // Desliga listener antigo, se houver
-        unsubscribeTransactions = transactionsCollection.onSnapshot(
-            processTransactionSnapshot,
-            (error) => {
-                console.error("Erro no listener de transações:", error);
-                showToast("Erro ao sincronizar transações.", "danger");
-            }
-        );
+        // Limpa listeners antigos antes de criar novos
+        if (unsubscribeTransactions) {
+            unsubscribeTransactions();
+            unsubscribeTransactions = null;
+        }
+        if (unsubscribeCategories) {
+            unsubscribeCategories();
+            unsubscribeCategories = null;
+        }
 
-        // Listener para categorias
-         if (unsubscribeCategories) unsubscribeCategories(); // Desliga listener antigo, se houver
-         unsubscribeCategories = categoriesCollection.onSnapshot(
-            processCategorySnapshot,
-            (error) => {
-                console.error("Erro no listener de categorias:", error);
-                showToast("Erro ao sincronizar categorias.", "danger");
-            }
-        );
+
+        // Listener para transações (Somente se a coleção foi inicializada)
+        if (transactionsCollection) {
+            unsubscribeTransactions = transactionsCollection.onSnapshot(
+                processTransactionSnapshot,
+                (error) => {
+                    console.error("Erro no listener de transações:", error);
+                    showToast("Erro ao sincronizar transações.", "danger");
+                    transactions = []; // Limpa dados locais em caso de erro persistente
+                    updateDashboard(); // Atualiza UI para estado vazio/erro
+                }
+            );
+        } else {
+             console.warn("Listener de Transações não iniciado - coleção não disponível.");
+             // Poderia carregar dados de exemplo ou mostrar mensagem
+        }
+
+        // Listener para categorias (Somente se a coleção foi inicializada)
+         if (categoriesCollection) {
+             unsubscribeCategories = categoriesCollection.onSnapshot(
+                processCategorySnapshot,
+                (error) => {
+                    console.error("Erro no listener de categorias:", error);
+                    showToast("Erro ao sincronizar categorias.", "danger");
+                     // Usa padrões como fallback se o listener falhar após carregamento inicial
+                    if(categories.length === 0) {
+                         categories = [...DEFAULT_INCOME_CATEGORIES, ...DEFAULT_EXPENSE_CATEGORIES].sort((a, b) => a.name.localeCompare(b.name));
+                         populateCategoryFilters();
+                    }
+                }
+            );
+         } else {
+              console.warn("Listener de Categorias não iniciado - coleção não disponível.");
+         }
     }
 
     // Parar listeners do Firestore (Ex: ao sair da página)
     function stopFirestoreListeners() {
         if (unsubscribeTransactions) unsubscribeTransactions();
         if (unsubscribeCategories) unsubscribeCategories();
+        unsubscribeTransactions = null; // Reset variable
+        unsubscribeCategories = null; // Reset variable
         console.log("Listeners do Firestore desligados.");
     }
 
@@ -2039,7 +2024,9 @@
 
     // Abrir modal de transação (Nova ou Edição)
     function openTransactionModal(transaction = null) {
+        const modalElement = document.getElementById('transaction-modal');
         const form = document.getElementById('transaction-form');
+        if (!modalElement || !form) return; // Verifica se elementos existem
         form.reset(); // Limpa o formulário
 
         const modalTitle = document.getElementById('transaction-modal-title');
@@ -2068,7 +2055,6 @@
         // Remove seleção de importância
         const importanceRadios = document.querySelectorAll('input[name="transaction-importance"]');
         importanceRadios.forEach(radio => radio.checked = false);
-        document.getElementById('importance-nenhuma').checked = true; // Default "nenhuma importância"
 
 
         if (transaction) {
@@ -2076,7 +2062,7 @@
             modalTitle.textContent = 'Editar Transação';
             transactionIdInput.value = transaction.id;
             document.getElementById('transaction-amount').value = transaction.amount;
-            document.getElementById('transaction-date').value = transaction.date; // YYYY-MM-DD
+            document.getElementById('transaction-date').value = transaction.date; // Assume YYYY-MM-DD
             document.getElementById('transaction-type').value = transaction.type;
             populateCategorySelect(transaction.type); // Atualiza categorias para o tipo correto
             document.getElementById('transaction-category').value = transaction.category; // Seleciona a categoria
@@ -2085,45 +2071,67 @@
             if (transaction.importance) {
                  const importanceRadio = document.getElementById(`importance-${transaction.importance}`);
                  if(importanceRadio) importanceRadio.checked = true;
-            } else {
-                document.getElementById('importance-nenhuma').checked = true;
             }
 
             // Revela campos avançados se houver dados neles
             let showAdvanced = false;
+            const descriptionInput = document.getElementById('transaction-description');
             if (transaction.description) {
-                document.getElementById('transaction-description').value = transaction.description;
+                descriptionInput.value = transaction.description;
                 showAdvanced = true;
+            } else {
+                descriptionInput.value = ''; // Garante campo vazio
             }
-            if (transaction.status !== 'paid') { // Se não for o default 'pago'
-                document.getElementById('transaction-status').value = transaction.status;
+
+            const statusSelect = document.getElementById('transaction-status');
+            if (transaction.status && transaction.status !== 'paid') { // Se não for o default 'pago'
+                statusSelect.value = transaction.status;
                 showAdvanced = true;
+            } else {
+                 statusSelect.value = 'paid'; // Garante default
             }
+
+             const paymentMethodSelect = document.getElementById('transaction-payment-method');
             if (transaction.paymentMethod) {
-                document.getElementById('transaction-payment-method').value = transaction.paymentMethod;
+                paymentMethodSelect.value = transaction.paymentMethod;
                 showAdvanced = true;
+            } else {
+                paymentMethodSelect.value = ''; // Garante default (Nenhuma)
             }
+
+            const notesTextarea = document.getElementById('transaction-notes');
             if (transaction.notes) {
-                document.getElementById('transaction-notes').value = transaction.notes;
+                notesTextarea.value = transaction.notes;
                 showAdvanced = true;
+            } else {
+                notesTextarea.value = ''; // Garante campo vazio
             }
 
              // Recorrência
-             if (transaction.recurringInfo) {
+             const recurringCheckbox = document.getElementById('transaction-recurring');
+             const frequencySelect = document.getElementById('transaction-frequency');
+             const installmentsInput = document.getElementById('transaction-installments');
+
+             if (transaction.recurringInfo && transaction.recurringInfo.baseId) {
                  recurringBaseIdInput.value = transaction.recurringInfo.baseId; // Guarda o ID base
-                 document.getElementById('transaction-recurring').checked = true;
+                 recurringCheckbox.checked = true;
                  recurringOptions.style.display = 'block';
-                 document.getElementById('transaction-frequency').value = transaction.recurringInfo.frequency;
-                 document.getElementById('transaction-installments').value = transaction.recurringInfo.totalInstallments || ''; // Mostra total se houver
+                 frequencySelect.value = transaction.recurringInfo.frequency || 'monthly'; // Default se ausente
+                 installmentsInput.value = transaction.recurringInfo.totalInstallments || ''; // Mostra total se houver
                  showAdvanced = true;
 
                  // Mostra opções de edição para ocorrências recorrentes
                  editRecurringOptions.style.display = 'block';
                  // Marca 'somente esta' por padrão
-                 document.querySelector('input[name="edit-recurring-scope"][value="this"]').checked = true;
+                 const editScopeThis = document.querySelector('input[name="edit-recurring-scope"][value="this"]');
+                 if(editScopeThis) editScopeThis.checked = true;
 
              } else {
                  recurringBaseIdInput.value = '';
+                 recurringCheckbox.checked = false;
+                 recurringOptions.style.display = 'none';
+                 frequencySelect.value = 'monthly'; // Reset
+                 installmentsInput.value = ''; // Reset
                  editRecurringOptions.style.display = 'none';
              }
 
@@ -2139,28 +2147,45 @@
             transactionIdInput.value = ''; // Garante que está vazio
             recurringBaseIdInput.value = '';
             editRecurringOptions.style.display = 'none';
+             // Garante que campos avançados e recorrentes estão resetados
+             document.getElementById('transaction-description').value = '';
+             document.getElementById('transaction-status').value = 'paid';
+             document.getElementById('transaction-payment-method').value = '';
+             document.getElementById('transaction-notes').value = '';
+             document.getElementById('transaction-recurring').checked = false;
+             document.getElementById('recurring-options').style.display = 'none';
+             document.getElementById('transaction-frequency').value = 'monthly';
+             document.getElementById('transaction-installments').value = '';
         }
 
-        openModal(document.getElementById('transaction-modal'));
+        openModal(modalElement);
         // Foco no campo de valor ao abrir
-        setTimeout(() => document.getElementById('transaction-amount').focus(), 100);
+        setTimeout(() => {
+            const amountInput = document.getElementById('transaction-amount');
+            if (amountInput) amountInput.focus();
+        }, 100);
     }
 
 
     // Salvar Transação (Nova ou Edição)
     async function saveTransaction(event) {
         event.preventDefault(); // Impede o envio padrão do formulário
+         if (!transactionsCollection || !db) { // Verifica db também para batch e FieldValue
+             showToast("Erro: Não é possível salvar transação (sem conexão).", "danger");
+             return;
+         }
         showLoading();
 
         const transactionId = document.getElementById('transaction-id').value;
-        const amount = parseFloat(document.getElementById('transaction-amount').value);
+        const amountInput = document.getElementById('transaction-amount');
+        const amount = parseFloat(amountInput.value);
         const category = document.getElementById('transaction-category').value;
         const date = document.getElementById('transaction-date').value;
         const type = document.getElementById('transaction-type').value;
         const importanceRadio = document.querySelector('input[name="transaction-importance"]:checked');
-        const importance = importanceRadio && importanceRadio.value !== "" ? importanceRadio.value : null;
+        const importance = importanceRadio ? importanceRadio.value : null;
 
-        // Campos avançados (pega mesmo se ocultos, podem ter sido preenchidos antes)
+        // Campos avançados
         const description = document.getElementById('transaction-description').value.trim();
         const status = document.getElementById('transaction-status').value;
         const paymentMethod = document.getElementById('transaction-payment-method').value || null; // null se vazio
@@ -2173,29 +2198,48 @@
         const totalInstallments = installmentsInput ? parseInt(installmentsInput) : null; // null se infinito
 
         // Validação básica
-        if (isNaN(amount) || amount <= 0 || !category || !date) {
-            showToast("Valor, Categoria e Data são obrigatórios.", "warning");
-            hideLoading();
-            return;
+        if (isNaN(amount) || amount <= 0) {
+             showToast("Valor inválido. Insira um número positivo.", "warning");
+             amountInput.focus(); // Foca no campo com erro
+             hideLoading();
+             return;
         }
+         if (!category) {
+             showToast("Selecione uma Categoria.", "warning");
+             document.getElementById('transaction-category').focus();
+             hideLoading();
+             return;
+         }
+         if (!date) {
+             showToast("Selecione uma Data.", "warning");
+             document.getElementById('transaction-date').focus();
+             hideLoading();
+             return;
+         }
         if(isRecurring && !frequency) {
             showToast("Selecione a frequência da recorrência.", "warning");
+            document.getElementById('transaction-frequency').focus();
             hideLoading();
             return;
         }
         if(isRecurring && totalInstallments !== null && totalInstallments < 2) {
             showToast("O número de parcelas deve ser 2 ou maior.", "warning");
+            document.getElementById('transaction-installments').focus();
             hideLoading();
             return;
         }
+         // Validação UUID (verifica se a biblioteca carregou)
+         if (isRecurring && typeof uuid === 'undefined') {
+             showToast("Erro: Biblioteca UUID não carregada. Recorrência não pode ser salva.", "danger");
+             hideLoading();
+             return;
+         }
 
         const baseTransactionData = {
             amount, category, date, type, importance,
             description: description || null, // Armazena null se vazio
             status, paymentMethod, notes: notes || null,
-            // Campos de timestamp para controle
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp() // Sempre atualiza o updatedAt
         };
 
          // --- Lógica de Edição vs. Nova ---
@@ -2206,80 +2250,116 @@
         try {
             if (isEditingRecurring) {
                 // --- Editando uma Ocorrência Recorrente ---
-                const editScope = document.querySelector('input[name="edit-recurring-scope"]:checked').value;
+                const editScopeRadio = document.querySelector('input[name="edit-recurring-scope"]:checked');
+                const editScope = editScopeRadio ? editScopeRadio.value : 'this'; // Default to 'this' if not found
 
                 if (editScope === 'this') {
                     // Edita APENAS esta ocorrência
+                    console.log(`Editando apenas a ocorrência ${transactionId}`);
                     const transactionRef = transactionsCollection.doc(transactionId);
                     // Remove a informação de recorrência desta instância específica
+                    // mas mantém outros dados. Garante que updatedAt é atualizado.
                     const updateData = {
-                        ...baseTransactionData,
+                        ...baseTransactionData, // Inclui amount, category, date, type, importance, description, status, paymentMethod, notes, updatedAt
                         recurringInfo: firebase.firestore.FieldValue.delete(), // Remove o campo
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        // createdAt não deve ser alterado aqui
                     };
                     await transactionRef.update(updateData);
                     showToast("Ocorrência atualizada com sucesso.", "success");
 
                 } else { // editScope === 'future'
                     // Edita esta e as futuras
+                     console.log(`Editando ocorrência ${transactionId} e futuras com baseId ${recurringBaseId}`);
                     const originalTransaction = transactions.find(t => t.id === transactionId);
-                    if (!originalTransaction) throw new Error("Transação original não encontrada para edição futura.");
+                    if (!originalTransaction || !originalTransaction.recurringInfo) {
+                         throw new Error("Transação recorrente original ou suas informações não encontradas para edição futura.");
+                    }
 
                     const batch = db.batch();
+                    const currentInstallmentNumber = originalTransaction.recurringInfo.currentInstallment;
 
-                    // 1. Atualiza a ocorrência atual
+                    // 1. Atualiza a ocorrência atual (dados base + recurringInfo atualizado se isRecurring ainda for true)
                     const currentRef = transactionsCollection.doc(transactionId);
-                    batch.update(currentRef, { ...baseTransactionData, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    let currentUpdateData = { ...baseTransactionData }; // Inclui todos os campos base atualizados
+                     if (isRecurring) { // Se AINDA é recorrente após a edição
+                        currentUpdateData.recurringInfo = {
+                             baseId: recurringBaseId, // Mantém o mesmo baseId
+                             frequency: frequency, // Usa a nova frequência
+                             currentInstallment: currentInstallmentNumber, // Mantém a parcela atual
+                             totalInstallments: totalInstallments // Usa o novo total
+                         };
+                     } else { // Se deixou de ser recorrente
+                         currentUpdateData.recurringInfo = firebase.firestore.FieldValue.delete();
+                     }
+                    batch.update(currentRef, currentUpdateData);
 
                     // 2. Busca e atualiza futuras ocorrências com o mesmo baseId
+                    console.log(`Buscando futuras transações com baseId ${recurringBaseId} e parcela > ${currentInstallmentNumber}`);
                     const futureQuery = transactionsCollection
                         .where('recurringInfo.baseId', '==', recurringBaseId)
-                        .where('date', '>', originalTransaction.date) // Apenas futuras
-                        .orderBy('date', 'asc');
+                        .where('recurringInfo.currentInstallment', '>', currentInstallmentNumber) // Apenas futuras parcelas
+                        .orderBy('recurringInfo.currentInstallment', 'asc');
 
                     const futureSnapshot = await futureQuery.get();
+                     console.log(`${futureSnapshot.docs.length} transações futuras encontradas.`);
                     futureSnapshot.docs.forEach(doc => {
-                        // Cria os dados base para as futuras (mantendo a data e installmentNumber delas)
-                        const futureData = { ...baseTransactionData };
-                        delete futureData.date; // Não sobrescreve a data futura
-                        delete futureData.status; // Mantém o status futuro (provavelmente 'scheduled')
-                        futureData.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
-                        // Atualiza o recurringInfo se necessário (ex: mudou frequência, parcelas)
-                        if(isRecurring && doc.data().recurringInfo) {
-                           futureData.recurringInfo = {
-                               ...doc.data().recurringInfo, // Mantem baseId e installmentNumber
-                               frequency: frequency,
-                               totalInstallments: totalInstallments
-                           }
-                        } else if (!isRecurring && doc.data().recurringInfo) {
-                            // Se deixou de ser recorrente, remove o recurringInfo das futuras
-                            futureData.recurringInfo = firebase.firestore.FieldValue.delete();
-                        }
-                        // Não precisa atualizar baseId, installmentNumber ou currentInstallment
+                        const futureDocRef = doc.ref;
+                        const futureInstallmentNum = doc.data().recurringInfo?.currentInstallment;
 
-                        batch.update(doc.ref, futureData);
+                        // Cria os dados base para as futuras (NÃO copia data, status ou installmentNumber)
+                        const futureUpdateData = {
+                            amount: baseTransactionData.amount,
+                            category: baseTransactionData.category,
+                            type: baseTransactionData.type,
+                            importance: baseTransactionData.importance,
+                            description: baseTransactionData.description ? `${baseTransactionData.description} ${totalInstallments ? `(${futureInstallmentNum}/${totalInstallments})` : ''}`.trim() : null, // Atualiza descrição com nova parcela se necessário
+                            paymentMethod: baseTransactionData.paymentMethod,
+                            notes: baseTransactionData.notes,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            // NÃO atualiza: date, status, createdAt
+                        };
+
+                         // Atualiza o recurringInfo se necessário (ex: mudou frequência, parcelas)
+                         if (isRecurring) { // Se continua recorrente
+                             futureUpdateData.recurringInfo = {
+                                 baseId: recurringBaseId,
+                                 frequency: frequency,
+                                 currentInstallment: futureInstallmentNum, // Mantém a parcela da futura
+                                 totalInstallments: totalInstallments
+                             };
+                         } else { // Se deixou de ser recorrente, remove info das futuras também
+                              futureUpdateData.recurringInfo = firebase.firestore.FieldValue.delete();
+                         }
+
+                        console.log(`Atualizando futura transação ${doc.id} (Parcela ${futureInstallmentNum})`);
+                        batch.update(futureDocRef, futureUpdateData);
                     });
 
                     await batch.commit();
                     showToast("Esta e as futuras ocorrências foram atualizadas.", "success");
-                    // Observação: Se a recorrência foi alterada (freq/parcelas), pode ser necessário recriar as futuras.
-                    // A lógica atual apenas atualiza os dados base (valor, categoria etc).
-                    // Recriar seria mais complexo e poderia perder edições individuais futuras.
+                    // NOTA: Esta lógica assume que as datas das futuras não precisam ser recalculadas.
+                    // Se a frequência mudou, as datas futuras existentes podem ficar "incorretas"
+                    // em relação à nova frequência. Recalcular e recriar seria mais complexo.
                 }
 
             } else if (isEditing && !isRecurring) {
-                 // --- Editando uma Transação ÚNICA (que não era recorrente antes ou deixou de ser) ---
-                await transactionsCollection.doc(transactionId).update({
+                 // --- Editando uma Transação ÚNICA (que não era ou deixou de ser recorrente) ---
+                 console.log(`Editando transação única ${transactionId}`);
+                 // Garante que não tem info recorrente ao salvar
+                const updateData = {
                     ...baseTransactionData,
-                    recurringInfo: firebase.firestore.FieldValue.delete(), // Garante que não tem info recorrente
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                 });
+                    recurringInfo: firebase.firestore.FieldValue.delete(),
+                    // createdAt não deve ser alterado
+                 };
+                 // Remove createdAt se ele foi adicionado indevidamente em baseTransactionData para edição
+                 delete updateData.createdAt;
+
+                 await transactionsCollection.doc(transactionId).update(updateData);
                  showToast("Transação atualizada com sucesso!", "success");
 
             } else if (isEditing && isRecurring) {
                  // --- Editando uma Transação ÚNICA e TORNANDO-A Recorrente ---
-                 // Isso é menos comum. Tratar como se fosse uma nova recorrente,
-                 // mas atualizando a primeira instância.
+                 console.log(`Tornando a transação ${transactionId} recorrente.`);
                  const baseId = uuid.v4(); // Novo ID base para a recorrência
                  const firstInstallmentData = {
                      ...baseTransactionData,
@@ -2289,13 +2369,14 @@
                          currentInstallment: 1,
                          totalInstallments: totalInstallments
                      },
-                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                     // createdAt não deve ser alterado aqui
                  };
+                 delete firstInstallmentData.createdAt; // Remove createdAt se presente
 
                  const batch = db.batch();
                  // Atualiza a transação existente como a primeira parcela
                  batch.update(transactionsCollection.doc(transactionId), firstInstallmentData);
-                 // Gera as parcelas futuras
+                 // Gera as parcelas futuras a partir da data da transação original
                  await generateFutureInstallments(batch, baseTransactionData, baseId, frequency, totalInstallments, date, 1);
                  await batch.commit();
                  showToast("Transação atualizada e recorrência criada!", "success");
@@ -2303,32 +2384,41 @@
 
             } else if (!isEditing && isRecurring) {
                 // --- Criando uma NOVA Transação Recorrente ---
-                const baseId = uuid.v4(); // ID único para agrupar as recorrências
-                const firstInstallmentData = {
-                    ...baseTransactionData,
+                 console.log(`Criando nova transação recorrente`);
+                 const baseId = uuid.v4(); // ID único para agrupar as recorrências
+                 const firstInstallmentData = {
+                    ...baseTransactionData, // Contém todos os dados base + updatedAt
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(), // Adiciona createdAt aqui
                     recurringInfo: {
                         baseId: baseId,
                         frequency: frequency,
                         currentInstallment: 1,
                         totalInstallments: totalInstallments
-                    },
-                    // createdAt já está em baseTransactionData
-                };
+                    }
+                 };
 
                 const batch = db.batch();
                 // Adiciona a primeira transação (a da data selecionada)
                 const firstDocRef = transactionsCollection.doc(); // Gera ID para a primeira parcela
                 batch.set(firstDocRef, firstInstallmentData);
 
-                 // Gera as parcelas futuras
-                await generateFutureInstallments(batch, baseTransactionData, baseId, frequency, totalInstallments, date, 1);
+                 // Gera as parcelas futuras (passa dados base SEM timestamps)
+                 const dataForFuture = {...baseTransactionData};
+                 delete dataForFuture.updatedAt;
+                 delete dataForFuture.createdAt; // Timestamps serão definidos em generateFutureInstallments
+
+                await generateFutureInstallments(batch, dataForFuture, baseId, frequency, totalInstallments, date, 1);
 
                 await batch.commit();
                 showToast(`Transação ${totalInstallments ? 'parcelada' : 'recorrente'} criada com sucesso!`, "success");
 
             } else { // !isEditing && !isRecurring
                 // --- Criando uma NOVA Transação ÚNICA ---
-                await transactionsCollection.add(baseTransactionData);
+                 console.log(`Criando nova transação única`);
+                await transactionsCollection.add({
+                    ...baseTransactionData,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp() // Adiciona createdAt
+                 });
                 showToast("Transação adicionada com sucesso!", "success");
             }
 
@@ -2336,7 +2426,7 @@
 
         } catch (error) {
             console.error("Erro ao salvar transação: ", error);
-            showToast("Erro ao salvar transação. Verifique o console.", "danger");
+            showToast(`Erro ao salvar transação: ${error.message || 'Erro desconhecido'}`, "danger", 5000);
         } finally {
             hideLoading();
         }
@@ -2344,71 +2434,106 @@
 
    // Função auxiliar para gerar parcelas futuras
     async function generateFutureInstallments(batch, baseData, baseId, frequency, totalInstallments, startDate, startInstallmentNum) {
-        const freqInfo = RECURRENCE_FREQUENCY[frequency];
-        if (!freqInfo) return; // Frequência inválida
+         if (!transactionsCollection || !db) return; // Verifica dependências
 
-        // Limitar a geração para evitar loops infinitos ou sobrecarga (ex: 2 anos)
-        const maxInstallments = totalInstallments ?? 24; // Se for infinito, gera 24 meses
-        const limitDate = moment(startDate).add(2, 'years');
+        const freqInfo = RECURRENCE_FREQUENCY[frequency];
+        if (!freqInfo) {
+            console.error(`Frequência inválida: ${frequency}`);
+            return;
+        }
+
+         // Define limite máximo de parcelas a gerar para evitar loops/sobrecarga
+        const limit = totalInstallments ? totalInstallments : (startInstallmentNum + 24); // Gera até 24 parcelas se infinito
+        const absoluteMax = startInstallmentNum + 60; // Limite duro de 5 anos
+        const finalLimit = Math.min(limit, absoluteMax);
+
+        console.log(`Gerando futuras parcelas a partir de ${startInstallmentNum + 1} até ${finalLimit}`);
 
         let currentDate = moment(startDate);
-        for (let i = startInstallmentNum + 1; i <= maxInstallments; i++) {
+        for (let i = startInstallmentNum + 1; i <= finalLimit; i++) {
             currentDate = currentDate.add(freqInfo.momentStep, freqInfo.momentUnit);
 
-             // Parar se exceder o limite de 2 anos (para recorrências infinitas)
-            if(!totalInstallments && currentDate.isAfter(limitDate)) {
-                console.warn("Limite de geração de recorrência atingido (2 anos).");
-                break;
-            }
+            // Cria a descrição para a parcela futura
+            const futureDescription = baseData.description
+              ? `${baseData.description} ${totalInstallments ? `(${i}/${totalInstallments})` : ''}`.trim()
+              : `Parcela ${i}${totalInstallments ? ` de ${totalInstallments}` : ''}`;
+
 
             const futureInstallmentData = {
-                ...baseData, // Copia valor, categoria, tipo, etc.
+                ...baseData, // Copia valor, categoria, tipo, importance, paymentMethod, notes
                 date: currentDate.format('YYYY-MM-DD'), // Data da parcela futura
-                status: 'scheduled', // Futuras são agendadas
-                description: `${baseData.description || 'Transação Recorrente'} ${totalInstallments ? `(${i}/${totalInstallments})` : ''}`.trim(),
+                status: 'scheduled', // Futuras são agendadas por padrão
+                description: futureDescription,
                 recurringInfo: {
                     baseId: baseId,
                     frequency: frequency,
                     currentInstallment: i,
                     totalInstallments: totalInstallments
                 },
-                 // Mantem createdAt/updatedAt do momento da criação do lote
-                 createdAt: baseData.createdAt,
-                 updatedAt: baseData.updatedAt
+                 // Define timestamps para cada nova parcela criada
+                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
-            // Não copiar ID da transação original
+            // Não copiar ID da transação original (não deve estar em baseData aqui)
             delete futureInstallmentData.id;
 
             const futureDocRef = transactionsCollection.doc(); // Gera novo ID para cada parcela
+            console.log(`Agendando batch.set para parcela ${i} (ID: ${futureDocRef.id}) em ${futureInstallmentData.date}`);
             batch.set(futureDocRef, futureInstallmentData);
         }
+        console.log(`Geração de futuras parcelas concluída no batch.`);
     }
 
 
     // Excluir Transação
     async function deleteTransaction(transactionId, recurringBaseId = null, deleteScope = 'this') {
+         if (!transactionsCollection || !db) { // Verifica db para batch
+             showToast("Erro: Não é possível excluir transação (sem conexão).", "danger");
+             return;
+         }
         showLoading();
         try {
              if (recurringBaseId && deleteScope !== 'this') {
                  // --- Excluir Esta e Futuras Recorrências ---
+                 console.log(`Excluindo ocorrência ${transactionId} e futuras com baseId ${recurringBaseId}`);
                 const batch = db.batch();
                 const originalTransaction = transactions.find(t => t.id === transactionId);
-                if (!originalTransaction) throw new Error("Transação original não encontrada para exclusão futura.");
+                // Encontra o número da parcela atual para buscar as futuras
+                 const currentInstallmentNum = originalTransaction?.recurringInfo?.currentInstallment;
 
-                // 1. Exclui a ocorrência atual
+                 if (!originalTransaction || typeof currentInstallmentNum !== 'number') {
+                     // Se não achar a transação ou a info da parcela, tenta excluir pelo menos a selecionada
+                     console.warn("Não foi possível obter info da parcela recorrente original. Excluindo apenas a selecionada.");
+                      await transactionsCollection.doc(transactionId).delete();
+                      showToast("Transação selecionada excluída. Não foi possível excluir futuras.", "warning");
+                      hideLoading();
+                      closeModalIfNeeded(document.getElementById('confirm-modal'));
+                      return;
+                 }
+
+
+                // 1. Exclui a ocorrência atual (marcada para exclusão)
                 batch.delete(transactionsCollection.doc(transactionId));
+                console.log(`Agendada exclusão de ${transactionId}`);
 
-                // 2. Busca e exclui futuras ocorrências com o mesmo baseId
+                // 2. Busca e exclui futuras ocorrências com o mesmo baseId e parcela >= atual
+                // Usamos >= currentInstallment para garantir que pegamos a atual E as futuras
+                 console.log(`Buscando futuras transações com baseId ${recurringBaseId} e parcela >= ${currentInstallmentNum}`);
                 const futureQuery = transactionsCollection
                     .where('recurringInfo.baseId', '==', recurringBaseId)
-                    .where('date', '>=', originalTransaction.date); // >= para incluir a atual se precisar (mas já deletamos)
+                    .where('recurringInfo.currentInstallment', '>=', currentInstallmentNum);
 
                 const futureSnapshot = await futureQuery.get();
+                 console.log(`${futureSnapshot.docs.length} transações (incluindo a atual) encontradas para exclusão.`);
                 futureSnapshot.docs.forEach(doc => {
-                     // Garante que não tenta deletar a mesma transação duas vezes se date for igual
-                     if (doc.id !== transactionId) {
-                         batch.delete(doc.ref);
-                     }
+                    // A transação atual já está no batch.delete(transactionId)
+                    // Mas se houver outras com a *mesma* installment number (improvável), deleta também.
+                    // O importante é deletar as com installmentNumber > currentInstallmentNum
+                    // e a própria atual. A query >= cobre isso.
+                    if (doc.id !== transactionId) { // Evita adicionar a mesma exclusão duas vezes
+                        console.log(`Agendada exclusão de futura transação ${doc.id}`);
+                        batch.delete(doc.ref);
+                    }
                 });
 
                  await batch.commit();
@@ -2416,20 +2541,18 @@
 
              } else {
                  // --- Excluir Apenas Esta Ocorrência (ou uma transação única) ---
+                  console.log(`Excluindo transação única ${transactionId}`);
                  await transactionsCollection.doc(transactionId).delete();
                  showToast("Transação excluída com sucesso!", "success");
              }
 
         } catch (error) {
             console.error("Erro ao excluir transação: ", error);
-            showToast("Erro ao excluir transação. Tente novamente.", "danger");
+            showToast(`Erro ao excluir transação: ${error.message || 'Erro desconhecido'}`, "danger", 5000);
         } finally {
             hideLoading();
              // Fecha modal de confirmação se estiver aberta
-             const confirmM = document.getElementById('confirm-modal');
-             if(confirmM.classList.contains('active')) {
-                closeModal(confirmM);
-             }
+             closeModalIfNeeded(document.getElementById('confirm-modal'));
         }
     }
 
@@ -2438,10 +2561,20 @@
 
     // Abrir/Fechar Modais
     function openModal(modalElement) {
-      modalElement.classList.add('active');
+      if (modalElement) {
+          modalElement.classList.add('active');
+      }
     }
     function closeModal(modalElement) {
-      modalElement.classList.remove('active');
+      if (modalElement) {
+          modalElement.classList.remove('active');
+      }
+    }
+    // Helper para fechar modal se ele existir e estiver ativo
+    function closeModalIfNeeded(modalElement) {
+        if (modalElement && modalElement.classList.contains('active')) {
+            closeModal(modalElement);
+        }
     }
 
     // Inicializar Navegação por Tabs
@@ -2452,6 +2585,7 @@
         tabLinks.forEach(tab => {
             tab.addEventListener('click', () => {
                 const targetTabId = tab.dataset.tab;
+                if (!targetTabId) return; // Sai se não houver data-tab
 
                 // Remove 'active' de todas as tabs e conteúdos
                 tabLinks.forEach(t => t.classList.remove('active'));
@@ -2459,16 +2593,27 @@
 
                 // Adiciona 'active' à tab clicada e ao conteúdo correspondente
                 tab.classList.add('active');
-                document.getElementById(`tab-${targetTabId}`).classList.add('active');
+                const targetContent = document.getElementById(`tab-${targetTabId}`);
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                }
 
                 currentTab = targetTabId;
+                console.log(`Tab alterada para: ${currentTab}`);
 
                 // Atualiza o conteúdo da tab selecionada
                 if (targetTabId === 'analysis') {
-                    updateMonthlyAnalysis(); // Atualiza ou inicializa a análise mensal
-                } else {
+                    // Garante que os filtros estejam populados antes de atualizar
+                     if(categories.length === 0) {
+                         console.warn("Tentando atualizar análise sem categorias carregadas.");
+                         // Tenta carregar categorias se ainda não foram
+                         loadCategories().then(updateMonthlyAnalysis).catch(console.error);
+                     } else {
+                        updateMonthlyAnalysis(); // Atualiza ou inicializa a análise mensal
+                     }
+                } else if (targetTabId === 'overview') {
                      updateOverviewCharts(); // Atualiza gráficos da visão geral
-                     updateKPIs();
+                     updateKPIs(); // Atualiza KPIs
                 }
             });
         });
@@ -2479,10 +2624,16 @@
         const analysisCategorySelect = document.getElementById('analysis-category');
         const transactionCategorySelect = document.getElementById('transaction-category');
 
-        // Guarda o valor selecionado para restaurar depois
-        const selectedAnalysisCategory = analysisCategorySelect.value;
+        // Verifica se os selects existem
+        if (!analysisCategorySelect || !transactionCategorySelect) {
+            console.warn("Selects de categoria não encontrados no DOM.");
+            return;
+        }
 
-        // Limpa selects (mantendo a opção "Todas")
+        // Guarda o valor selecionado para restaurar depois (se existir)
+        const selectedAnalysisCategory = analysisCategorySelect ? analysisCategorySelect.value : 'all';
+
+        // Limpa selects (mantendo a opção "Todas" na análise)
         analysisCategorySelect.innerHTML = '<option value="all">Todas as Categorias</option>';
         transactionCategorySelect.innerHTML = ''; // Limpa completamente
 
@@ -2490,16 +2641,22 @@
         categories.forEach(cat => {
             const option = document.createElement('option');
             option.value = cat.id;
-            option.textContent = `${cat.icon || ''} ${cat.name}`;
+            // Usa textContent para evitar problemas com HTML injection
+            option.textContent = `${cat.icon || ''} ${cat.name || 'Categoria sem nome'}`;
             analysisCategorySelect.appendChild(option);
         });
 
         // Popula Modal de Transação (filtrado pelo tipo selecionado no modal)
-        populateCategorySelect(document.getElementById('transaction-type').value);
+        const currentTransactionType = document.getElementById('transaction-type')?.value || 'expense';
+        populateCategorySelect(currentTransactionType);
 
 
-        // Restaura seleção anterior no filtro de análise
-        analysisCategorySelect.value = selectedAnalysisCategory;
+        // Restaura seleção anterior no filtro de análise, se possível
+        if (analysisCategorySelect.querySelector(`option[value="${selectedAnalysisCategory}"]`)) {
+            analysisCategorySelect.value = selectedAnalysisCategory;
+        } else {
+            analysisCategorySelect.value = 'all'; // Volta para 'Todas' se a anterior sumiu
+        }
 
          // Habilita/desabilita botão de excluir categoria na Análise Mensal
          toggleDeleteCategoryButton();
@@ -2508,6 +2665,7 @@
     // Popular select de categoria no Modal de Transação (filtrado por tipo)
     function populateCategorySelect(type = 'expense') {
         const select = document.getElementById('transaction-category');
+        if (!select) return; // Sai se o select não existe
         select.innerHTML = ''; // Limpa antes de popular
 
         const filteredCategories = categories.filter(cat => cat.type === type);
@@ -2522,7 +2680,7 @@
             filteredCategories.forEach(cat => {
                 const option = document.createElement('option');
                 option.value = cat.id;
-                option.textContent = `${cat.icon || ''} ${cat.name}`;
+                option.textContent = `${cat.icon || ''} ${cat.name || 'Categoria sem nome'}`;
                 select.appendChild(option);
             });
         }
@@ -2532,6 +2690,8 @@
     function toggleDeleteCategoryButton() {
         const select = document.getElementById('analysis-category');
         const deleteButton = document.getElementById('btn-delete-category');
+        if (!select || !deleteButton) return; // Verifica elementos
+
         if (select.value !== 'all') {
              const category = categories.find(c => c.id === select.value);
              // Só mostra se a categoria selecionada NÃO for padrão
@@ -2545,126 +2705,162 @@
         }
     }
 
-// Popular filtros de Ano e Mês separados para Análise
-function populateMonthYearFilter() {
-    const yearSelect = document.getElementById('analysis-year');
-    const monthSelect = document.getElementById('analysis-month');
-    
-    // Limpa os selects
-    yearSelect.innerHTML = '';
-    monthSelect.innerHTML = '';
-    
-    // Anos (atual +/- 2 anos)
-    const currentYear = moment().year();
-    for (let year = currentYear - 2; year <= currentYear + 2; year++) {
-        const option = document.createElement('option');
-        option.value = year;
-        option.textContent = year;
-        yearSelect.appendChild(option);
-    }
-    
-    // Meses
-    const months = moment.months();
-    months.forEach((month, index) => {
-        const option = document.createElement('option');
-        option.value = index; // 0-11
-        option.textContent = month.charAt(0).toUpperCase() + month.slice(1); // Capitalize
-        monthSelect.appendChild(option);
-    });
-    
-    // Define valores atuais
-    yearSelect.value = moment().year();
-    monthSelect.value = moment().month();
-    
-    // Atualiza a variável de estado com o formato YYYY-MM
-    updateCurrentAnalysisDate();
-}
+     // Popular select de Mês/Ano para Análise
+    function populateMonthYearFilter() {
+        const select = document.getElementById('analysis-month-year');
+        if (!select) return; // Verifica elemento
+        select.innerHTML = ''; // Limpa
 
-// Função para atualizar a data de análise atual
-function updateCurrentAnalysisDate() {
-    const yearSelect = document.getElementById('analysis-year');
-    const monthSelect = document.getElementById('analysis-month');
-    
-    // Verificar se os elementos existem antes de acessar suas propriedades
-    if (yearSelect && monthSelect) {
-        const year = yearSelect.value;
-        const month = monthSelect.value;
-        currentAnalysisMonthYear = `${year}-${String(Number(month) + 1).padStart(2, '0')}`;
-        updateMonthlyAnalysis();
-    } else {
-        console.error("Elementos de filtro de ano/mês não encontrados");
-        // Usar data atual como fallback
-        currentAnalysisMonthYear = moment().format('YYYY-MM');
+        // Gera opções para os últimos 12 meses + próximos 6 meses
+        const startMonth = moment().subtract(12, 'months');
+        const endMonth = moment().add(6, 'months');
+
+        let current = startMonth.clone();
+        while (current.isSameOrBefore(endMonth, 'month')) {
+            const value = current.format('YYYY-MM');
+            const text = current.format('MMMM YYYY');
+            const option = document.createElement('option');
+            option.value = value;
+            // Capitaliza a primeira letra do mês
+            option.textContent = text.charAt(0).toUpperCase() + text.slice(1);
+            select.appendChild(option);
+            current.add(1, 'month');
+        }
+
+        // Define o mês atual como padrão
+        const currentMonthValue = moment().format('YYYY-MM');
+        // Verifica se a opção do mês atual existe antes de definir
+        if (select.querySelector(`option[value="${currentMonthValue}"]`)) {
+           select.value = currentMonthValue;
+        } else if (select.options.length > 0) {
+            // Se não existir (caso raro), seleciona a última opção (mais recente)
+            select.value = select.options[select.options.length - 1].value;
+        }
+        currentAnalysisMonthYear = select.value;
     }
-}
 
      // Setup dos Event Listeners
     function setupEventListeners() {
         // Botão Nova Transação
-        document.getElementById('btn-new-transaction').addEventListener('click', () => openTransactionModal());
+        const btnNew = document.getElementById('btn-new-transaction');
+        if (btnNew) btnNew.addEventListener('click', () => openTransactionModal());
 
         // Toggle Tema
-        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        const btnTheme = document.getElementById('theme-toggle');
+        if (btnTheme) btnTheme.addEventListener('click', toggleTheme);
 
-        // Modal de Transação
-        document.getElementById('transaction-modal-close').addEventListener('click', () => closeModal(document.getElementById('transaction-modal')));
-        document.getElementById('transaction-modal-cancel').addEventListener('click', () => closeModal(document.getElementById('transaction-modal')));
-        document.getElementById('transaction-form').addEventListener('submit', saveTransaction);
-        document.getElementById('transaction-type').addEventListener('change', (e) => populateCategorySelect(e.target.value)); // Atualiza categorias no modal
-        document.getElementById('btn-toggle-advanced').addEventListener('click', toggleAdvancedFields);
-        document.getElementById('transaction-recurring').addEventListener('change', (e) => {
-            document.getElementById('recurring-options').style.display = e.target.checked ? 'block' : 'none';
-        });
+        // --- Modal de Transação ---
+        const transactionModal = document.getElementById('transaction-modal');
+        if (transactionModal) {
+            const btnClose = transactionModal.querySelector('#transaction-modal-close');
+            const btnCancel = transactionModal.querySelector('#transaction-modal-cancel');
+            const form = transactionModal.querySelector('#transaction-form');
+            const typeSelect = transactionModal.querySelector('#transaction-type');
+            const btnToggleAdvanced = transactionModal.querySelector('#btn-toggle-advanced');
+            const recurringCheckbox = transactionModal.querySelector('#transaction-recurring');
+             const btnAddCategoryModal = transactionModal.querySelector('#btn-add-category-modal');
 
-         // Filtros Análise Mensal - Novo formato de Ano/Mês
-        document.getElementById('analysis-year').addEventListener('change', updateCurrentAnalysisDate);
-        document.getElementById('analysis-month').addEventListener('change', updateCurrentAnalysisDate);
 
-        document.getElementById('analysis-category').addEventListener('change', (e) => {
-            currentAnalysisCategory = e.target.value;
-            toggleDeleteCategoryButton();
-            updateMonthlyAnalysis();
-        });
-        document.getElementById('analysis-type').addEventListener('change', (e) => {
-            currentAnalysisType = e.target.value;
-            updateMonthlyAnalysis();
-        });
-        document.getElementById('analysis-importance').addEventListener('change', (e) => {
-            currentAnalysisImportance = e.target.value;
-            updateMonthlyAnalysis();
-        });
-
-         // Gerenciamento de Categorias
-         document.getElementById('btn-add-category').addEventListener('click', () => openCategoryModal());
-         document.getElementById('btn-add-category-modal').addEventListener('click', () => openCategoryModal()); // Botão dentro do modal de transação
-         document.getElementById('btn-delete-category').addEventListener('click', () => {
-            const categoryId = document.getElementById('analysis-category').value;
-            if (categoryId && categoryId !== 'all') {
-                confirmDeleteCategory(categoryId);
+            if (btnClose) btnClose.addEventListener('click', () => closeModal(transactionModal));
+            if (btnCancel) btnCancel.addEventListener('click', () => closeModal(transactionModal));
+            if (form) form.addEventListener('submit', saveTransaction);
+            if (typeSelect) typeSelect.addEventListener('change', (e) => populateCategorySelect(e.target.value));
+            if (btnToggleAdvanced) btnToggleAdvanced.addEventListener('click', toggleAdvancedFields);
+            if (recurringCheckbox) {
+                recurringCheckbox.addEventListener('change', (e) => {
+                    const recurringOptionsDiv = document.getElementById('recurring-options');
+                    if(recurringOptionsDiv) recurringOptionsDiv.style.display = e.target.checked ? 'block' : 'none';
+                });
             }
-        });
-         document.getElementById('category-form').addEventListener('submit', handleSaveCategory);
-         document.querySelectorAll('[data-dismiss="modal"]').forEach(btn => {
-             btn.addEventListener('click', () => closeModal(btn.closest('.modal')));
-         }); // Fechar modais de categoria e confirmação
+             if (btnAddCategoryModal) btnAddCategoryModal.addEventListener('click', () => openCategoryModal());
+        }
 
-         // Modal de Confirmação
-         document.getElementById('confirm-modal-confirm').addEventListener('click', () => {
-             // A ação específica é definida dinamicamente antes de abrir o modal
-             const action = document.getElementById('confirm-modal-confirm')._action;
-             if (action && typeof action === 'function') {
-                 action();
-             } else {
-                 console.warn("Nenhuma ação definida para confirmação.");
-                 closeModal(document.getElementById('confirm-modal'));
-             }
+        // --- Filtros Análise Mensal ---
+        const monthYearSelect = document.getElementById('analysis-month-year');
+        const categorySelect = document.getElementById('analysis-category');
+
+        if (monthYearSelect) {
+            monthYearSelect.addEventListener('change', (e) => {
+                currentAnalysisMonthYear = e.target.value;
+                updateMonthlyAnalysis();
+            });
+        }
+        if (categorySelect) {
+            categorySelect.addEventListener('change', (e) => {
+                currentAnalysisCategory = e.target.value;
+                toggleDeleteCategoryButton();
+                updateMonthlyAnalysis();
+            });
+        }
+
+         // --- Gerenciamento de Categorias ---
+         const btnAddCategoryGlobal = document.getElementById('btn-add-category');
+         const btnDeleteCategoryGlobal = document.getElementById('btn-delete-category');
+         const categoryModal = document.getElementById('category-modal');
+
+
+         if (btnAddCategoryGlobal) btnAddCategoryGlobal.addEventListener('click', () => openCategoryModal());
+         if (btnDeleteCategoryGlobal) {
+             btnDeleteCategoryGlobal.addEventListener('click', () => {
+                const selectedCategoryId = document.getElementById('analysis-category')?.value;
+                if (selectedCategoryId && selectedCategoryId !== 'all') {
+                    confirmDeleteCategory(selectedCategoryId);
+                }
+            });
+         }
+
+         if (categoryModal) {
+             const categoryForm = categoryModal.querySelector('#category-form');
+             if (categoryForm) categoryForm.addEventListener('submit', handleSaveCategory);
+             // Botões de fechar/cancelar dentro do modal de categoria
+             categoryModal.querySelectorAll('[data-dismiss="modal"]').forEach(btn => {
+                 btn.addEventListener('click', () => closeModal(categoryModal));
+             });
+         }
+
+
+         // --- Modal de Confirmação ---
+          const confirmModal = document.getElementById('confirm-modal');
+          if (confirmModal) {
+              const confirmButton = confirmModal.querySelector('#confirm-modal-confirm');
+              if (confirmButton) {
+                  confirmButton.addEventListener('click', () => {
+                     // A ação específica é definida dinamicamente antes de abrir o modal
+                     // usando uma propriedade customizada no botão
+                     const action = confirmButton._action; // Acessa a propriedade customizada
+                     if (action && typeof action === 'function') {
+                         action(); // Executa a ação (ex: deleteTransaction, deleteCategory)
+                     } else {
+                         console.warn("Nenhuma ação definida para confirmação.");
+                         closeModal(confirmModal);
+                     }
+                 });
+              }
+               // Botões de fechar/cancelar dentro do modal de confirmação
+             confirmModal.querySelectorAll('[data-dismiss="modal"]').forEach(btn => {
+                 btn.addEventListener('click', () => closeModal(confirmModal));
+             });
+          }
+
+         // Event listener genérico para fechar modais clicando fora (no backdrop)
+         document.querySelectorAll('.modal').forEach(modal => {
+             modal.addEventListener('click', (event) => {
+                // Fecha APENAS se o clique for diretamente no elemento .modal (o backdrop)
+                if (event.target === modal) {
+                    closeModal(modal);
+                }
+             });
          });
+
+        console.log("Listeners de eventos configurados.");
     }
 
     // Mostrar/Ocultar campos avançados no modal de transação
     function toggleAdvancedFields() {
         const advancedFields = document.getElementById('advanced-fields');
         const button = document.getElementById('btn-toggle-advanced');
+        if (!advancedFields || !button) return; // Verifica elementos
+
         const isVisible = advancedFields.classList.toggle('visible');
 
         if (isVisible) {
@@ -2676,20 +2872,35 @@ function updateCurrentAnalysisDate() {
 
     // Abrir Modal Nova Categoria
     function openCategoryModal() {
-        document.getElementById('category-form').reset();
+        const modalElement = document.getElementById('category-modal');
+        const form = document.getElementById('category-form');
+        if (!modalElement || !form) return;
+
+        form.reset();
         document.getElementById('category-modal-title').textContent = "Nova Categoria";
-        document.getElementById('category-color').value = '#8A8A8E'; // Reset color
-        openModal(document.getElementById('category-modal'));
-         setTimeout(() => document.getElementById('category-name').focus(), 100);
+        // Tenta definir cor padrão, verificando se elemento existe
+        const colorInput = document.getElementById('category-color');
+        if (colorInput) colorInput.value = '#8A8A8E';
+
+        openModal(modalElement);
+        setTimeout(() => {
+            const nameInput = document.getElementById('category-name');
+            if(nameInput) nameInput.focus();
+        }, 100);
     }
 
     // Salvar Categoria (Handler do form)
     async function handleSaveCategory(event) {
         event.preventDefault();
-        const name = document.getElementById('category-name').value;
-        const type = document.getElementById('category-type').value;
-        const icon = document.getElementById('category-icon').value;
-        const color = document.getElementById('category-color').value;
+        const nameInput = document.getElementById('category-name');
+        const typeSelect = document.getElementById('category-type');
+        const iconInput = document.getElementById('category-icon');
+        const colorInput = document.getElementById('category-color');
+
+        const name = nameInput ? nameInput.value : '';
+        const type = typeSelect ? typeSelect.value : '';
+        const icon = iconInput ? iconInput.value : '';
+        const color = colorInput ? colorInput.value : '#8A8A8E';
 
         if (!name || !type) {
             showToast("Nome e Tipo da Categoria são obrigatórios.", "warning");
@@ -2715,14 +2926,22 @@ function updateCurrentAnalysisDate() {
         }
 
         const confirmModalElement = document.getElementById('confirm-modal');
-        document.getElementById('confirm-modal-title').textContent = "Excluir Categoria";
-        document.getElementById('confirm-modal-message').textContent = `Tem certeza que deseja excluir a categoria "${category.name}"?`;
-        document.getElementById('confirm-modal-extra-info').textContent = "Atenção: Esta ação não pode ser desfeita. Transações associadas a esta categoria NÃO serão excluídas, mas ficarão sem categoria."; // Ajustar mensagem se a lógica de verificação mudar
-         document.getElementById('confirm-modal-confirm').textContent = "Excluir";
-         document.getElementById('confirm-modal-confirm').className = 'btn btn-danger'; // Botão vermelho
+        if (!confirmModalElement) return;
 
-        // Define a ação do botão confirmar
-        document.getElementById('confirm-modal-confirm')._action = () => deleteCategory(categoryId);
+        const title = confirmModalElement.querySelector('#confirm-modal-title');
+        const message = confirmModalElement.querySelector('#confirm-modal-message');
+        const extraInfo = confirmModalElement.querySelector('#confirm-modal-extra-info');
+        const confirmButton = confirmModalElement.querySelector('#confirm-modal-confirm');
+
+        if(title) title.textContent = "Excluir Categoria";
+        if(message) message.textContent = `Tem certeza que deseja excluir a categoria "${category.name || categoryId}"?`;
+        if(extraInfo) extraInfo.textContent = "Atenção: Esta ação não pode ser desfeita. Transações associadas (se houver) ficarão sem categoria.";
+        if(confirmButton) {
+             confirmButton.textContent = "Excluir";
+             confirmButton.className = 'btn btn-danger'; // Botão vermelho
+             // Define a ação do botão confirmar usando propriedade customizada
+             confirmButton._action = () => deleteCategory(categoryId);
+        }
 
         openModal(confirmModalElement);
     }
@@ -2736,17 +2955,26 @@ function updateCurrentAnalysisDate() {
         }
 
         const confirmModalElement = document.getElementById('confirm-modal');
-        document.getElementById('confirm-modal-title').textContent = "Excluir Transação";
+         if (!confirmModalElement) return;
+
+        const title = confirmModalElement.querySelector('#confirm-modal-title');
+        const message = confirmModalElement.querySelector('#confirm-modal-message');
+        const extraInfo = confirmModalElement.querySelector('#confirm-modal-extra-info');
+        const confirmButton = confirmModalElement.querySelector('#confirm-modal-confirm');
+
+
+        if (title) title.textContent = "Excluir Transação";
         const description = transaction.description || `Transação de ${formatCurrency(transaction.amount)}`;
-        let message = `Tem certeza que deseja excluir a transação "${description}" de ${formatDate(transaction.date)}?`;
-        let extraInfo = "Esta ação não pode ser desfeita.";
+        let baseMessage = `Tem certeza que deseja excluir a transação "${description}" de ${formatDate(transaction.date)}?`;
+        let extraInfoHTML = "Esta ação não pode ser desfeita.";
         let deleteScope = 'this'; // Padrão: excluir apenas esta
+        let confirmButtonAction = () => deleteTransaction(transactionId, null, 'this'); // Ação padrão
 
          // Lógica para recorrência
          const recurringBaseId = transaction.recurringInfo?.baseId;
          if(recurringBaseId) {
-            message = `Esta é uma transação recorrente. O que você deseja excluir?`;
-            extraInfo = `
+            baseMessage = `Esta é uma transação recorrente (${transaction.recurringInfo?.currentInstallment || '?'}/${transaction.recurringInfo?.totalInstallments || '∞'}). O que você deseja excluir?`;
+            extraInfoHTML = `
                 <div style="display: flex; flex-direction: column; gap: 0.75rem;">
                     <label>
                         <input type="radio" name="delete-scope" value="this" checked> Somente esta ocorrência (${formatDate(transaction.date)})
@@ -2756,22 +2984,31 @@ function updateCurrentAnalysisDate() {
                     </label>
                 </div>
             `;
-             // Atualiza deleteScope quando o radio muda
-             setTimeout(() => {
-                confirmModalElement.querySelectorAll('input[name="delete-scope"]').forEach(radio => {
-                    radio.onchange = (e) => { deleteScope = e.target.value; };
-                });
-             }, 100);
+
+            // Atualiza a ação do botão dinamicamente quando o radio muda
+            confirmModalElement.querySelectorAll('input[name="delete-scope"]').forEach(radio => {
+                 radio.onchange = (e) => {
+                    deleteScope = e.target.value;
+                    confirmButtonAction = () => deleteTransaction(transactionId, recurringBaseId, deleteScope);
+                    // Reatribui a ação ao botão confirmar
+                    if (confirmButton) confirmButton._action = confirmButtonAction;
+                 };
+             });
+             // Define a ação inicial para o botão
+             confirmButtonAction = () => deleteTransaction(transactionId, recurringBaseId, 'this'); // Inicia com 'this'
          }
 
+        if(message) message.textContent = baseMessage;
+        if(extraInfo) extraInfo.innerHTML = extraInfoHTML; // Usa innerHTML para renderizar os radios
+        if(confirmButton) {
+             confirmButton.textContent = "Excluir";
+             confirmButton.className = 'btn btn-danger';
+             confirmButton._action = confirmButtonAction; // Atribui a ação (inicial ou recorrente)
+         }
 
-        document.getElementById('confirm-modal-message').textContent = message;
-        document.getElementById('confirm-modal-extra-info').innerHTML = extraInfo;
-        document.getElementById('confirm-modal-confirm').textContent = "Excluir";
-        document.getElementById('confirm-modal-confirm').className = 'btn btn-danger';
-
-        // Define a ação do botão confirmar
-        document.getElementById('confirm-modal-confirm')._action = () => deleteTransaction(transactionId, recurringBaseId, deleteScope);
+        // Garante que o radio 'this' esteja marcado ao abrir (para recorrentes)
+        const radioThis = confirmModalElement.querySelector('input[name="delete-scope"][value="this"]');
+        if (radioThis) radioThis.checked = true;
 
         openModal(confirmModalElement);
     }
@@ -2781,6 +3018,14 @@ function updateCurrentAnalysisDate() {
 
     // Atualizar Dashboard Completo
     function updateDashboard() {
+        // Verifica se as coleções estão disponíveis antes de atualizar
+        if (!transactionsCollection || !categoriesCollection) {
+            console.warn("Atualização do Dashboard interrompida - coleções não disponíveis.");
+            // Pode ser útil resetar a UI para um estado vazio/erro
+            // resetUI(); // (Função a ser criada se necessário)
+            return;
+        }
+        console.log("Atualizando dashboard...");
         updateKPIs();
         // Atualiza gráficos dependendo da aba ativa
         if (currentTab === 'overview') {
@@ -2792,56 +3037,86 @@ function updateCurrentAnalysisDate() {
 
     // Atualizar KPIs da Visão Geral
     function updateKPIs() {
+        // Seleciona elementos da UI
+        const balanceEl = document.getElementById('kpi-balance');
+        const incomeEl = document.getElementById('kpi-income');
+        const expensesEl = document.getElementById('kpi-expenses');
+        const savingsEl = document.getElementById('kpi-savings');
+        const projectionEl = document.getElementById('kpi-projection');
+        const balanceTrendEl = document.getElementById('balance-trend');
+        const incomeTrendEl = document.getElementById('income-trend');
+        const expensesTrendEl = document.getElementById('expenses-trend');
+        const balanceTrendIndicator = document.getElementById('balance-trend-indicator');
+        const incomeTrendIndicator = document.getElementById('income-trend-indicator');
+        const expensesTrendIndicator = document.getElementById('expenses-trend-indicator');
+        const savingsStatusEl = document.getElementById('savings-status');
+        const savingsProgress = document.getElementById('savings-progress');
+        const projectionStatusEl = document.getElementById('projection-status');
+
+        // Verifica se todos os elementos existem antes de prosseguir
+        if (!balanceEl || !incomeEl || !expensesEl || !savingsEl || !projectionEl ||
+            !balanceTrendEl || !incomeTrendEl || !expensesTrendEl ||
+            !balanceTrendIndicator || !incomeTrendIndicator || !expensesTrendIndicator ||
+            !savingsStatusEl || !savingsProgress || !projectionStatusEl) {
+            console.warn("Um ou mais elementos de KPI não encontrados no DOM. Abortando atualização de KPIs.");
+            return;
+        }
+
         // 1. Saldo Atual (Considerando todas as transações pagas)
-        const totalIncome = transactions.filter(t => t.type === 'income' && t.status === 'paid').reduce((sum, t) => sum + t.amount, 0);
-        const totalExpenses = transactions.filter(t => t.type === 'expense' && t.status === 'paid').reduce((sum, t) => sum + t.amount, 0);
+        const totalIncome = transactions
+            .filter(t => t.type === 'income' && t.status === 'paid' && typeof t.amount === 'number')
+            .reduce((sum, t) => sum + t.amount, 0);
+        const totalExpenses = transactions
+            .filter(t => t.type === 'expense' && t.status === 'paid' && typeof t.amount === 'number')
+            .reduce((sum, t) => sum + t.amount, 0);
         const currentBalance = totalIncome - totalExpenses;
-        document.getElementById('kpi-balance').textContent = formatCurrency(currentBalance);
+        balanceEl.textContent = formatCurrency(currentBalance);
 
         // 2. Receitas e Despesas do Mês Atual
         const currentMonthStart = moment().startOf('month');
         const currentMonthEnd = moment().endOf('month');
 
         const currentMonthIncome = transactions
-            .filter(t => t.type === 'income' && moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]'))
+            .filter(t => t.type === 'income' && typeof t.amount === 'number' && moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]'))
             .reduce((sum, t) => sum + t.amount, 0);
         const currentMonthExpenses = transactions
-            .filter(t => t.type === 'expense' && moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]'))
+            .filter(t => t.type === 'expense' && typeof t.amount === 'number' && moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]'))
             .reduce((sum, t) => sum + t.amount, 0);
 
-        document.getElementById('kpi-income').textContent = formatCurrency(currentMonthIncome);
-        document.getElementById('kpi-expenses').textContent = formatCurrency(currentMonthExpenses);
+        incomeEl.textContent = formatCurrency(currentMonthIncome);
+        expensesEl.textContent = formatCurrency(currentMonthExpenses);
 
         // 3. Economia do Mês
         const currentMonthSavings = currentMonthIncome - currentMonthExpenses;
-        const savingsEl = document.getElementById('kpi-savings');
         savingsEl.textContent = formatCurrency(currentMonthSavings);
         savingsEl.style.color = currentMonthSavings >= 0 ? 'var(--success)' : 'var(--danger)';
 
         // Barra de progresso e status da economia
-        const savingsProgress = document.getElementById('savings-progress');
-        const savingsStatus = document.getElementById('savings-status');
         let savingsPercentage = 0;
         if (currentMonthIncome > 0) {
             savingsPercentage = Math.max(0, (currentMonthSavings / currentMonthIncome) * 100); // % da receita economizado
-            savingsProgress.style.width = `${savingsPercentage}%`;
+            savingsProgress.style.width = `${Math.min(100, savingsPercentage)}%`; // Limita a 100%
             savingsProgress.className = `progress-bar ${currentMonthSavings >= 0 ? 'success' : 'danger'}`;
-            savingsStatus.textContent = `${currentMonthSavings >= 0 ? 'Positiva' : 'Negativa'} (${savingsPercentage.toFixed(0)}% da receita)`;
+            savingsStatusEl.textContent = `${currentMonthSavings >= 0 ? 'Positiva' : 'Negativa'} (${savingsPercentage.toFixed(0)}% da receita)`;
         } else {
              savingsProgress.style.width = '0%';
-             savingsProgress.className = 'progress-bar';
-             savingsStatus.textContent = currentMonthExpenses > 0 ? 'Apenas despesas' : 'Sem movimentação';
+             savingsProgress.className = 'progress-bar'; // Reset class
+             savingsStatusEl.textContent = currentMonthExpenses > 0 ? 'Apenas despesas' : 'Sem movimentação';
         }
 
 
         // 4. Projeção de Gastos do Mês
-        // (Gastos realizados + gastos agendados/pendentes no mês)
-        const scheduledExpenses = transactions
-             .filter(t => t.type === 'expense' && t.status !== 'paid' && moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]'))
+        // (Gastos realizados no mês + gastos agendados/pendentes futuros no mês)
+        const scheduledExpensesInMonth = transactions
+             .filter(t => t.type === 'expense' && typeof t.amount === 'number' && t.status !== 'paid' && moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]'))
              .reduce((sum, t) => sum + t.amount, 0);
-        const projectedExpenses = currentMonthExpenses + scheduledExpenses;
-        document.getElementById('kpi-projection').textContent = formatCurrency(projectedExpenses);
-        document.getElementById('projection-status').textContent = `Realizado: ${formatCurrency(currentMonthExpenses)} | Previsto: ${formatCurrency(scheduledExpenses)}`;
+        const expensesPaidInMonth = transactions
+             .filter(t => t.type === 'expense' && typeof t.amount === 'number' && t.status === 'paid' && moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]'))
+             .reduce((sum, t) => sum + t.amount, 0);
+
+        const projectedExpenses = expensesPaidInMonth + scheduledExpensesInMonth;
+        projectionEl.textContent = formatCurrency(projectedExpenses);
+        projectionStatusEl.textContent = `Realizado: ${formatCurrency(expensesPaidInMonth)} | Previsto: ${formatCurrency(scheduledExpensesInMonth)}`;
 
 
         // 5. Tendências vs Mês Anterior
@@ -2849,133 +3124,170 @@ function updateCurrentAnalysisDate() {
         const lastMonthEnd = moment().subtract(1, 'month').endOf('month');
 
         const lastMonthIncome = transactions
-            .filter(t => t.type === 'income' && moment(t.date).isBetween(lastMonthStart, lastMonthEnd, 'day', '[]'))
+            .filter(t => t.type === 'income' && typeof t.amount === 'number' && moment(t.date).isBetween(lastMonthStart, lastMonthEnd, 'day', '[]'))
             .reduce((sum, t) => sum + t.amount, 0);
         const lastMonthExpenses = transactions
-            .filter(t => t.type === 'expense' && moment(t.date).isBetween(lastMonthStart, lastMonthEnd, 'day', '[]'))
+            .filter(t => t.type === 'expense' && typeof t.amount === 'number' && moment(t.date).isBetween(lastMonthStart, lastMonthEnd, 'day', '[]'))
             .reduce((sum, t) => sum + t.amount, 0);
-        const lastMonthBalance = lastMonthIncome - lastMonthExpenses;
+        const lastMonthBalance = lastMonthIncome - lastMonthExpenses; // Saldo PAGO do mês anterior
+
+         // Calcula saldo PAGO do mês atual para comparação
+        const currentMonthPaidBalance = transactions
+            .filter(t => t.status === 'paid' && typeof t.amount === 'number' && moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]'))
+            .reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0);
+
 
         // Função para calcular e formatar tendência
-        const updateTrend = (current, previous, elementId, indicatorElementId) => {
-            const trendElement = document.getElementById(elementId);
-            const indicatorElement = document.getElementById(indicatorElementId);
+        const updateTrend = (current, previous, trendValueElement, trendIndicatorElement) => {
             let percentage = 0;
             let trendClass = 'neutral';
-            let icon = `<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8z"/>`; // Traço
+             let iconPath = `<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8z"/>`; // Traço padrão
 
+             // Calcula percentual apenas se previous for diferente de zero para evitar divisão por zero
             if (previous !== 0) {
                 percentage = ((current - previous) / Math.abs(previous)) * 100;
             } else if (current !== 0) {
-                percentage = 100 * Math.sign(current); // 100% ou -100% se saiu do zero
+                 // Se anterior era zero e atual não é, considera 100% de aumento/diminuição
+                percentage = 100 * Math.sign(current);
             }
+             // Se ambos são zero, percentual é 0
 
-             // Inverter lógica para despesas (queda é bom)
-            const isExpense = elementId.includes('expenses');
-             if (percentage > 1) {
-                trendClass = isExpense ? 'down' : 'up'; // Despesa subiu (ruim), Receita/Saldo subiu (bom)
-                icon = `<path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>`; // Seta para cima
-             } else if (percentage < -1) {
-                trendClass = isExpense ? 'up' : 'down'; // Despesa caiu (bom), Receita/Saldo caiu (ruim)
-                 icon = `<path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>`; // Seta para baixo
+             // Determina classe e ícone (precisão de 1% para definir direção)
+            const isExpenseTrend = trendIndicatorElement.id.includes('expenses');
+             if (percentage > 1) { // Aumento > 1%
+                 trendClass = isExpenseTrend ? 'down' : 'up'; // Aumento de despesa é "down" (ruim), aumento de receita/saldo é "up" (bom)
+                 iconPath = `<path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>`; // Seta para cima
+             } else if (percentage < -1) { // Diminuição > 1%
+                 trendClass = isExpenseTrend ? 'up' : 'down'; // Diminuição de despesa é "up" (bom), diminuição de receita/saldo é "down" (ruim)
+                  iconPath = `<path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>`; // Seta para baixo
              }
 
-            trendElement.textContent = `${Math.abs(percentage).toFixed(0)}%`;
-            indicatorElement.className = `kpi-trend ${trendClass}`;
-            indicatorElement.querySelector('svg').innerHTML = icon;
+            trendValueElement.textContent = `${Math.abs(percentage).toFixed(0)}%`;
+            trendIndicatorElement.className = `kpi-trend ${trendClass}`;
+            const svgElement = trendIndicatorElement.querySelector('svg');
+            if(svgElement) svgElement.innerHTML = iconPath;
         };
 
-        updateTrend(currentBalance, lastMonthBalance, 'balance-trend', 'balance-trend-indicator');
-        updateTrend(currentMonthIncome, lastMonthIncome, 'income-trend', 'income-trend-indicator');
-        updateTrend(currentMonthExpenses, lastMonthExpenses, 'expenses-trend', 'expenses-trend-indicator'); // Já inverte a lógica na função
+        // Atualiza as tendências usando os elementos verificados
+        updateTrend(currentMonthPaidBalance, lastMonthBalance, balanceTrendEl, balanceTrendIndicator);
+        updateTrend(currentMonthIncome, lastMonthIncome, incomeTrendEl, incomeTrendIndicator);
+        updateTrend(currentMonthExpenses, lastMonthExpenses, expensesTrendEl, expensesTrendIndicator); // Lógica invertida na função
     }
+
 
     // ===== Lógica da Análise Mensal =====
-function updateMonthlyAnalysis() {
-    showLoading();
-    
-    if (!currentAnalysisMonthYear) {
-        currentAnalysisMonthYear = moment().format('YYYY-MM'); // Usa mês atual como fallback
-    }
 
-        const selectedMonthYear = currentAnalysisMonthYear;
-        const selectedCategory = document.getElementById('analysis-category').value;
-        const selectedType = document.getElementById('analysis-type').value;
-        const selectedImportance = document.getElementById('analysis-importance').value;
+    function updateMonthlyAnalysis() {
+        // Verifica se elementos essenciais existem
+        const monthYearSelect = document.getElementById('analysis-month-year');
+        const categorySelect = document.getElementById('analysis-category');
+        if (!monthYearSelect || !categorySelect) {
+             console.error("Filtros de Análise Mensal não encontrados. Abortando.");
+             return;
+        }
+        showLoading();
+        console.log(`Atualizando análise para ${currentAnalysisMonthYear}, Categoria: ${currentAnalysisCategory}`);
+
+        const selectedMonthYear = currentAnalysisMonthYear; // Usa o valor do estado global
+        const selectedCategory = currentAnalysisCategory; // Usa o valor do estado global
 
         const startOfMonth = moment(selectedMonthYear).startOf('month');
         const endOfMonth = moment(selectedMonthYear).endOf('month');
 
-        // Filtrar transações para o mês e filtros selecionados
+        // Filtrar transações para o mês e categoria selecionados
         const monthlyTransactions = transactions.filter(t => {
+            // Validação básica da transação
+            if (!t.date || typeof t.amount !== 'number' || !t.type) {
+                console.warn(`Transação inválida encontrada: ${t.id}`, t);
+                return false;
+            }
             const transactionMoment = moment(t.date);
             const isSameMonth = transactionMoment.isBetween(startOfMonth, endOfMonth, 'day', '[]');
             const isSameCategory = (selectedCategory === 'all' || t.category === selectedCategory);
-            const isSameType = (selectedType === 'all' || t.type === selectedType);
-            const hasMatchingImportance = (
-                selectedImportance === 'all' || 
-                (selectedImportance === 'none' && !t.importance) || 
-                (t.importance === selectedImportance)
-            );
-            
-            return isSameMonth && isSameCategory && isSameType && hasMatchingImportance;
+            return isSameMonth && isSameCategory;
         });
+        console.log(`${monthlyTransactions.length} transações encontradas para a análise.`);
 
-        // Calcular Indicadores
-        calculateMonthlyIndicators(monthlyTransactions, selectedMonthYear);
+        try {
+            // Calcular Indicadores
+            calculateMonthlyIndicators(monthlyTransactions, selectedMonthYear);
 
-        // Renderizar Lista de Transações
-        renderMonthlyTransactionList(monthlyTransactions);
+            // Renderizar Lista de Transações
+            renderMonthlyTransactionList(monthlyTransactions);
 
-        // Gerar e Renderizar Insights
-        generateAndRenderInsights(monthlyTransactions, selectedMonthYear);
+            // Gerar e Renderizar Insights
+            generateAndRenderInsights(monthlyTransactions, selectedMonthYear);
 
-        // Atualizar Gráficos da Análise Mensal
-        updateAnalysisCharts(monthlyTransactions);
-
-        hideLoading();
+            // Atualizar Gráficos da Análise Mensal
+            updateAnalysisCharts(monthlyTransactions);
+        } catch (error) {
+             console.error("Erro durante a atualização da análise mensal:", error);
+             showToast("Ocorreu um erro ao atualizar a análise.", "danger");
+             // Limpa a UI de análise para indicar o erro
+             // clearAnalysisUI(); // (Função a ser criada se necessário)
+        } finally {
+            hideLoading();
+        }
     }
 
     function calculateMonthlyIndicators(monthlyTransactions, selectedMonthYear) {
+         // Seleciona elementos e verifica existência
+        const totalIncomeEl = document.getElementById('analysis-total-income');
+        const totalExpensesEl = document.getElementById('analysis-total-expenses');
+        const finalBalanceEl = document.getElementById('analysis-final-balance');
+        const monthStatusEl = document.getElementById('analysis-month-status');
+        const daysLeftEl = document.getElementById('analysis-days-left');
+        const incomeCompEl = document.getElementById('analysis-income-comparison');
+        const expenseCompEl = document.getElementById('analysis-expense-comparison');
+        const balanceCompEl = document.getElementById('analysis-balance-comparison');
+        const topCategoryEl = document.getElementById('analysis-top-category');
+        const topCategoryValueEl = document.getElementById('analysis-top-category-value');
+
+        if (!totalIncomeEl || !totalExpensesEl || !finalBalanceEl || !monthStatusEl || !daysLeftEl ||
+            !incomeCompEl || !expenseCompEl || !balanceCompEl || !topCategoryEl || !topCategoryValueEl) {
+            console.warn("Elementos de indicadores da Análise Mensal não encontrados.");
+            return;
+        }
+
+
         const income = monthlyTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
         const expenses = monthlyTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
         const balance = income - expenses;
 
-        document.getElementById('analysis-total-income').textContent = formatCurrency(income);
-        document.getElementById('analysis-total-expenses').textContent = formatCurrency(expenses);
-        const balanceEl = document.getElementById('analysis-final-balance');
-        balanceEl.textContent = formatCurrency(balance);
-        balanceEl.className = `indicator-value ${balance >= 0 ? 'positive' : 'negative'}`;
+        totalIncomeEl.textContent = formatCurrency(income);
+        totalExpensesEl.textContent = formatCurrency(expenses);
+        finalBalanceEl.textContent = formatCurrency(balance);
+        finalBalanceEl.className = `indicator-value ${balance >= 0 ? 'positive' : 'negative'}`;
 
         // Status do Mês e Dias Restantes
         const today = moment();
-        const endOfMonth = moment(selectedMonthYear).endOf('month');
+        const startOfMonthMoment = moment(selectedMonthYear); // Cache moment object
+        const endOfMonth = startOfMonthMoment.endOf('month');
         const daysLeft = endOfMonth.diff(today, 'days');
-        const statusEl = document.getElementById('analysis-month-status');
-        const daysLeftEl = document.getElementById('analysis-days-left');
 
-        if (moment(selectedMonthYear).isSame(today, 'month')) {
-            statusEl.textContent = 'Em Andamento';
+        if (startOfMonthMoment.isSame(today, 'month')) {
+            monthStatusEl.textContent = 'Em Andamento';
             daysLeftEl.textContent = `${Math.max(0, daysLeft)} dias restantes`;
-        } else if (moment(selectedMonthYear).isBefore(today, 'month')) {
-            statusEl.textContent = 'Fechado';
+        } else if (startOfMonthMoment.isBefore(today, 'month')) {
+            monthStatusEl.textContent = 'Fechado';
             daysLeftEl.textContent = 'Mês encerrado';
         } else {
-            statusEl.textContent = 'Futuro';
+            monthStatusEl.textContent = 'Futuro';
             daysLeftEl.textContent = 'Mês futuro';
         }
 
          // Comparativos com Mês Anterior
-        const lastMonthStr = moment(selectedMonthYear).subtract(1, 'month').format('YYYY-MM');
+        const lastMonthStr = startOfMonthMoment.subtract(1, 'month').format('YYYY-MM'); // Reusa o moment object
         const lastMonthStart = moment(lastMonthStr).startOf('month');
         const lastMonthEnd = moment(lastMonthStr).endOf('month');
         const lastMonthTransactions = transactions.filter(t => {
+             // Validação básica
+            if (!t.date || typeof t.amount !== 'number' || !t.type) return false;
              const transactionMoment = moment(t.date);
              const isSameMonth = transactionMoment.isBetween(lastMonthStart, lastMonthEnd, 'day', '[]');
              // Considera a mesma categoria selecionada para comparação justa
              const isSameCategory = (currentAnalysisCategory === 'all' || t.category === currentAnalysisCategory);
-             const isSameType = (currentAnalysisType === 'all' || t.type === currentAnalysisType);
-             return isSameMonth && isSameCategory && isSameType;
+             return isSameMonth && isSameCategory;
          });
 
         const lastMonthIncome = lastMonthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
@@ -2984,28 +3296,27 @@ function updateMonthlyAnalysis() {
 
         const formatComparison = (current, previous) => {
              if (previous === 0 && current === 0) return "--";
-             if (previous === 0) return `${current > 0 ? '+' : ''}100% vs mês anterior`;
+             if (previous === 0) return `${current > 0 ? '+' : ''}100% vs mês anterior`; // Evita divisão por zero
              const diff = current - previous;
-             const percentage = ((diff / Math.abs(previous)) * 100);
+             const percentage = ((diff / Math.abs(previous)) * 100); // Usa Math.abs para evitar negativo no denominador
              return `${percentage >= 0 ? '+' : ''}${percentage.toFixed(0)}% vs mês anterior`;
          };
 
-        document.getElementById('analysis-income-comparison').textContent = formatComparison(income, lastMonthIncome);
-        document.getElementById('analysis-expense-comparison').textContent = formatComparison(expenses, lastMonthExpenses);
-        document.getElementById('analysis-balance-comparison').textContent = formatComparison(balance, lastMonthBalance);
+        incomeCompEl.textContent = formatComparison(income, lastMonthIncome);
+        expenseCompEl.textContent = formatComparison(expenses, lastMonthExpenses);
+        balanceCompEl.textContent = formatComparison(balance, lastMonthBalance);
 
 
         // Top Categoria de Gasto
         const expensesByCategory = monthlyTransactions
             .filter(t => t.type === 'expense')
             .reduce((acc, t) => {
-                acc[t.category] = (acc[t.category] || 0) + t.amount;
+                const catId = t.category || 'unknown'; // Trata categoria ausente
+                acc[catId] = (acc[catId] || 0) + t.amount;
                 return acc;
             }, {});
 
         const topCategoryEntry = Object.entries(expensesByCategory).sort(([, a], [, b]) => b - a)[0];
-        const topCategoryEl = document.getElementById('analysis-top-category');
-        const topCategoryValueEl = document.getElementById('analysis-top-category-value');
 
         if (topCategoryEntry) {
             const [categoryId, amount] = topCategoryEntry;
@@ -3018,85 +3329,101 @@ function updateMonthlyAnalysis() {
         }
     }
 
-function renderMonthlyTransactionList(monthlyTransactions) {
-    const listContainer = document.getElementById('analysis-transaction-list');
-    const noTransactionsMessage = document.getElementById('analysis-no-transactions');
-    listContainer.innerHTML = ''; // Limpa a lista
+    function renderMonthlyTransactionList(monthlyTransactions) {
+        const listContainer = document.getElementById('analysis-transaction-list');
+        const noTransactionsMessage = document.getElementById('analysis-no-transactions');
+        if (!listContainer || !noTransactionsMessage) return; // Verifica elementos
 
-    if (monthlyTransactions.length === 0) {
-        listContainer.appendChild(noTransactionsMessage); // Mostra mensagem se vazio
-        noTransactionsMessage.style.display = 'block';
-        return;
+        listContainer.innerHTML = ''; // Limpa a lista
+
+        if (monthlyTransactions.length === 0) {
+            noTransactionsMessage.style.display = 'block'; // Mostra mensagem se vazio
+            return;
+        }
+         noTransactionsMessage.style.display = 'none'; // Esconde mensagem
+
+        monthlyTransactions.forEach(t => {
+            const category = categories.find(c => c.id === t.category) || { name: 'Desconhecida', icon: '❓', color: '#8E8E93' };
+            const item = document.createElement('div');
+            item.className = 'transaction-item';
+            item.style.cursor = 'pointer'; // Indica clicável
+            item.setAttribute('role', 'button'); // Semântica
+            item.setAttribute('tabindex', '0'); // Permite foco
+            item.addEventListener('click', () => openTransactionModal(t)); // Abre edição ao clicar
+            item.addEventListener('keydown', (e) => { // Permite ativar com Enter/Espaço
+                if (e.key === 'Enter' || e.key === ' ') {
+                    openTransactionModal(t);
+                }
+            });
+
+            const amountPrefix = t.type === 'income' ? '+' : '-';
+            const importanceClass = t.importance ? `transaction-importance ${t.importance}` : '';
+            const importanceTitle = t.importance ? `Importância: ${t.importance.charAt(0).toUpperCase() + t.importance.slice(1)}` : '';
+
+
+            item.innerHTML = `
+                <div class="transaction-item-left">
+                    <div class="transaction-icon" style="background-color: ${category.color || '#8E8E93'};">
+                        ${category.icon || '?'}
+                    </div>
+                    <div class="transaction-info">
+                        <div class="transaction-description">${t.description || category.name || 'Transação sem descrição'}</div>
+                        <div class="transaction-category">${category.name || 'Desconhecida'}</div>
+                    </div>
+                </div>
+                <div class="transaction-item-right">
+                    <div class="transaction-amount ${t.type === 'income' ? 'income' : 'expense'}">
+                        ${amountPrefix} ${formatCurrency(t.amount)}
+                         ${importanceClass ? `<span class="${importanceClass}" title="${importanceTitle}"></span>` : ''}
+                    </div>
+                    <div class="transaction-date">${formatDate(t.date)}</div>
+                </div>
+                 <!-- Botão Excluir (Opcional, pode poluir a lista) -->
+                 <!--
+                 <button type="button" class="btn-icon-small btn-delete-transaction" style="margin-left: 1rem; color: var(--danger);" title="Excluir Transação">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                         <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                     </svg>
+                 </button>
+                 -->
+            `;
+             // Adiciona listener para o botão de excluir SE ele for adicionado ao HTML acima
+             /*
+             const deleteBtn = item.querySelector('.btn-delete-transaction');
+             if (deleteBtn) {
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Impede que o clique no botão abra o modal de edição
+                    confirmDeleteTransaction(t.id);
+                });
+             }
+             */
+            listContainer.appendChild(item);
+        });
     }
-     noTransactionsMessage.style.display = 'none'; // Esconde mensagem
-
-    monthlyTransactions.sort((a, b) => moment(b.date).diff(moment(a.date))); // Mais recentes primeiro
-
-    monthlyTransactions.forEach(t => {
-        const category = categories.find(c => c.id === t.category) || { name: '?', icon: '❓', color: '#8E8E93' };
-        const item = document.createElement('div');
-        item.className = 'transaction-item';
-        
-        const amountPrefix = t.type === 'income' ? '+' : '-';
-        const importanceClass = t.importance ? `transaction-importance ${t.importance}` : '';
-
-        item.innerHTML = `
-            <div class="transaction-item-left">
-                <div class="transaction-icon" style="background-color: ${category.color};">
-                    ${category.icon}
-                </div>
-                <div class="transaction-info">
-                    <div class="transaction-description">${t.description || category.name}</div>
-                    <div class="transaction-category">${category.name}</div>
-                </div>
-            </div>
-            <div class="transaction-item-right">
-                <div class="transaction-amount ${t.type}">
-                    ${amountPrefix} ${formatCurrency(t.amount)}
-                     ${importanceClass ? `<span class="${importanceClass}" title="Importância: ${t.importance}"></span>` : ''}
-                </div>
-                <div class="transaction-date">${formatDate(t.date)}</div>
-                <button class="btn-action btn-delete-transaction" data-id="${t.id}" title="Excluir Transação">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                    </svg>
-                </button>
-            </div>
-        `;
-        
-        // Adiciona evento de clique no botão excluir
-        item.querySelector('.btn-delete-transaction').addEventListener('click', (e) => {
-            e.stopPropagation(); // Impede que o clique propague para o item
-            confirmDeleteTransaction(t.id);
-        });
-        
-        // Manter o evento de edição ao clicar no resto do item
-        item.addEventListener('click', (e) => {
-            if (!e.target.closest('.btn-delete-transaction')) {
-                openTransactionModal(t);
-            }
-        });
-        
-        listContainer.appendChild(item);
-    });
-}
 
      function generateAndRenderInsights(monthlyTransactions, selectedMonthYear) {
         const insightsList = document.getElementById('analysis-insights-list');
         const noInsightsMessage = document.getElementById('analysis-no-insights');
+        if (!insightsList || !noInsightsMessage) return; // Verifica elementos
+
         insightsList.innerHTML = ''; // Limpa a lista
         const insights = [];
 
+        // Calcula totais do mês atual
         const income = monthlyTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
         const expenses = monthlyTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
         const balance = income - expenses;
 
-         // --- Comparação com Mês Anterior ---
+         // --- Comparação com Mês Anterior (dados globais) ---
          const lastMonthStr = moment(selectedMonthYear).subtract(1, 'month').format('YYYY-MM');
          const lastMonthStart = moment(lastMonthStr).startOf('month');
          const lastMonthEnd = moment(lastMonthStr).endOf('month');
-         const lastMonthTransactions = transactions.filter(t => moment(t.date).isBetween(lastMonthStart, lastMonthEnd, 'day', '[]'));
+         const lastMonthTransactions = transactions.filter(t => {
+             if (!t.date || typeof t.amount !== 'number' || !t.type) return false;
+             return moment(t.date).isBetween(lastMonthStart, lastMonthEnd, 'day', '[]');
+             // Nota: Comparação geral, não filtra por categoria selecionada aqui para insights mais amplos
+         });
 
          const lastMonthIncome = lastMonthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
          const lastMonthExpenses = lastMonthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
@@ -3105,104 +3432,101 @@ function renderMonthlyTransactionList(monthlyTransactions) {
          if (lastMonthExpenses > 0) {
              const expenseChange = ((expenses - lastMonthExpenses) / lastMonthExpenses) * 100;
              if (expenseChange > 15) {
-                 insights.push({ type: 'warning', text: `🚨 Atenção: Suas despesas totais aumentaram ${expenseChange.toFixed(0)}% em relação ao mês anterior.` });
+                 insights.push({ type: 'warning', text: `🚨 Atenção: Suas despesas totais (${formatCurrency(expenses)}) aumentaram ${expenseChange.toFixed(0)}% em relação ao mês anterior.` });
              } else if (expenseChange < -10) {
-                 insights.push({ type: 'success', text: `✅ Ótimo! Suas despesas totais diminuíram ${Math.abs(expenseChange).toFixed(0)}% este mês.` });
+                 insights.push({ type: 'success', text: `✅ Ótimo! Suas despesas totais (${formatCurrency(expenses)}) diminuíram ${Math.abs(expenseChange).toFixed(0)}% este mês.` });
              }
          } else if (expenses > 0) {
-             insights.push({ type: 'info', text: `ℹ️ Este foi o primeiro mês com registro de despesas.` });
+             insights.push({ type: 'info', text: `ℹ️ Este foi o primeiro mês com registro de despesas (${formatCurrency(expenses)}).` });
          }
 
-         // Insight: Economia
-         if (balance > 0) {
-             const savingsRate = (balance / income) * 100;
-             insights.push({ type: 'success', text: `👍 Parabéns! Você fechou o mês com saldo positivo de ${formatCurrency(balance)} (${savingsRate.toFixed(0)}% de economia).` });
-         } else if (balance < 0) {
+         // Insight: Economia / Saldo do Mês
+         if (balance > 50) { // Limiar > 0 para ser mais significativo
+             insights.push({ type: 'success', text: `👍 Parabéns! Você fechou o mês com saldo positivo de ${formatCurrency(balance)}.` });
+         } else if (balance < -50) { // Limiar < 0
               insights.push({ type: 'alert', text: `📉 Cuidado! Você fechou o mês com saldo negativo de ${formatCurrency(Math.abs(balance))}.` });
-         } else {
-             insights.push({ type: 'neutral', text: `⚖️ Seu saldo final do mês foi zero.` });
+         } else if (income > 0 || expenses > 0) { // Se houve movimento mas saldo perto de zero
+             insights.push({ type: 'neutral', text: `⚖️ Seu saldo final do mês (${formatCurrency(balance)}) ficou próximo de zero.` });
          }
 
-        // --- Análise de Categorias ---
+
+        // --- Análise de Categorias (do mês atual filtrado) ---
         const expensesByCategory = monthlyTransactions
             .filter(t => t.type === 'expense')
             .reduce((acc, t) => {
-                acc[t.category] = (acc[t.category] || 0) + t.amount;
+                const catId = t.category || 'unknown';
+                acc[catId] = (acc[catId] || 0) + t.amount;
                 return acc;
             }, {});
 
-         const lastMonthExpensesByCategory = lastMonthTransactions
+         // Calcula despesas do mês anterior POR CATEGORIA (filtrado como na análise)
+          const lastMonthFilteredTransactions = transactions.filter(t => {
+             if (!t.date || typeof t.amount !== 'number' || !t.type) return false;
+             const transactionMoment = moment(t.date);
+             const isSameMonth = transactionMoment.isBetween(lastMonthStart, lastMonthEnd, 'day', '[]');
+             const isSameCategory = (currentAnalysisCategory === 'all' || t.category === currentAnalysisCategory);
+             return isSameMonth && isSameCategory;
+         });
+         const lastMonthExpensesByCategory = lastMonthFilteredTransactions
             .filter(t => t.type === 'expense')
             .reduce((acc, t) => {
-                acc[t.category] = (acc[t.category] || 0) + t.amount;
+                 const catId = t.category || 'unknown';
+                 acc[catId] = (acc[catId] || 0) + t.amount;
                 return acc;
             }, {});
 
          const sortedCategories = Object.entries(expensesByCategory).sort(([, a], [, b]) => b - a);
 
-         // Insight: Maior Categoria de Gasto
+         // Insight: Maior Categoria de Gasto (do período filtrado)
          if (sortedCategories.length > 0) {
              const [topCategoryId, topAmount] = sortedCategories[0];
              const topCategory = categories.find(c => c.id === topCategoryId);
-             if (expenses > 0) {
-                 const percentOfTotal = (topAmount / expenses) * 100;
-                 insights.push({ type: 'info', text: `🔍 Sua maior despesa foi em ${topCategory?.name || 'Categoria Desconhecida'} (${formatCurrency(topAmount)}, ${percentOfTotal.toFixed(0)}% do total).` });
+             const categoryName = topCategory?.name || 'Desconhecida';
+             // Mostra insight apenas se houver mais de uma categoria ou se o valor for significativo
+             if (sortedCategories.length > 1 || topAmount > 50) {
+                insights.push({ type: 'info', text: `🔍 Sua maior despesa ${currentAnalysisCategory !== 'all' ? 'nesta categoria' : 'neste mês'} foi em ${categoryName} (${formatCurrency(topAmount)}).` });
              }
          }
 
-         // Insight: Variação em Categorias Relevantes
+         // Insight: Variação em Categorias Relevantes (comparando com mês anterior, filtrado igual)
          sortedCategories.slice(0, 5).forEach(([categoryId, currentAmount]) => { // Analisa top 5
              const lastAmount = lastMonthExpensesByCategory[categoryId] || 0;
-             if (lastAmount > 0) {
+             const category = categories.find(c => c.id === categoryId);
+             const categoryName = category?.name || 'Desconhecida';
+
+             if (lastAmount > 0 && currentAmount > 0) { // Compara apenas se houve gasto em ambos os meses
                  const change = ((currentAmount - lastAmount) / lastAmount) * 100;
-                 if (change > 25) { // Aumento significativo
-                    const category = categories.find(c => c.id === categoryId);
-                    insights.push({ type: 'warning', text: `📈 Gastos com ${category?.name || 'Categoria'} subiram ${change.toFixed(0)}% este mês.` });
-                 } else if (change < -20) { // Redução significativa
-                     const category = categories.find(c => c.id === categoryId);
-                     insights.push({ type: 'success', text: `📉 Boa! Gastos com ${category?.name || 'Categoria'} diminuíram ${Math.abs(change).toFixed(0)}%.` });
+                 if (change > 25) { // Aumento significativo > 25%
+                    insights.push({ type: 'warning', text: `📈 Gastos com ${categoryName} subiram ${change.toFixed(0)}% (${formatCurrency(currentAmount)} vs ${formatCurrency(lastAmount)}).` });
+                 } else if (change < -20) { // Redução significativa > 20%
+                     insights.push({ type: 'success', text: `📉 Boa! Gastos com ${categoryName} diminuíram ${Math.abs(change).toFixed(0)}% (${formatCurrency(currentAmount)} vs ${formatCurrency(lastAmount)}).` });
                  }
+             } else if (lastAmount == 0 && currentAmount > 20) { // Gasto novo significativo (> R$20)
+                 insights.push({ type: 'info', text: `🆕 Novo gasto significativo em ${categoryName} este mês: ${formatCurrency(currentAmount)}.` });
              }
          });
 
-         // --- Padrões de Comportamento ---
-         const expensesByDayOfWeek = monthlyTransactions
-            .filter(t => t.type === 'expense')
-            .reduce((acc, t) => {
-                const day = moment(t.date).day(); // 0 = Domingo, 6 = Sábado
-                acc[day] = (acc[day] || 0) + 1; // Conta transações por dia
-                return acc;
-            }, {});
-         const busiestDayEntry = Object.entries(expensesByDayOfWeek).sort(([, a], [, b]) => b - a)[0];
-         if (busiestDayEntry) {
-             const dayIndex = parseInt(busiestDayEntry[0]);
-             const dayName = moment().day(dayIndex).format('dddd'); // Nome do dia
-              if (busiestDayEntry[1] > monthlyTransactions.length * 0.3 && monthlyTransactions.length > 5) { // Se > 30% das transações ocorreram nesse dia
-                  insights.push({ type: 'neutral', text: `🔄 Padrão notado: ${dayName} parece ser seu dia de maior volume de gastos.` });
-              }
+         // --- Padrões de Comportamento (Exemplo simples) ---
+         if (monthlyTransactions.length > 10) { // Só analisa se houver um número razoável de transações
+             const expensesByDayOfWeek = monthlyTransactions
+                .filter(t => t.type === 'expense')
+                .reduce((acc, t) => {
+                    const day = moment(t.date).day(); // 0 = Domingo, 6 = Sábado
+                    acc[day] = (acc[day] || 0) + 1; // Conta transações por dia
+                    return acc;
+                }, {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0}); // Inicializa todos os dias
+
+             const busiestDayEntry = Object.entries(expensesByDayOfWeek).sort(([, a], [, b]) => b - a)[0];
+             if (busiestDayEntry && busiestDayEntry[1] > 0) { // Se houve algum gasto
+                 const dayIndex = parseInt(busiestDayEntry[0]);
+                 const dayName = moment().day(dayIndex).format('dddd'); // Nome do dia
+                 // Se o dia mais movimentado teve mais que o dobro da média diária de transações de despesa
+                  const avgTransactionsPerDay = monthlyTransactions.filter(t=>t.type === 'expense').length / moment(selectedMonthYear).daysInMonth();
+                  if (busiestDayEntry[1] > avgTransactionsPerDay * 2 && avgTransactionsPerDay > 0) {
+                      insights.push({ type: 'neutral', text: `🔄 Padrão notado: ${dayName} parece ser seu dia de maior volume de gastos neste período.` });
+                  }
+             }
          }
-
-        // --- Análise por Importância ---
-        const extremeTransactions = monthlyTransactions.filter(t => t.importance === 'extrema');
-        if (extremeTransactions.length > 0) {
-            const extremeTotal = extremeTransactions.reduce((sum, t) => sum + t.amount, 0);
-            const extremePercent = (extremeTotal / expenses) * 100;
-            insights.push({ type: 'alert', text: `⚠️ ${extremeTransactions.length} transações de importância extrema totalizam ${formatCurrency(extremeTotal)} (${extremePercent.toFixed(0)}% das despesas).` });
-        }
-
-        const urgenteTransactions = monthlyTransactions.filter(t => t.importance === 'urgente');
-        if (urgenteTransactions.length > 0) {
-            const urgenteTotal = urgenteTransactions.reduce((sum, t) => sum + t.amount, 0);
-            insights.push({ type: 'warning', text: `🔔 Você teve ${urgenteTransactions.length} despesas urgentes totalizando ${formatCurrency(urgenteTotal)}.` });
-        }
-
-        // --- Insights sobre Recorrência ---
-        const recurringTransactions = monthlyTransactions.filter(t => t.recurringInfo);
-        if (recurringTransactions.length > 0) {
-            const recurringTotal = recurringTransactions.reduce((sum, t) => sum + t.amount, 0);
-            const recurringPercent = (recurringTotal / expenses) * 100;
-            insights.push({ type: 'info', text: `📊 Despesas recorrentes representam ${recurringPercent.toFixed(0)}% (${formatCurrency(recurringTotal)}) do total de gastos.` });
-        }
 
 
         // Renderiza insights ou mensagem padrão
@@ -3211,7 +3535,16 @@ function renderMonthlyTransactionList(monthlyTransactions) {
              insights.forEach(insight => {
                 const item = document.createElement('div');
                 item.className = `insight-item ${insight.type}`;
+                // Define ícone com base no tipo
+                let icon = '💬'; // Default
+                if(insight.type === 'alert') icon = '🚨';
+                else if(insight.type === 'warning') icon = '⚠️';
+                else if(insight.type === 'success') icon = '✅';
+                else if(insight.type === 'info') icon = 'ℹ️';
+                else if(insight.type === 'neutral') icon = '🔍';
+
                 item.innerHTML = `
+                    <span class="insight-icon">${icon}</span>
                     <span class="insight-text">${insight.text}</span>
                 `;
                 insightsList.appendChild(item);
@@ -3224,14 +3557,13 @@ function renderMonthlyTransactionList(monthlyTransactions) {
 
 
     // ===== Gráficos =====
-    let overviewCharts = {};
-    let analysisCharts = {};
+    // (Variáveis overviewCharts e analysisCharts movidas para o topo do script)
 
     // Configurações comuns para gráficos
     function getChartCommonOptions(isDarkMode) {
-        const textColor = isDarkMode ? '#E0E0E0' : '#333333'; // Ajustado para melhor contraste
-        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.07)';
-        const tooltipBg = isDarkMode ? 'rgba(40, 40, 40, 0.85)' : 'rgba(255, 255, 255, 0.9)';
+        const textColor = isDarkMode ? 'rgba(235, 235, 245, 0.8)' : '#3C3C43'; // Cores mais próximas do iOS
+        const gridColor = isDarkMode ? 'rgba(84, 84, 88, 0.4)' : 'rgba(60, 60, 67, 0.15)'; // Separator colors
+        const tooltipBg = isDarkMode ? 'rgba(44, 44, 46, 0.9)' : 'rgba(249, 249, 249, 0.9)'; // Fundos translúcidos
         const tooltipText = isDarkMode ? '#FFFFFF' : '#1C1C1E';
 
         return {
@@ -3246,7 +3578,7 @@ function renderMonthlyTransactionList(monthlyTransactions) {
                         color: textColor,
                         boxWidth: 12,
                         padding: 20,
-                        font: { size: 13 }
+                        font: { size: 13, family: 'var(--font-sans)' }
                     }
                 },
                 tooltip: {
@@ -3255,62 +3587,96 @@ function renderMonthlyTransactionList(monthlyTransactions) {
                     titleColor: tooltipText,
                     bodyColor: tooltipText,
                     borderColor: gridColor,
-                    borderWidth: 1,
-                    padding: 12,
+                    borderWidth: 0.5,
+                    padding: 10, // Reduzido
                     cornerRadius: 8,
                     usePointStyle: true,
-                    boxPadding: 4, // Espaço interno do tooltip
+                    boxPadding: 4,
+                     titleFont: { weight: '600', family: 'var(--font-sans)' },
+                     bodyFont: { family: 'var(--font-sans)' },
+                     footerFont: { family: 'var(--font-sans)', size: 11 },
                     callbacks: {
                         label: function(context) {
                             let label = context.dataset.label || context.label || '';
                             if (label) { label += ': '; }
-                            let value = context.parsed.y ?? context.parsed.x ?? context.parsed; // Funciona para pie/doughnut também
+                            // Funciona para bar, line, pie, doughnut
+                            let value = context.parsed.y ?? context.parsed.x ?? context.parsed;
                             if (value !== null && typeof value === 'number') {
                                 label += formatCurrency(value);
+                            } else if (context.formattedValue){ // Fallback para valores já formatados
+                                label += context.formattedValue;
                             }
                             return label;
                         },
                          // Adiciona % em gráficos de pizza/rosca
-                         labelPointStyle: function(context) {
-                            return { pointStyle: 'circle', rotation: 0 };
-                         },
                          footer: function(tooltipItems) {
-                             if (tooltipItems[0]?.chart?.config?.type?.match(/pie|doughnut/)) {
-                                 const sum = tooltipItems[0].dataset.data.reduce((a, b) => a + b, 0);
+                             // Verifica se é Pie ou Doughnut antes de calcular porcentagem
+                             if (tooltipItems.length > 0 && tooltipItems[0].chart.config.type.match(/pie|doughnut/)) {
+                                 const chart = tooltipItems[0].chart;
+                                 const datasetIndex = tooltipItems[0].datasetIndex;
+                                 const dataIndex = tooltipItems[0].dataIndex;
+                                 const dataset = chart.data.datasets[datasetIndex];
+                                 // Garante que dataset.data é um array
+                                 const sum = Array.isArray(dataset.data) ? dataset.data.reduce((a, b) => a + (typeof b === 'number' ? b : 0), 0) : 0;
                                  const value = tooltipItems[0].parsed;
-                                 const percentage = ((value / sum) * 100).toFixed(1) + '%';
-                                 return `Percentual: ${percentage}`;
+
+                                 if (sum > 0 && typeof value === 'number') {
+                                     const percentage = ((value / sum) * 100).toFixed(1) + '%';
+                                     return `Percentual: ${percentage}`;
+                                 }
                              }
                              return '';
                          }
                     }
                 }
             },
-            scales: { // Só se aplica a gráficos com eixos (bar, line)
+            // Configurações de eixos (aplicáveis a bar/line)
+            scales: {
                 x: {
-                    grid: { color: gridColor, drawBorder: false },
-                    ticks: { color: textColor, font: { size: 12 } }
+                    grid: {
+                        color: gridColor,
+                        drawBorder: false,
+                        // Evita linha do grid no eixo y=0
+                        // drawOnChartArea: false
+                     },
+                    ticks: {
+                         color: textColor,
+                         font: { size: 12, family: 'var(--font-sans)' },
+                         maxRotation: 0, // Evita rotação de labels
+                         autoSkipPadding: 10 // Mais espaço para pular labels
+                    }
                 },
                 y: {
                     grid: { color: gridColor, drawBorder: false },
                     ticks: {
                          color: textColor,
-                         font: { size: 12 },
-                         callback: function(value) { return formatCurrency(value); }
+                         font: { size: 12, family: 'var(--font-sans)' },
+                         // Formata como moeda, mas pode simplificar se ficar muito longo
+                         callback: function(value) {
+                             if (Math.abs(value) >= 1000000) return formatCurrency(value / 1000000) + 'M';
+                             if (Math.abs(value) >= 1000) return formatCurrency(value / 1000) + 'k';
+                             return formatCurrency(value);
+                         }
                     },
                     beginAtZero: true
                 }
-            }
+            },
+             // Remove escalas para gráficos sem eixos como Pie/Doughnut
+             // (Será sobrescrito na inicialização específica desses gráficos se necessário)
+             layout: {
+                 padding: { top: 10, bottom: 0, left: 0, right: 10 } // Adiciona padding
+             }
         };
     }
 
 
     // Inicializar todos os gráficos
     function initCharts() {
+         console.log("Inicializando gráficos...");
         const isDark = root.getAttribute('data-theme') === 'dark';
         const commonOptions = getChartCommonOptions(isDark);
 
-        // Destruir gráficos antigos se existirem
+        // Destruir gráficos antigos se existirem para evitar duplicação ou memory leaks
         Object.values(overviewCharts).forEach(chart => chart?.destroy());
         Object.values(analysisCharts).forEach(chart => chart?.destroy());
         overviewCharts = {};
@@ -3321,58 +3687,84 @@ function renderMonthlyTransactionList(monthlyTransactions) {
         try {
             const ovIncomeExpenseCtx = document.getElementById('overview-income-expense-chart')?.getContext('2d');
             if(ovIncomeExpenseCtx) {
+                 console.log("Inicializando overview-income-expense-chart");
                 overviewCharts.incomeExpense = new Chart(ovIncomeExpenseCtx, {
-                    type: 'bar', data: { labels: [], datasets: [] }, options: commonOptions
+                    type: 'bar', data: { labels: [], datasets: [] }, options: { ...commonOptions } // Usa cópia das opções comuns
                 });
-            }
+            } else { console.warn("Canvas 'overview-income-expense-chart' não encontrado."); }
 
             const ovCategoryCtx = document.getElementById('overview-category-chart')?.getContext('2d');
             if(ovCategoryCtx) {
+                 console.log("Inicializando overview-category-chart");
+                 // Remove escalas X/Y para doughnut/pie
+                 const doughnutOptions = { ...commonOptions };
+                 delete doughnutOptions.scales;
+                 doughnutOptions.cutout = '65%'; // Opção específica do Doughnut
                 overviewCharts.category = new Chart(ovCategoryCtx, {
-                    type: 'doughnut', data: { labels: [], datasets: [] }, options: {...commonOptions, cutout: '65%'}
+                    type: 'doughnut', data: { labels: [], datasets: [] }, options: doughnutOptions
                 });
-            }
+            } else { console.warn("Canvas 'overview-category-chart' não encontrado."); }
 
             const ovCashflowCtx = document.getElementById('overview-cashflow-chart')?.getContext('2d');
              if(ovCashflowCtx) {
+                 console.log("Inicializando overview-cashflow-chart");
                 overviewCharts.cashflow = new Chart(ovCashflowCtx, {
-                    type: 'bar', data: { labels: [], datasets: [] }, options: commonOptions
+                    type: 'bar', data: { labels: [], datasets: [] }, options: { ...commonOptions }
                 });
-            }
+            } else { console.warn("Canvas 'overview-cashflow-chart' não encontrado."); }
 
             const ovFixedVariableCtx = document.getElementById('overview-fixed-variable-chart')?.getContext('2d');
              if(ovFixedVariableCtx) {
+                  console.log("Inicializando overview-fixed-variable-chart");
+                 const pieOptions = { ...commonOptions };
+                 delete pieOptions.scales; // Remove escalas X/Y
                  overviewCharts.fixedVariable = new Chart(ovFixedVariableCtx, {
-                    type: 'pie', data: { labels: [], datasets: [] }, options: commonOptions
+                    type: 'pie', data: { labels: [], datasets: [] }, options: pieOptions
                 });
-             }
+             } else { console.warn("Canvas 'overview-fixed-variable-chart' não encontrado."); }
 
              const ovTrendCtx = document.getElementById('overview-trend-chart')?.getContext('2d');
              if(ovTrendCtx) {
-                overviewCharts.trend = new Chart(ovTrendCtx, {
-                    type: 'line', data: { labels: [], datasets: [] }, options: {...commonOptions, tension: 0.3, pointRadius: 3, pointHoverRadius: 5 }
+                 console.log("Inicializando overview-trend-chart");
+                 const lineOptions = { ...commonOptions }; // Usa opções comuns (com escalas)
+                 lineOptions.tension = 0.3; // Opções específicas do Line
+                 lineOptions.pointRadius = 3;
+                 lineOptions.pointHoverRadius = 5;
+                 overviewCharts.trend = new Chart(ovTrendCtx, {
+                    type: 'line', data: { labels: [], datasets: [] }, options: lineOptions
                 });
-             }
+             } else { console.warn("Canvas 'overview-trend-chart' não encontrado."); }
 
-        } catch(e) { console.error("Erro inicializando gráficos Overview:", e)}
+        } catch(e) { console.error("Erro inicializando gráficos Overview:", e); }
 
 
         // --- Gráficos da Análise Mensal ---
          try {
              const anCategoryPieCtx = document.getElementById('analysis-category-pie-chart')?.getContext('2d');
              if(anCategoryPieCtx) {
+                 console.log("Inicializando analysis-category-pie-chart");
+                  const pieOptions = { ...commonOptions };
+                  delete pieOptions.scales; // Remove escalas X/Y
                 analysisCharts.categoryPie = new Chart(anCategoryPieCtx, {
-                    type: 'pie', data: { labels: [], datasets: [] }, options: commonOptions
+                    type: 'pie', data: { labels: [], datasets: [] }, options: pieOptions
                 });
-             }
+             } else { console.warn("Canvas 'analysis-category-pie-chart' não encontrado."); }
 
              const anBalanceLineCtx = document.getElementById('analysis-balance-line-chart')?.getContext('2d');
              if(anBalanceLineCtx) {
-                analysisCharts.balanceLine = new Chart(anBalanceLineCtx, {
-                    type: 'line', data: { labels: [], datasets: [] }, options: {...commonOptions, tension: 0.1, pointRadius: 3, pointHoverRadius: 5 }
+                  console.log("Inicializando analysis-balance-line-chart");
+                  const lineOptions = { ...commonOptions }; // Usa opções comuns (com escalas)
+                  lineOptions.tension = 0.1; // Linha mais reta para saldo
+                  lineOptions.pointRadius = 3;
+                  lineOptions.pointHoverRadius = 5;
+                  // Personaliza tooltip do eixo Y para este gráfico específico se necessário
+                  // lineOptions.scales.y.ticks.callback = function(value) { return 'R$ ' + value; };
+                 analysisCharts.balanceLine = new Chart(anBalanceLineCtx, {
+                    type: 'line', data: { labels: [], datasets: [] }, options: lineOptions
                 });
-             }
-        } catch(e) { console.error("Erro inicializando gráficos Analysis:", e)}
+             } else { console.warn("Canvas 'analysis-balance-line-chart' não encontrado."); }
+
+        } catch(e) { console.error("Erro inicializando gráficos Analysis:", e); }
 
         console.log("Gráficos inicializados.");
     }
@@ -3381,40 +3773,65 @@ function renderMonthlyTransactionList(monthlyTransactions) {
     // Atualizar TODOS os gráficos para o novo tema
     function updateAllChartsTheme() {
         const isDark = root.getAttribute('data-theme') === 'dark';
-        const newOptions = getChartCommonOptions(isDark);
+        const newOptionsBase = getChartCommonOptions(isDark);
+        console.log("Atualizando tema dos gráficos para:", isDark ? "Dark" : "Light");
 
-        const updateChartOptions = (chart) => {
-             if (chart && chart.options) {
-                // Merge mantendo opções específicas como cutout, tension etc.
-                chart.options = { ...chart.options, ...newOptions, color: newOptions.color };
-                // Atualiza sub-opções que podem não ser cobertas pelo spread
-                if(chart.options.plugins?.legend?.labels) chart.options.plugins.legend.labels.color = newOptions.color;
-                if(chart.options.plugins?.tooltip) {
-                    chart.options.plugins.tooltip.backgroundColor = newOptions.plugins.tooltip.backgroundColor;
-                    chart.options.plugins.tooltip.titleColor = newOptions.plugins.tooltip.titleColor;
-                    chart.options.plugins.tooltip.bodyColor = newOptions.plugins.tooltip.bodyColor;
-                    chart.options.plugins.tooltip.borderColor = newOptions.plugins.tooltip.borderColor;
+        const updateChartOptions = (chart, specificOptions = {}) => {
+             if (chart && chart.options && chart.config) {
+                // Merge inteligente: começa com novas opções base,
+                // depois aplica opções específicas do tipo de gráfico (se houver),
+                // e finalmente aplica opções que não devem mudar com o tema (como 'tension').
+                 const optionsToKeep = {
+                     tension: chart.options.tension,
+                     cutout: chart.options.cutout,
+                     // Adicione outras opções que não devem mudar com o tema
+                 };
+
+                // Define se o gráfico tem eixos
+                 const hasScales = chart.config.type === 'bar' || chart.config.type === 'line';
+
+                 // Cria novas opções
+                 let newOptions = { ...newOptionsBase };
+                 if (!hasScales) {
+                    delete newOptions.scales; // Remove escalas para pie/doughnut
+                 }
+
+                 // Merge final
+                 chart.options = { ...newOptions, ...specificOptions, ...optionsToKeep };
+
+
+                // Força atualização completa
+                try {
+                    chart.update();
+                } catch (e) {
+                    console.error("Erro ao atualizar gráfico:", chart.canvas?.id, e);
                 }
-                if(chart.options.scales?.x?.ticks) chart.options.scales.x.ticks.color = newOptions.color;
-                if(chart.options.scales?.x?.grid) chart.options.scales.x.grid.color = newOptions.scales.x.grid.color;
-                if(chart.options.scales?.y?.ticks) chart.options.scales.y.ticks.color = newOptions.color;
-                if(chart.options.scales?.y?.grid) chart.options.scales.y.grid.color = newOptions.scales.y.grid.color;
-                if(chart.options.scales?.r?.pointLabels) chart.options.scales.r.pointLabels.color = newOptions.color; // Radar
-                if(chart.options.scales?.r?.ticks) chart.options.scales.r.ticks.color = newOptions.color; // Radar
-
-                // Força atualização
-                chart.update();
             }
         };
 
-        Object.values(overviewCharts).forEach(updateChartOptions);
-        Object.values(analysisCharts).forEach(updateChartOptions);
+        // Atualiza gráficos individuais, passando opções específicas se necessário
+        if (overviewCharts.incomeExpense) updateChartOptions(overviewCharts.incomeExpense);
+        if (overviewCharts.category) updateChartOptions(overviewCharts.category, {cutout: '65%'});
+        if (overviewCharts.cashflow) updateChartOptions(overviewCharts.cashflow);
+        if (overviewCharts.fixedVariable) updateChartOptions(overviewCharts.fixedVariable);
+        if (overviewCharts.trend) updateChartOptions(overviewCharts.trend, { tension: 0.3 });
+
+        if (analysisCharts.categoryPie) updateChartOptions(analysisCharts.categoryPie);
+        if (analysisCharts.balanceLine) updateChartOptions(analysisCharts.balanceLine, { tension: 0.1 });
+
+
         console.log("Temas dos gráficos atualizados.");
     }
 
 
     // Atualizar Gráficos da Visão Geral
     function updateOverviewCharts() {
+         // Verifica se os gráficos existem antes de tentar atualizar
+         if (!overviewCharts || Object.keys(overviewCharts).length === 0) {
+             console.warn("Gráficos de Overview não inicializados. Abortando atualização.");
+             return;
+         }
+         console.log("Atualizando gráficos de Overview...");
          const isDark = root.getAttribute('data-theme') === 'dark';
 
         // --- Receitas vs Despesas (Últimos 12 meses) ---
@@ -3427,8 +3844,9 @@ function renderMonthlyTransactionList(monthlyTransactions) {
                 labels.push(month.format('MMM/YY'));
                 const start = month.startOf('month');
                 const end = month.endOf('month');
-                const monthIncome = transactions.filter(t => t.type === 'income' && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0);
-                const monthExpenses = transactions.filter(t => t.type === 'expense' && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0);
+                 // Filtra transações PAGAS para o gráfico de histórico financeiro
+                const monthIncome = transactions.filter(t => t.type === 'income' && t.status === 'paid' && typeof t.amount === 'number' && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0);
+                const monthExpenses = transactions.filter(t => t.type === 'expense' && t.status === 'paid' && typeof t.amount === 'number' && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0);
                 incomeData.push(monthIncome);
                 expenseData.push(monthExpenses);
             }
@@ -3444,11 +3862,20 @@ function renderMonthlyTransactionList(monthlyTransactions) {
 
         // --- Despesas por Categoria (Últimos 30 dias) ---
         if(overviewCharts.category) {
-            const last30DaysStart = moment().subtract(30, 'days');
-            const expensesLast30Days = transactions.filter(t => t.type === 'expense' && moment(t.date).isAfter(last30DaysStart));
+            const last30DaysStart = moment().subtract(30, 'days').startOf('day'); // Inclui o dia inicial
+            const expensesLast30Days = transactions.filter(t =>
+                t.type === 'expense' &&
+                typeof t.amount === 'number' &&
+                t.date && // Garante que a data existe
+                moment(t.date).isSameOrAfter(last30DaysStart) // Usa SameOrAfter
+                // Poderia filtrar por status 'paid' se quisesse apenas gastos efetivados
+                // && t.status === 'paid'
+            );
+
             const expensesByCategory = expensesLast30Days.reduce((acc, t) => {
-                const category = categories.find(c => c.id === t.category) || { id: 'unknown', name: 'Desconhecida', color: '#8E8E93' };
-                acc[category.id] = (acc[category.id] || { name: category.name, value: 0, color: category.color });
+                 const catId = t.category || 'unknown';
+                const category = categories.find(c => c.id === catId) || { id: 'unknown', name: 'Desconhecida', color: '#8E8E93', icon: '❓' };
+                acc[category.id] = (acc[category.id] || { name: `${category.icon} ${category.name}`, value: 0, color: category.color });
                 acc[category.id].value += t.amount;
                 return acc;
             }, {});
@@ -3459,7 +3886,7 @@ function renderMonthlyTransactionList(monthlyTransactions) {
                 datasets: [{
                     data: sortedCategories.map(c => c.value),
                     backgroundColor: sortedCategories.map(c => c.color),
-                    borderColor: isDark ? '#1C1C1E' : '#FFFFFF', // Cor de fundo do card
+                    borderColor: isDark ? '#000000' : '#FFFFFF', // Usa bg do tema
                     borderWidth: 2
                 }]
              };
@@ -3476,14 +3903,15 @@ function renderMonthlyTransactionList(monthlyTransactions) {
                 labels.push(month.format('MMM'));
                 const start = month.startOf('month');
                 const end = month.endOf('month');
-                const monthIncome = transactions.filter(t => t.type === 'income' && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0);
-                const monthExpenses = transactions.filter(t => t.type === 'expense' && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0);
+                 // Fluxo considera apenas transações PAGAS
+                const monthIncome = transactions.filter(t => t.type === 'income' && t.status === 'paid' && typeof t.amount === 'number' && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0);
+                const monthExpenses = transactions.filter(t => t.type === 'expense' && t.status === 'paid' && typeof t.amount === 'number' && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0);
                 balanceData.push(monthIncome - monthExpenses);
             }
             overviewCharts.cashflow.data = {
                 labels,
                 datasets: [{
-                    label: 'Saldo Mensal',
+                    label: 'Saldo Mensal (Pago)',
                     data: balanceData,
                     backgroundColor: balanceData.map(b => b >= 0 ? (isDark ? '#30D158' : '#34C759') : (isDark ? '#FF453A' : '#FF3B30')),
                     borderRadius: 4
@@ -3493,20 +3921,27 @@ function renderMonthlyTransactionList(monthlyTransactions) {
         }
 
         // --- Fixas vs Variáveis (Mês Atual) ---
+        // Considera despesas do mês atual, independente do status, para refletir o *comprometido*
         if(overviewCharts.fixedVariable) {
              const currentMonthStart = moment().startOf('month');
              const currentMonthEnd = moment().endOf('month');
-             const monthExpenses = transactions.filter(t => t.type === 'expense' && moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]'));
+             const monthExpenses = transactions.filter(t =>
+                 t.type === 'expense' &&
+                 typeof t.amount === 'number' &&
+                 t.date &&
+                 moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]')
+             );
 
-             const fixed = monthExpenses.filter(t => t.recurringInfo).reduce((sum, t) => sum + t.amount, 0);
-             const variable = monthExpenses.filter(t => !t.recurringInfo).reduce((sum, t) => sum + t.amount, 0);
+             // Considera "Fixa" se tiver recurringInfo.baseId
+             const fixed = monthExpenses.filter(t => t.recurringInfo?.baseId).reduce((sum, t) => sum + t.amount, 0);
+             const variable = monthExpenses.filter(t => !t.recurringInfo?.baseId).reduce((sum, t) => sum + t.amount, 0);
 
              overviewCharts.fixedVariable.data = {
-                 labels: ['Fixas', 'Variáveis'],
+                 labels: ['Fixas (Recorrentes)', 'Variáveis'],
                  datasets: [{
                     data: [fixed, variable],
                     backgroundColor: [isDark ? '#0A84FF' : '#007AFF', isDark ? '#BF5AF2' : '#AF52DE'], // Blue, Purple
-                    borderColor: isDark ? '#1C1C1E' : '#FFFFFF',
+                     borderColor: isDark ? '#000000' : '#FFFFFF',
                     borderWidth: 2
                  }]
              };
@@ -3514,6 +3949,7 @@ function renderMonthlyTransactionList(monthlyTransactions) {
         }
 
          // --- Tendência Geral de Gastos (Últimos 6 Meses) ---
+         // Baseado em despesas PAGAS para refletir o gasto real histórico
          if(overviewCharts.trend) {
              const labels = [];
              const data = [];
@@ -3522,35 +3958,45 @@ function renderMonthlyTransactionList(monthlyTransactions) {
                  labels.push(month.format('MMM/YY'));
                  const start = month.startOf('month');
                  const end = month.endOf('month');
-                 const monthExpenses = transactions.filter(t => t.type === 'expense' && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0);
+                 const monthExpenses = transactions.filter(t => t.type === 'expense' && t.status === 'paid' && typeof t.amount === 'number' && t.date && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0);
                  data.push(monthExpenses);
              }
              overviewCharts.trend.data = {
                 labels,
                 datasets: [{
-                    label: 'Despesas Totais',
+                    label: 'Despesas Pagas',
                     data: data,
                     borderColor: isDark ? '#FF9F0A' : '#FF9500', // Orange
                     backgroundColor: isDark ? 'rgba(255, 159, 10, 0.15)' : 'rgba(255, 149, 0, 0.1)',
-                    fill: true,
-                    tension: 0.3
+                    fill: true
+                    // tension já definido na inicialização
                 }]
              };
              overviewCharts.trend.update();
          }
+         console.log("Gráficos de Overview atualizados.");
     }
 
-// Atualizar Gráficos da Análise Mensal
+
+     // Atualizar Gráficos da Análise Mensal
     function updateAnalysisCharts(monthlyTransactions) {
+         if (!analysisCharts || Object.keys(analysisCharts).length === 0) {
+             console.warn("Gráficos de Análise não inicializados. Abortando atualização.");
+             return;
+         }
+         console.log("Atualizando gráficos de Análise Mensal...");
         const isDark = root.getAttribute('data-theme') === 'dark';
 
         // --- Distribuição de Despesas (Pizza) ---
+        // Baseado em TODAS as despesas do mês/categoria filtrado (inclui não pagas)
         if (analysisCharts.categoryPie) {
             const expensesByCategory = monthlyTransactions
                 .filter(t => t.type === 'expense')
                 .reduce((acc, t) => {
-                    const category = categories.find(c => c.id === t.category) || { id: 'unknown', name: 'Desconhecida', color: '#8E8E93' };
-                    acc[category.id] = (acc[category.id] || { name: category.name, value: 0, color: category.color });
+                     const catId = t.category || 'unknown';
+                    const category = categories.find(c => c.id === catId) || { id: 'unknown', name: 'Desconhecida', color: '#8E8E93', icon: '❓' };
+                    // Agrupa por ID, mas usa nome+ícone no label
+                    acc[category.id] = (acc[category.id] || { name: `${category.icon} ${category.name}`, value: 0, color: category.color });
                     acc[category.id].value += t.amount;
                     return acc;
                 }, {});
@@ -3559,23 +4005,25 @@ function renderMonthlyTransactionList(monthlyTransactions) {
 
              // Limitar a N categorias + "Outros" para não poluir
             const maxCategories = 7;
-            let labels = sortedCategories.slice(0, maxCategories).map(c => c.name);
-            let data = sortedCategories.slice(0, maxCategories).map(c => c.value);
-            let colors = sortedCategories.slice(0, maxCategories).map(c => c.color);
+            let displayLabels = sortedCategories.slice(0, maxCategories).map(c => c.name);
+            let displayData = sortedCategories.slice(0, maxCategories).map(c => c.value);
+            let displayColors = sortedCategories.slice(0, maxCategories).map(c => c.color);
 
             if (sortedCategories.length > maxCategories) {
                 const otherValue = sortedCategories.slice(maxCategories).reduce((sum, c) => sum + c.value, 0);
-                labels.push("Outros");
-                data.push(otherValue);
-                colors.push(isDark ? '#48484A' : '#C7C7CC'); // System Gray 2
+                 if (otherValue > 0) { // Só adiciona "Outros" se tiver valor
+                     displayLabels.push("Outros");
+                     displayData.push(otherValue);
+                     displayColors.push(isDark ? '#48484A' : '#C7C7CC'); // System Gray 2
+                 }
             }
 
             analysisCharts.categoryPie.data = {
-                labels: labels,
+                labels: displayLabels,
                 datasets: [{
-                    data: data,
-                    backgroundColor: colors,
-                    borderColor: isDark ? '#1C1C1E' : '#FFFFFF',
+                    data: displayData,
+                    backgroundColor: displayColors,
+                    borderColor: isDark ? '#000000' : '#FFFFFF',
                     borderWidth: 2
                 }]
             };
@@ -3583,125 +4031,130 @@ function renderMonthlyTransactionList(monthlyTransactions) {
         }
 
         // --- Evolução do Saldo no Mês (Linha) ---
+        // Baseado em transações PAGAS para refletir o saldo real diário
         if (analysisCharts.balanceLine) {
-            const daysInMonth = moment(currentAnalysisMonthYear).daysInMonth();
+             const selectedMonth = moment(currentAnalysisMonthYear);
+            const daysInMonth = selectedMonth.daysInMonth();
             const labels = Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString()); // Dias 1 a N
             const dailyBalances = [];
             let cumulativeBalance = 0;
 
-            // Calcular saldo inicial do mês (saldo total até o dia anterior ao início do mês)
-             const startOfMonth = moment(currentAnalysisMonthYear).startOf('month');
+            // Calcular saldo inicial do mês (saldo total PAGO até o dia anterior ao início do mês)
+             const startOfMonth = selectedMonth.startOf('month');
              const initialBalance = transactions
-                 .filter(t => moment(t.date).isBefore(startOfMonth, 'day') && t.status === 'paid')
+                 .filter(t => t.status === 'paid' && typeof t.amount === 'number' && t.date && moment(t.date).isBefore(startOfMonth, 'day'))
                  .reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0);
              cumulativeBalance = initialBalance;
 
 
             for (let day = 1; day <= daysInMonth; day++) {
-                const currentDay = moment(currentAnalysisMonthYear).date(day);
-                const incomeToday = monthlyTransactions
-                    .filter(t => t.type === 'income' && moment(t.date).isSame(currentDay, 'day'))
-                    .reduce((sum, t) => sum + t.amount, 0);
-                const expensesToday = monthlyTransactions
-                    .filter(t => t.type === 'expense' && moment(t.date).isSame(currentDay, 'day'))
-                    .reduce((sum, t) => sum + t.amount, 0);
+                 const currentDayMoment = moment(currentAnalysisMonthYear).date(day);
+                 // Filtra transações PAGAS ocorridas ATÉ este dia no mês atual
+                 const balanceChangeToday = monthlyTransactions // Usa transações já filtradas por mês/categoria
+                     .filter(t => t.status === 'paid' && moment(t.date).isSame(currentDayMoment, 'day'))
+                     .reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0);
 
-                cumulativeBalance += incomeToday - expensesToday;
+                cumulativeBalance += balanceChangeToday;
                 dailyBalances.push(cumulativeBalance);
             }
 
             analysisCharts.balanceLine.data = {
                 labels,
                 datasets: [{
-                    label: 'Saldo Acumulado',
+                    label: 'Saldo Acumulado (Pago)',
                     data: dailyBalances,
                     borderColor: isDark ? '#0A84FF' : '#007AFF', // Blue
                     backgroundColor: isDark ? 'rgba(10, 132, 255, 0.15)' : 'rgba(0, 122, 255, 0.1)',
-                    fill: true,
-                    tension: 0.1 // Linha mais reta
+                    fill: true
+                    // tension já definido na inicialização
                 }]
             };
             analysisCharts.balanceLine.update();
         }
+         console.log("Gráficos de Análise Mensal atualizados.");
     }
 
-<script>
-// ===== Inicialização da Aplicação =====
+    // ===== Inicialização da Aplicação =====
 
-// Popular filtros de Ano e Mês separados para Análise
-function populateMonthYearFilter() {
-    const yearSelect = document.getElementById('analysis-year');
-    const monthSelect = document.getElementById('analysis-month');
-    
-    // Verificar se os novos elementos existem
-    if (!yearSelect || !monthSelect) {
-        console.error("Elementos de filtro de ano/mês não encontrados no DOM");
-        return; // Sair da função se os elementos não existirem
+    async function init() {
+        showLoading();
+        console.log("Iniciando aplicação...");
+
+        try {
+            // 1. Configurar Tema (síncrono)
+            setupTheme();
+
+            // 2. Carregar Categorias (Garantindo Padrões se necessário)
+            // Precisa esperar antes de popular filtros e iniciar listeners
+             // Verifica se 'db' está disponível antes de tentar carregar
+             if(db) {
+                await loadCategories();
+             } else {
+                 console.error("Banco de dados não inicializado. Carregando categorias padrão localmente.");
+                 // Carrega padrões locais se DB falhou
+                 categories = [...DEFAULT_INCOME_CATEGORIES, ...DEFAULT_EXPENSE_CATEGORIES].sort((a, b) => a.name.localeCompare(b.name));
+                 populateCategoryFilters(); // Popula filtros com os padrões
+             }
+
+
+            // 3. Inicializar Componentes da UI (Filtros, Modais, Tabs)
+            initTabs();
+            populateMonthYearFilter(); // Popula filtro de Mês/Ano (não depende de dados async)
+            // populateCategoryFilters() já foi chamado dentro de loadCategories ou no fallback
+            initCharts(); // Inicializa a estrutura dos gráficos (antes de receber dados)
+
+            // 4. Configurar Listeners de Eventos da UI (síncrono)
+            setupEventListeners(); // Configura todos os listeners de botões, selects etc.
+
+            // 5. Configurar Listeners do Firestore (assíncrono)
+            // Só inicia listeners se DB estiver ok
+            if(db) {
+                setupFirestoreListeners();
+            } else {
+                 console.error("Listeners do Firestore não iniciados - DB indisponível.");
+                 // Talvez carregar dados de exemplo ou localStorage aqui
+                 // Por enquanto, a aplicação ficará sem dados reais.
+                 updateDashboard(); // Chama para mostrar estado vazio/inicial
+            }
+
+
+            // 6. Atualização inicial (os listeners podem demorar um pouco para trazer os primeiros dados)
+             // updateDashboard(); // É chamado dentro de processTransactionSnapshot, então não precisa aqui
+             console.log("Estrutura da aplicação inicializada. Aguardando dados do Firestore...");
+
+
+        } catch (error) {
+            console.error("Erro fatal durante a inicialização:", error);
+            showToast("Erro grave ao iniciar. Verifique o console (F12) e recarregue a página.", "danger", 10000);
+             // Tenta garantir que a UI básica esteja funcional mesmo em erro
+             try {
+                initTabs();
+                setupEventListeners();
+             } catch (uiError) {
+                 console.error("Erro ao configurar UI de fallback:", uiError);
+             }
+        } finally {
+             // Garante que o loading seja escondido mesmo se houver erro parcial
+             // Um pequeno delay pode ajudar a UI a renderizar antes de esconder
+             setTimeout(hideLoading, 500); // Aumenta um pouco o delay
+        }
     }
-    
-    // Limpa os selects
-    yearSelect.innerHTML = '';
-    monthSelect.innerHTML = '';
-    
-    // Anos (atual +/- 2 anos)
-    const currentYear = moment().year();
-    for (let year = currentYear - 2; year <= currentYear + 2; year++) {
-        const option = document.createElement('option');
-        option.value = year;
-        option.textContent = year;
-        yearSelect.appendChild(option);
+
+    // --- Ponto de Entrada ---
+    // Espera o DOM carregar completamente
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        // DOM já carregado, executa imediatamente
+        init();
     }
-    
-    // Meses
-    const months = moment.months();
-    months.forEach((month, index) => {
-        const option = document.createElement('option');
-        option.value = index; // 0-11
-        option.textContent = month.charAt(0).toUpperCase() + month.slice(1); // Capitalize
-        monthSelect.appendChild(option);
-    });
-    
-    // Define valores atuais
-    yearSelect.value = moment().year();
-    monthSelect.value = moment().month();
-    
-    // Atualiza a variável de estado com o formato YYYY-MM
-    updateCurrentAnalysisDate();
-}
 
-async function init() {
-    showLoading();
-    console.log("Iniciando aplicação...");
-    try {
-        // 1. Configurar Tema
-        setupTheme();
-        // 2. Carregar Categorias (Garantindo Padrões se necessário)
-        await loadCategories(); // Espera carregar antes de continuar
-        // 3. Inicializar Componentes da UI (Filtros, Modais, Tabs)
-        initTabs();
-        populateMonthYearFilter(); // Popula filtro de Ano/Mês
-        setupEventListeners(); // Configura todos os listeners
-        initCharts(); // Inicializa gráficos
-        // 4. Listeners do Firestore
-        setupFirestoreListeners();
-        console.log("Aplicação inicializada com sucesso!");
-    } catch (error) {
-        console.error("Erro fatal durante a inicialização:", error);
-        showToast("Erro grave ao iniciar...", "danger", 10000);
-        // Tenta inicializar o mínimo possível
-        initTabs();
-        setupEventListeners();
-    } finally {
-        // Garante que o loading seja escondido mesmo se houver erro parcial
-        setTimeout(hideLoading, 300);
-    }
-}
 
-// --- Ponto de Entrada ---
-document.addEventListener('DOMContentLoaded', init);
+     // --- Limpeza ao Sair ---
+     // Garante que os listeners são removidos para evitar memory leaks em SPAs (embora aqui seja página única)
+     window.addEventListener('beforeunload', stopFirestoreListeners);
 
-// --- Limpeza ao Sair ---
-window.addEventListener('beforeunload', stopFirestoreListeners);
-</script>
+
+  </script>
 </body>
 </html>

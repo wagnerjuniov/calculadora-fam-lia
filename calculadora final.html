@@ -2365,31 +2365,42 @@
         toggleDeleteCategoryButton();
     }
     function populateCategorySelect(type = 'expense') {
-        const select = document.getElementById('transaction-category'); 
-        if (!select) return; 
-        
-        // Limpa o select
-        select.innerHTML = '';
-        
-        // Filtra categorias pelo tipo (receita ou despesa)
-        const filteredCategories = categories.filter(cat => cat.type === type);
-        
-        if (filteredCategories.length === 0) { 
-            // Mensagem quando não há categorias do tipo selecionado
+    const select = document.getElementById('transaction-category'); 
+    if (!select) return;
+    
+    // Limpa o select
+    select.innerHTML = '';
+    
+    // Filtra categorias pelo tipo (receita ou despesa)
+    const filteredCategories = categories.filter(cat => cat.type === type);
+    
+    if (filteredCategories.length === 0) { 
+        // Mensagem quando não há categorias do tipo selecionado
+        const option = document.createElement('option'); 
+        option.value = ""; 
+        option.textContent = `Nenhuma categoria de ${type === 'income' ? 'receita' : 'despesa'} encontrada`; 
+        option.disabled = true; 
+        select.appendChild(option); 
+        console.warn(`Nenhuma categoria do tipo '${type}' encontrada. Total de categorias: ${categories.length}`);
+    } else { 
+        // Adiciona cada categoria encontrada ao select
+        console.log(`Populando ${filteredCategories.length} categorias do tipo '${type}'`);
+        filteredCategories.forEach(cat => { 
             const option = document.createElement('option'); 
-            option.value = ""; 
-            option.textContent = `Nenhuma categoria de ${type === 'income' ? 'receita' : 'despesa'} encontrada`; 
-            option.disabled = true; 
+            option.value = cat.id; 
+            option.textContent = `${cat.icon || ''} ${cat.name || 'Categoria sem nome'}`; 
             select.appendChild(option); 
-        } else { 
-            // Adiciona cada categoria encontrada ao select
-            filteredCategories.forEach(cat => { 
-                const option = document.createElement('option'); 
-                option.value = cat.id; 
-                option.textContent = `${cat.icon || ''} ${cat.name || 'Categoria sem nome'}`; 
-                select.appendChild(option); 
-            }); 
-        }
+        }); 
+    }
+    
+    // Certifica-se de que ao menos uma opção esteja selecionada
+    if (select.options.length > 0 && !select.value) {
+        select.selectedIndex = 0;
+    }
+    
+    // Debug: mostrar todas as categorias disponíveis
+    console.log("Todas as categorias disponíveis:", categories.map(c => `${c.name} (${c.type})`));
+}
         
         // Certifica-se de que ao menos uma opção esteja selecionada
         if (select.options.length > 0 && !select.value) {
@@ -2451,20 +2462,21 @@
 
         console.log("Filtros atualizados:", currentAnalysisMonthYear, currentAnalysisCategory, currentAnalysisType, currentAnalysisImportance);
 
-        // Atualiza a análise completa somente se solicitado (evita loop na inicialização)
+// Atualiza a análise completa somente se solicitado (evita loop na inicialização)
         if (triggerUpdate) {
             updateMonthlyAnalysis();
         }
     }
-
-
     function setupEventListeners() {
         const btnNew = document.getElementById('btn-new-transaction'); if (btnNew) btnNew.addEventListener('click', () => openTransactionModal());
         const btnTheme = document.getElementById('theme-toggle'); if (btnTheme) btnTheme.addEventListener('click', toggleTheme);
         const transactionModal = document.getElementById('transaction-modal');
         if (transactionModal) {
             const btnClose = transactionModal.querySelector('#transaction-modal-close'); const btnCancel = transactionModal.querySelector('#transaction-modal-cancel'); const form = transactionModal.querySelector('#transaction-form'); const typeSelect = transactionModal.querySelector('#transaction-type'); const btnToggleAdvanced = transactionModal.querySelector('#btn-toggle-advanced'); const recurringCheckbox = transactionModal.querySelector('#transaction-recurring'); const btnAddCategoryModal = transactionModal.querySelector('#btn-add-category-modal');
-            if (btnClose) btnClose.addEventListener('click', () => closeModal(transactionModal)); if (btnCancel) btnCancel.addEventListener('click', () => closeModal(transactionModal)); if (form) form.addEventListener('submit', saveTransaction); if (typeSelect) typeSelect.addEventListener('change', (e) => populateCategorySelect(e.target.value)); if (btnToggleAdvanced) btnToggleAdvanced.addEventListener('click', toggleAdvancedFields);
+            if (btnClose) btnClose.addEventListener('click', () => closeModal(transactionModal)); if (btnCancel) btnCancel.addEventListener('click', () => closeModal(transactionModal)); if (form) form.addEventListener('submit', saveTransaction); if (typeSelect) typeSelect.addEventListener('change', (e) => {
+                console.log(`Tipo de transação alterado para: ${e.target.value}`);
+                populateCategorySelect(e.target.value);
+            }); if (btnToggleAdvanced) btnToggleAdvanced.addEventListener('click', toggleAdvancedFields);
             if (recurringCheckbox) { recurringCheckbox.addEventListener('change', (e) => { const recurringOptionsDiv = document.getElementById('recurring-options'); if(recurringOptionsDiv) recurringOptionsDiv.style.display = e.target.checked ? 'block' : 'none'; }); }
             if (btnAddCategoryModal) btnAddCategoryModal.addEventListener('click', () => openCategoryModal());
         }

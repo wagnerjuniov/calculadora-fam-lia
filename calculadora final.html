@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
@@ -2473,10 +2472,7 @@
         const transactionModal = document.getElementById('transaction-modal');
         if (transactionModal) {
             const btnClose = transactionModal.querySelector('#transaction-modal-close'); const btnCancel = transactionModal.querySelector('#transaction-modal-cancel'); const form = transactionModal.querySelector('#transaction-form'); const typeSelect = transactionModal.querySelector('#transaction-type'); const btnToggleAdvanced = transactionModal.querySelector('#btn-toggle-advanced'); const recurringCheckbox = transactionModal.querySelector('#transaction-recurring'); const btnAddCategoryModal = transactionModal.querySelector('#btn-add-category-modal');
-            if (btnClose) btnClose.addEventListener('click', () => closeModal(transactionModal)); if (btnCancel) btnCancel.addEventListener('click', () => closeModal(transactionModal)); if (form) form.addEventListener('submit', saveTransaction); if (typeSelect) typeSelect.addEventListener('change', (e) => {
-                console.log(`Tipo de transação alterado para: ${e.target.value}`);
-                populateCategorySelect(e.target.value);
-            }); if (btnToggleAdvanced) btnToggleAdvanced.addEventListener('click', toggleAdvancedFields);
+            if (btnClose) btnClose.addEventListener('click', () => closeModal(transactionModal)); if (btnCancel) btnCancel.addEventListener('click', () => closeModal(transactionModal)); if (form) form.addEventListener('submit', saveTransaction); if (typeSelect) typeSelect.addEventListener('change', (e) => populateCategorySelect(e.target.value)); if (btnToggleAdvanced) btnToggleAdvanced.addEventListener('click', toggleAdvancedFields);
             if (recurringCheckbox) { recurringCheckbox.addEventListener('change', (e) => { const recurringOptionsDiv = document.getElementById('recurring-options'); if(recurringOptionsDiv) recurringOptionsDiv.style.display = e.target.checked ? 'block' : 'none'; }); }
             if (btnAddCategoryModal) btnAddCategoryModal.addEventListener('click', () => openCategoryModal());
         }

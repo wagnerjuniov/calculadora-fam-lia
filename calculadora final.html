@@ -288,6 +288,13 @@
       height: 280px; /* Increased height */
     }
 
+    /* Forçar visibilidade dos canvas */
+    .chart-container canvas {
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
     .chart-title {
       font-size: 1.125rem; /* 18px */
       font-weight: 600;
@@ -2289,13 +2296,13 @@
         } finally { hideLoading(); }
     }
     async function generateFutureInstallments(batch, baseData, baseId, frequency, totalInstallments, startDate, startInstallmentNum) {
-         if (!transactionsCollection || !db) return;
+        if (!transactionsCollection || !db) return;
         const freqInfo = RECURRENCE_FREQUENCY[frequency]; if (!freqInfo) { console.error(`Frequência inválida: ${frequency}`); return; }
         const limit = totalInstallments ? totalInstallments : (startInstallmentNum + 24); const absoluteMax = startInstallmentNum + 60; const finalLimit = Math.min(limit, absoluteMax);
         console.log(`Gerando futuras parcelas a partir de ${startInstallmentNum + 1} até ${finalLimit}`);
         let currentDate = moment(startDate);
         for (let i = startInstallmentNum + 1; i <= finalLimit; i++) {
-            currentDate = currentDate.add(freqInfo.momentStep, freqInfo.momentUnit);
+            currentDate = moment(currentDate).add(freqInfo.momentStep, freqInfo.momentUnit); // Corrigido: criar nova instância do Moment
             const futureDescription = baseData.description ? `${baseData.description} ${totalInstallments ? `(${i}/${totalInstallments})` : ''}`.trim() : `Parcela ${i}${totalInstallments ? ` de ${totalInstallments}` : ''}`;
             const futureInstallmentData = { ...baseData, date: currentDate.format('YYYY-MM-DD'), status: 'scheduled', description: futureDescription, recurringInfo: { baseId: baseId, frequency: frequency, currentInstallment: i, totalInstallments: totalInstallments }, createdAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
             delete futureInstallmentData.id;
@@ -2574,7 +2581,7 @@
         const lastMonthIncome = transactions.filter(t => t.type === 'income' && typeof t.amount === 'number' && moment(t.date).isBetween(lastMonthStart, lastMonthEnd, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0);
         const lastMonthExpenses = transactions.filter(t => t.type === 'expense' && typeof t.amount === 'number' && moment(t.date).isBetween(lastMonthStart, lastMonthEnd, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0);
         const lastMonthBalance = lastMonthIncome - lastMonthExpenses;
-        const currentMonthPaidBalance = transactions.filter(t => t.status === 'paid' && typeof t.amount === 'number' && moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]')).reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0);
+        const currentMonthPaidBalance = transactions.filter(t => t.status === 'paid' && typeof t.amount === 'number' && t.date && moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]')).reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0);
         const updateTrend = (current, previous, trendValueElement, trendIndicatorElement) => {
             let percentage = 0; let trendClass = 'neutral'; let iconPath = `<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8z"/>`;
             if (previous !== 0) { percentage = ((current - previous) / Math.abs(previous)) * 100; } else if (current !== 0) { percentage = 100 * Math.sign(current); }
@@ -2594,7 +2601,6 @@
         const categorySelect = document.getElementById('analysis-category');
         const typeSelect = document.getElementById('analysis-type');
         const importanceSelect = document.getElementById('analysis-importance');
-
         if (!yearSelect || !monthSelect || !categorySelect || !typeSelect || !importanceSelect) {
              console.error("Filtros de Análise Mensal não encontrados. Abortando.");
              return;
@@ -2896,71 +2902,817 @@
         const textColor = isDarkMode ? 'rgba(235, 235, 245, 0.8)' : '#3C3C43'; const gridColor = isDarkMode ? 'rgba(84, 84, 88, 0.4)' : 'rgba(60, 60, 67, 0.15)'; const tooltipBg = isDarkMode ? 'rgba(44, 44, 46, 0.9)' : 'rgba(249, 249, 249, 0.9)'; const tooltipText = isDarkMode ? '#FFFFFF' : '#1C1C1E';
         return { responsive: true, maintainAspectRatio: false, color: textColor, plugins: { legend: { position: 'bottom', align: 'center', labels: { color: textColor, boxWidth: 12, padding: 20, font: { size: 13, family: 'var(--font-sans)' } } }, tooltip: { enabled: true, backgroundColor: tooltipBg, titleColor: tooltipText, bodyColor: tooltipText, borderColor: gridColor, borderWidth: 0.5, padding: 10, cornerRadius: 8, usePointStyle: true, boxPadding: 4, titleFont: { weight: '600', family: 'var(--font-sans)' }, bodyFont: { family: 'var(--font-sans)' }, footerFont: { family: 'var(--font-sans)', size: 11 }, callbacks: { label: function(context) { let label = context.dataset.label || context.label || ''; if (label) { label += ': '; } let value = context.parsed.y ?? context.parsed.x ?? context.parsed; if (value !== null && typeof value === 'number') { label += formatCurrency(value); } else if (context.formattedValue){ label += context.formattedValue; } return label; }, footer: function(tooltipItems) { if (tooltipItems.length > 0 && tooltipItems[0].chart.config.type.match(/pie|doughnut/)) { const chart = tooltipItems[0].chart; const datasetIndex = tooltipItems[0].datasetIndex; const dataIndex = tooltipItems[0].dataIndex; const dataset = chart.data.datasets[datasetIndex]; const sum = Array.isArray(dataset.data) ? dataset.data.reduce((a, b) => a + (typeof b === 'number' ? b : 0), 0) : 0; const value = tooltipItems[0].parsed; if (sum > 0 && typeof value === 'number') { const percentage = ((value / sum) * 100).toFixed(1) + '%'; return `Percentual: ${percentage}`; } } return ''; } } } }, scales: { x: { grid: { color: gridColor, drawBorder: false, }, ticks: { color: textColor, font: { size: 12, family: 'var(--font-sans)' }, maxRotation: 0, autoSkipPadding: 10 } }, y: { grid: { color: gridColor, drawBorder: false }, ticks: { color: textColor, font: { size: 12, family: 'var(--font-sans)' }, callback: function(value) { if (Math.abs(value) >= 1000000) return formatCurrency(value / 1000000) + 'M'; if (Math.abs(value) >= 1000) return formatCurrency(value / 1000) + 'k'; return formatCurrency(value); } }, beginAtZero: true } }, layout: { padding: { top: 10, bottom: 0, left: 0, right: 10 } } };
     }
+    
     function initCharts() {
-         console.log("Inicializando gráficos..."); const isDark = root.getAttribute('data-theme') === 'dark'; const commonOptions = getChartCommonOptions(isDark);
-        Object.values(overviewCharts).forEach(chart => chart?.destroy()); Object.values(analysisCharts).forEach(chart => chart?.destroy()); overviewCharts = {}; analysisCharts = {};
+        console.log("Inicializando gráficos..."); 
+        
+        // Verificar se Chart.js está disponível
+        if (typeof Chart === 'undefined') {
+            console.error("Chart.js não está disponível. Verifique a conexão com CDN.");
+            showToast("Erro ao carregar biblioteca de gráficos. Recarregue a página.", "danger");
+            return;
+        }
+        
+        const isDark = root.getAttribute('data-theme') === 'dark'; 
+        const commonOptions = getChartCommonOptions(isDark);
+        
+        // Destruir gráficos existentes para prevenir vazamentos de memória
+        Object.values(overviewCharts).forEach(chart => {
+            if (chart && typeof chart.destroy === 'function') {
+                try {
+                    chart.destroy();
+                } catch (e) {
+                    console.warn("Erro ao destruir gráfico existente:", e);
+                }
+            }
+        }); 
+        
+        Object.values(analysisCharts).forEach(chart => {
+            if (chart && typeof chart.destroy === 'function') {
+                try {
+                    chart.destroy();
+                } catch (e) {
+                    console.warn("Erro ao destruir gráfico existente:", e);
+                }
+            }
+        });
+        
+        overviewCharts = {}; 
+        analysisCharts = {};
+        
         try {
-            const ovIncomeExpenseCtx = document.getElementById('overview-income-expense-chart')?.getContext('2d'); if(ovIncomeExpenseCtx) { console.log("Inicializando overview-income-expense-chart"); overviewCharts.incomeExpense = new Chart(ovIncomeExpenseCtx, { type: 'bar', data: { labels: [], datasets: [] }, options: { ...commonOptions } }); } else { console.warn("Canvas 'overview-income-expense-chart' não encontrado."); }
-            const ovCategoryCtx = document.getElementById('overview-category-chart')?.getContext('2d'); if(ovCategoryCtx) { console.log("Inicializando overview-category-chart"); const doughnutOptions = { ...commonOptions }; delete doughnutOptions.scales; doughnutOptions.cutout = '65%'; overviewCharts.category = new Chart(ovCategoryCtx, { type: 'doughnut', data: { labels: [], datasets: [] }, options: doughnutOptions }); } else { console.warn("Canvas 'overview-category-chart' não encontrado."); }
-            const ovCashflowCtx = document.getElementById('overview-cashflow-chart')?.getContext('2d'); if(ovCashflowCtx) { console.log("Inicializando overview-cashflow-chart"); overviewCharts.cashflow = new Chart(ovCashflowCtx, { type: 'bar', data: { labels: [], datasets: [] }, options: { ...commonOptions } }); } else { console.warn("Canvas 'overview-cashflow-chart' não encontrado."); }
-            const ovFixedVariableCtx = document.getElementById('overview-fixed-variable-chart')?.getContext('2d'); if(ovFixedVariableCtx) { console.log("Inicializando overview-fixed-variable-chart"); const pieOptions = { ...commonOptions }; delete pieOptions.scales; overviewCharts.fixedVariable = new Chart(ovFixedVariableCtx, { type: 'pie', data: { labels: [], datasets: [] }, options: pieOptions }); } else { console.warn("Canvas 'overview-fixed-variable-chart' não encontrado."); }
-            const ovTrendCtx = document.getElementById('overview-trend-chart')?.getContext('2d'); if(ovTrendCtx) { console.log("Inicializando overview-trend-chart"); const lineOptions = { ...commonOptions }; lineOptions.tension = 0.3; lineOptions.pointRadius = 3; lineOptions.pointHoverRadius = 5; overviewCharts.trend = new Chart(ovTrendCtx, { type: 'line', data: { labels: [], datasets: [] }, options: lineOptions }); } else { console.warn("Canvas 'overview-trend-chart' não encontrado."); }
-        } catch(e) { console.error("Erro inicializando gráficos Overview:", e); }
-         try {
-             const anCategoryPieCtx = document.getElementById('analysis-category-pie-chart')?.getContext('2d'); if(anCategoryPieCtx) { console.log("Inicializando analysis-category-pie-chart"); const pieOptions = { ...commonOptions }; delete pieOptions.scales; analysisCharts.categoryPie = new Chart(anCategoryPieCtx, { type: 'pie', data: { labels: [], datasets: [] }, options: pieOptions }); } else { console.warn("Canvas 'analysis-category-pie-chart' não encontrado."); }
-             const anBalanceLineCtx = document.getElementById('analysis-balance-line-chart')?.getContext('2d'); if(anBalanceLineCtx) { console.log("Inicializando analysis-balance-line-chart"); const lineOptions = { ...commonOptions }; lineOptions.tension = 0.1; lineOptions.pointRadius = 3; lineOptions.pointHoverRadius = 5; analysisCharts.balanceLine = new Chart(anBalanceLineCtx, { type: 'line', data: { labels: [], datasets: [] }, options: lineOptions }); } else { console.warn("Canvas 'analysis-balance-line-chart' não encontrado."); }
-        } catch(e) { console.error("Erro inicializando gráficos Analysis:", e); }
-        console.log("Gráficos inicializados.");
+            // Gráficos da aba Overview
+            const ovIncomeExpenseCanvas = document.getElementById('overview-income-expense-chart');
+            if (ovIncomeExpenseCanvas) {
+                console.log("Inicializando overview-income-expense-chart");
+                const ctx = ovIncomeExpenseCanvas.getContext('2d');
+                if (ctx) {
+                    overviewCharts.incomeExpense = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: [],
+                            datasets: [
+                                {
+                                    label: 'Receitas',
+                                    data: [0], // Dataset inicial com zero
+                                    backgroundColor: isDark ? '#30D158' : '#34C759',
+                                    borderRadius: 4
+                                },
+                                {
+                                    label: 'Despesas',
+                                    data: [0], // Dataset inicial com zero
+                                    backgroundColor: isDark ? '#FF453A' : '#FF3B30',
+                                    borderRadius: 4
+                                }
+                            ]
+                        },
+                        options: { ...commonOptions }
+                    });
+                    console.log("Gráfico de receitas vs despesas inicializado com sucesso");
+                } else {
+                    console.warn("Não foi possível obter contexto 2D para o canvas 'overview-income-expense-chart'");
+                }
+            } else {
+                console.warn("Canvas 'overview-income-expense-chart' não encontrado.");
+            }
+            
+            const ovCategoryCanvas = document.getElementById('overview-category-chart');
+            if (ovCategoryCanvas) {
+                console.log("Inicializando overview-category-chart");
+                const doughnutOptions = { ...commonOptions };
+                delete doughnutOptions.scales;
+                doughnutOptions.cutout = '65%';
+                
+                const ctx = ovCategoryCanvas.getContext('2d');
+                if (ctx) {
+                    overviewCharts.category = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Sem dados'],
+                            datasets: [{
+                                data: [1],
+                                backgroundColor: ['#8E8E93'],
+                                borderColor: isDark ? '#000000' : '#FFFFFF',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: doughnutOptions
+                    });
+                    console.log("Gráfico de categorias inicializado com sucesso");
+                } else {
+                    console.warn("Não foi possível obter contexto 2D para o canvas 'overview-category-chart'");
+                }
+            } else {
+                console.warn("Canvas 'overview-category-chart' não encontrado.");
+            }
+            
+            const ovCashflowCanvas = document.getElementById('overview-cashflow-chart');
+            if (ovCashflowCanvas) {
+                console.log("Inicializando overview-cashflow-chart");
+                const ctx = ovCashflowCanvas.getContext('2d');
+                if (ctx) {
+                    overviewCharts.cashflow = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                            datasets: [{
+                                label: 'Saldo Mensal',
+                                data: Array(12).fill(0),
+                                backgroundColor: isDark ? '#30D158' : '#34C759',
+                                borderRadius: 4
+                            }]
+                        },
+                        options: { ...commonOptions }
+                    });
+                    console.log("Gráfico de fluxo de caixa inicializado com sucesso");
+                } else {
+                    console.warn("Não foi possível obter contexto 2D para o canvas 'overview-cashflow-chart'");
+                }
+            } else {
+                console.warn("Canvas 'overview-cashflow-chart' não encontrado.");
+            }
+            
+            const ovFixedVariableCanvas = document.getElementById('overview-fixed-variable-chart');
+            if (ovFixedVariableCanvas) {
+                console.log("Inicializando overview-fixed-variable-chart");
+                const pieOptions = { ...commonOptions };
+                delete pieOptions.scales;
+                
+                const ctx = ovFixedVariableCanvas.getContext('2d');
+                if (ctx) {
+                    overviewCharts.fixedVariable = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Fixas (Recorrentes)', 'Variáveis'],
+                            datasets: [{
+                                data: [1, 1],
+                                backgroundColor: [
+                                    isDark ? '#0A84FF' : '#007AFF',
+                                    isDark ? '#BF5AF2' : '#AF52DE'
+                                ],
+                                borderColor: isDark ? '#000000' : '#FFFFFF',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: pieOptions
+                    });
+                    console.log("Gráfico fixas vs variáveis inicializado com sucesso");
+                } else {
+                    console.warn("Não foi possível obter contexto 2D para o canvas 'overview-fixed-variable-chart'");
+                }
+            } else {
+                console.warn("Canvas 'overview-fixed-variable-chart' não encontrado.");
+            }
+            
+            const ovTrendCanvas = document.getElementById('overview-trend-chart');
+            if (ovTrendCanvas) {
+                console.log("Inicializando overview-trend-chart");
+                const lineOptions = { ...commonOptions };
+                lineOptions.tension = 0.3;
+                lineOptions.pointRadius = 3;
+                lineOptions.pointHoverRadius = 5;
+                
+                const ctx = ovTrendCanvas.getContext('2d');
+                if (ctx) {
+                    overviewCharts.trend = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: Array(6).fill('').map((_, i) => {
+                                return moment().subtract(5-i, 'months').format('MMM/YY');
+                            }),
+                            datasets: [{
+                                label: 'Despesas Pagas',
+                                data: Array(6).fill(0),
+                                borderColor: isDark ? '#FF9F0A' : '#FF9500',
+                                backgroundColor: isDark ? 'rgba(255, 159, 10, 0.15)' : 'rgba(255, 149, 0, 0.1)',
+                                fill: true
+                            }]
+                        },
+                        options: lineOptions
+                    });
+                    console.log("Gráfico de tendência inicializado com sucesso");
+                } else {
+                    console.warn("Não foi possível obter contexto 2D para o canvas 'overview-trend-chart'");
+                }
+            } else {
+                console.warn("Canvas 'overview-trend-chart' não encontrado.");
+            }
+            
+            // Gráficos da aba Analysis
+            const anCategoryPieCanvas = document.getElementById('analysis-category-pie-chart');
+            if (anCategoryPieCanvas) {
+                console.log("Inicializando analysis-category-pie-chart");
+                const pieOptions = { ...commonOptions };
+                delete pieOptions.scales;
+                
+                const ctx = anCategoryPieCanvas.getContext('2d');
+                if (ctx) {
+                    analysisCharts.categoryPie = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Sem dados'],
+                            datasets: [{
+                                data: [1],
+                                backgroundColor: ['#8E8E93'],
+                                borderColor: isDark ? '#000000' : '#FFFFFF',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: pieOptions
+                    });
+                    console.log("Gráfico de categorias da análise inicializado com sucesso");
+                } else {
+                    console.warn("Não foi possível obter contexto 2D para o canvas 'analysis-category-pie-chart'");
+                }
+            } else {
+                console.warn("Canvas 'analysis-category-pie-chart' não encontrado.");
+            }
+            
+            const anBalanceLineCanvas = document.getElementById('analysis-balance-line-chart');
+            if (anBalanceLineCanvas) {
+                console.log("Inicializando analysis-balance-line-chart");
+                const lineOptions = { ...commonOptions };
+                lineOptions.tension = 0.1;
+                lineOptions.pointRadius = 3;
+                lineOptions.pointHoverRadius = 5;
+                
+                const ctx = anBalanceLineCanvas.getContext('2d');
+                if (ctx) {
+                    analysisCharts.balanceLine = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: Array.from({ length: 30 }, (_, i) => (i + 1).toString()),
+                            datasets: [{
+                                label: 'Saldo Acumulado',
+                                data: Array(30).fill(0),
+                                borderColor: isDark ? '#0A84FF' : '#007AFF',
+                                backgroundColor: isDark ? 'rgba(10, 132, 255, 0.15)' : 'rgba(0, 122, 255, 0.1)',
+                                fill: true
+                            }]
+                        },
+                        options: lineOptions
+                    });
+                    console.log("Gráfico de saldo da análise inicializado com sucesso");
+                } else {
+                    console.warn("Não foi possível obter contexto 2D para o canvas 'analysis-balance-line-chart'");
+                }
+            } else {
+                console.warn("Canvas 'analysis-balance-line-chart' não encontrado.");
+            }
+        } catch(e) {
+            console.error("Erro ao inicializar gráficos:", e);
+            showToast("Erro ao inicializar gráficos. Verifique o console.", "danger");
+        }
+        
+        // Forçar atualizações depois de inicialização
+        setTimeout(() => {
+            if (currentTab === 'overview') {
+                console.log("Forçando atualização inicial dos gráficos da Visão Geral");
+                updateOverviewCharts();
+            } else if (currentTab === 'analysis') {
+                console.log("Forçando atualização inicial dos gráficos da Análise");
+                updateMonthlyAnalysis();
+            }
+        }, 500);
+        
+        console.log("Inicialização de gráficos concluída.");
     }
+    
     function updateAllChartsTheme() {
-        const isDark = root.getAttribute('data-theme') === 'dark'; const newOptionsBase = getChartCommonOptions(isDark); console.log("Atualizando tema dos gráficos para:", isDark ? "Dark" : "Light");
-        const updateChartOptions = (chart, specificOptions = {}) => { if (chart && chart.options && chart.config) { const optionsToKeep = { tension: chart.options.tension, cutout: chart.options.cutout, }; const hasScales = chart.config.type === 'bar' || chart.config.type === 'line'; let newOptions = { ...newOptionsBase }; if (!hasScales) { delete newOptions.scales; } chart.options = { ...newOptions, ...specificOptions, ...optionsToKeep }; try { chart.update(); } catch (e) { console.error("Erro ao atualizar gráfico:", chart.canvas?.id, e); } } };
-        if (overviewCharts.incomeExpense) updateChartOptions(overviewCharts.incomeExpense); if (overviewCharts.category) updateChartOptions(overviewCharts.category, {cutout: '65%'}); if (overviewCharts.cashflow) updateChartOptions(overviewCharts.cashflow); if (overviewCharts.fixedVariable) updateChartOptions(overviewCharts.fixedVariable); if (overviewCharts.trend) updateChartOptions(overviewCharts.trend, { tension: 0.3 });
-        if (analysisCharts.categoryPie) updateChartOptions(analysisCharts.categoryPie); if (analysisCharts.balanceLine) updateChartOptions(analysisCharts.balanceLine, { tension: 0.1 });
-        console.log("Temas dos gráficos atualizados.");
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        const newOptionsBase = getChartCommonOptions(isDark);
+        console.log("Atualizando tema dos gráficos para:", isDark ? "Dark" : "Light");
+        
+        const updateChartOptions = (chart, specificOptions = {}) => {
+            if (!chart) {
+                console.warn("Tentativa de atualizar um gráfico inexistente");
+                return;
+            }
+            
+            if (chart.options && chart.config) {
+                const optionsToKeep = {
+                    tension: chart.options.tension,
+                    cutout: chart.options.cutout,
+                };
+                
+                const hasScales = chart.config.type === 'bar' || chart.config.type === 'line';
+                let newOptions = { ...newOptionsBase };
+                
+                if (!hasScales) {
+                    delete newOptions.scales;
+                }
+                
+                chart.options = { ...newOptions, ...specificOptions, ...optionsToKeep };
+                
+                try {
+                    chart.update();
+                } catch (e) {
+                    console.error("Erro ao atualizar tema do gráfico:", chart.canvas?.id, e);
+                }
+            } else {
+                console.warn("Gráfico sem opções ou configuração válida:", chart);
+            }
+        };
+        
+        // Atualiza cada gráfico com as novas opções
+        if (overviewCharts.incomeExpense) updateChartOptions(overviewCharts.incomeExpense);
+        if (overviewCharts.category) updateChartOptions(overviewCharts.category, {cutout: '65%'});
+        if (overviewCharts.cashflow) updateChartOptions(overviewCharts.cashflow);
+        if (overviewCharts.fixedVariable) updateChartOptions(overviewCharts.fixedVariable);
+        if (overviewCharts.trend) updateChartOptions(overviewCharts.trend, { tension: 0.3 });
+        
+        if (analysisCharts.categoryPie) updateChartOptions(analysisCharts.categoryPie);
+        if (analysisCharts.balanceLine) updateChartOptions(analysisCharts.balanceLine, { tension: 0.1 });
+        
+        console.log("Temas dos gráficos atualizados com sucesso");
     }
+    
     function updateOverviewCharts() {
-         if (!overviewCharts || Object.keys(overviewCharts).length === 0) { console.warn("Gráficos de Overview não inicializados. Abortando atualização."); return; }
-         console.log("Atualizando gráficos de Overview..."); const isDark = root.getAttribute('data-theme') === 'dark';
-        if(overviewCharts.incomeExpense) { const labels = []; const incomeData = []; const expenseData = []; for (let i = 11; i >= 0; i--) { const month = moment().subtract(i, 'months'); labels.push(month.format('MMM/YY')); const start = month.startOf('month'); const end = month.endOf('month'); const monthIncome = transactions.filter(t => t.type === 'income' && t.status === 'paid' && typeof t.amount === 'number' && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0); const monthExpenses = transactions.filter(t => t.type === 'expense' && t.status === 'paid' && typeof t.amount === 'number' && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0); incomeData.push(monthIncome); expenseData.push(monthExpenses); } overviewCharts.incomeExpense.data = { labels, datasets: [ { label: 'Receitas', data: incomeData, backgroundColor: isDark ? '#30D158' : '#34C759', borderRadius: 4 }, { label: 'Despesas', data: expenseData, backgroundColor: isDark ? '#FF453A' : '#FF3B30', borderRadius: 4 } ] }; overviewCharts.incomeExpense.update(); }
-        if(overviewCharts.category) { const last30DaysStart = moment().subtract(30, 'days').startOf('day'); const expensesLast30Days = transactions.filter(t => t.type === 'expense' && typeof t.amount === 'number' && t.date && moment(t.date).isSameOrAfter(last30DaysStart) ); const expensesByCategory = expensesLast30Days.reduce((acc, t) => { const catId = t.category || 'unknown'; const category = categories.find(c => c.id === catId) || { id: 'unknown', name: 'Desconhecida', color: '#8E8E93', icon: '❓' }; acc[category.id] = (acc[category.id] || { name: `${category.icon} ${category.name}`, value: 0, color: category.color }); acc[category.id].value += t.amount; return acc; }, {}); const sortedCategories = Object.values(expensesByCategory).sort((a, b) => b.value - a.value); overviewCharts.category.data = { labels: sortedCategories.map(c => c.name), datasets: [{ data: sortedCategories.map(c => c.value), backgroundColor: sortedCategories.map(c => c.color), borderColor: isDark ? '#000000' : '#FFFFFF', borderWidth: 2 }] }; overviewCharts.category.update(); }
-        if (overviewCharts.cashflow) { const currentYear = moment().year(); const labels = []; const balanceData = []; for (let i = 0; i < 12; i++) { const month = moment().year(currentYear).month(i); labels.push(month.format('MMM')); const start = month.startOf('month'); const end = month.endOf('month'); const monthIncome = transactions.filter(t => t.type === 'income' && t.status === 'paid' && typeof t.amount === 'number' && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0); const monthExpenses = transactions.filter(t => t.type === 'expense' && t.status === 'paid' && typeof t.amount === 'number' && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0); balanceData.push(monthIncome - monthExpenses); } overviewCharts.cashflow.data = { labels, datasets: [{ label: 'Saldo Mensal (Pago)', data: balanceData, backgroundColor: balanceData.map(b => b >= 0 ? (isDark ? '#30D158' : '#34C759') : (isDark ? '#FF453A' : '#FF3B30')), borderRadius: 4 }] }; overviewCharts.cashflow.update(); }
-        if(overviewCharts.fixedVariable) { const currentMonthStart = moment().startOf('month'); const currentMonthEnd = moment().endOf('month'); const monthExpenses = transactions.filter(t => t.type === 'expense' && typeof t.amount === 'number' && t.date && moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]') ); const fixed = monthExpenses.filter(t => t.recurringInfo?.baseId).reduce((sum, t) => sum + t.amount, 0); const variable = monthExpenses.filter(t => !t.recurringInfo?.baseId).reduce((sum, t) => sum + t.amount, 0); overviewCharts.fixedVariable.data = { labels: ['Fixas (Recorrentes)', 'Variáveis'], datasets: [{ data: [fixed, variable], backgroundColor: [isDark ? '#0A84FF' : '#007AFF', isDark ? '#BF5AF2' : '#AF52DE'], borderColor: isDark ? '#000000' : '#FFFFFF', borderWidth: 2 }] }; overviewCharts.fixedVariable.update(); }
-        if(overviewCharts.trend) { const labels = []; const data = []; for (let i = 5; i >= 0; i--) { const month = moment().subtract(i, 'months'); labels.push(month.format('MMM/YY')); const start = month.startOf('month'); const end = month.endOf('month'); const monthExpenses = transactions.filter(t => t.type === 'expense' && t.status === 'paid' && typeof t.amount === 'number' && t.date && moment(t.date).isBetween(start, end, 'day', '[]')).reduce((sum, t) => sum + t.amount, 0); data.push(monthExpenses); } overviewCharts.trend.data = { labels, datasets: [{ label: 'Despesas Pagas', data: data, borderColor: isDark ? '#FF9F0A' : '#FF9500', backgroundColor: isDark ? 'rgba(255, 159, 10, 0.15)' : 'rgba(255, 149, 0, 0.1)', fill: true }] }; overviewCharts.trend.update(); }
-         console.log("Gráficos de Overview atualizados.");
+        if (!overviewCharts || Object.keys(overviewCharts).length === 0) {
+            console.warn("Gráficos de Overview não inicializados. Tentando reinicializar...");
+            initCharts();
+            return;
+        }
+        
+        console.log("Atualizando gráficos de Visão Geral...");
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        
+        try {
+            // Gráfico de Receitas x Despesas
+            if (overviewCharts.incomeExpense) {
+                const labels = [];
+                const incomeData = [];
+                const expenseData = [];
+                
+                for (let i = 11; i >= 0; i--) {
+                    const month = moment().subtract(i, 'months');
+                    labels.push(month.format('MMM/YY'));
+                    
+                    const start = month.startOf('month');
+                    const end = month.endOf('month');
+                    
+                    const monthIncome = transactions.filter(t => 
+                        t.type === 'income' && t.status === 'paid' && 
+                        typeof t.amount === 'number' && 
+                        moment(t.date).isBetween(start, end, 'day', '[]')
+                    ).reduce((sum, t) => sum + t.amount, 0);
+                    
+                    const monthExpenses = transactions.filter(t => 
+                        t.type === 'expense' && t.status === 'paid' && 
+                        typeof t.amount === 'number' && 
+                        moment(t.date).isBetween(start, end, 'day', '[]')
+                    ).reduce((sum, t) => sum + t.amount, 0);
+                    
+                    incomeData.push(monthIncome);
+                    expenseData.push(monthExpenses);
+                }
+                
+                // Verifica se há dados para mostrar
+                if (incomeData.every(v => v === 0) && expenseData.every(v => v === 0)) {
+                    console.log("Nenhum dado para o gráfico de Receitas x Despesas");
+                }
+                
+                overviewCharts.incomeExpense.data = {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Receitas',
+                            data: incomeData.length > 0 ? incomeData : [0],
+                            backgroundColor: isDark ? '#30D158' : '#34C759',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Despesas',
+                            data: expenseData.length > 0 ? expenseData : [0],
+                            backgroundColor: isDark ? '#FF453A' : '#FF3B30',
+                            borderRadius: 4
+                        }
+                    ]
+                };
+                
+                try {
+                    overviewCharts.incomeExpense.update();
+                    console.log("Gráfico de Receitas x Despesas atualizado com sucesso");
+                } catch (error) {
+                    console.error("Erro ao atualizar gráfico de Receitas x Despesas:", error);
+                }
+            }
+            
+            // Gráfico de Categorias
+            if (overviewCharts.category) {
+                const last30DaysStart = moment().subtract(30, 'days').startOf('day');
+                const expensesLast30Days = transactions.filter(t => 
+                    t.type === 'expense' && typeof t.amount === 'number' && t.date && 
+                    moment(t.date).isSameOrAfter(last30DaysStart)
+                );
+                
+                const expensesByCategory = expensesLast30Days.reduce((acc, t) => {
+                    const catId = t.category || 'unknown';
+                    const category = categories.find(c => c.id === catId) || 
+                        { id: 'unknown', name: 'Desconhecida', color: '#8E8E93', icon: '❓' };
+                    
+                    if (!acc[category.id]) {
+                        acc[category.id] = {
+                            name: `${category.icon} ${category.name}`,
+                            value: 0,
+                            color: category.color
+                        };
+                    }
+                    
+                    acc[category.id].value += t.amount;
+                    return acc;
+                }, {});
+                
+                const sortedCategories = Object.values(expensesByCategory).sort((a, b) => b.value - a.value);
+                
+                if (sortedCategories.length === 0) {
+                    // Sem dados para mostrar
+                    overviewCharts.category.data = {
+                        labels: ['Sem dados'],
+                        datasets: [{
+                            data: [1],
+                            backgroundColor: ['#8E8E93'],
+                            borderColor: isDark ? '#000000' : '#FFFFFF',
+                            borderWidth: 2
+                        }]
+                    };
+                } else {
+                    overviewCharts.category.data = {
+                        labels: sortedCategories.map(c => c.name),
+                        datasets: [{
+                            data: sortedCategories.map(c => c.value),
+                            backgroundColor: sortedCategories.map(c => c.color),
+                            borderColor: isDark ? '#000000' : '#FFFFFF',
+                            borderWidth: 2
+                        }]
+                    };
+                }
+                
+                try {
+                    overviewCharts.category.update();
+                    console.log("Gráfico de Categorias atualizado com sucesso");
+                } catch (error) {
+                    console.error("Erro ao atualizar gráfico de Categorias:", error);
+                }
+            }
+            
+            // Gráfico de Fluxo de Caixa
+            if (overviewCharts.cashflow) {
+                const currentYear = moment().year();
+                const labels = [];
+                const balanceData = [];
+                
+                for (let i = 0; i < 12; i++) {
+                    const month = moment().year(currentYear).month(i);
+                    labels.push(month.format('MMM'));
+                    
+                    const start = month.startOf('month');
+                    const end = month.endOf('month');
+                    
+                    const monthIncome = transactions.filter(t => 
+                        t.type === 'income' && t.status === 'paid' && 
+                        typeof t.amount === 'number' && 
+                        moment(t.date).isBetween(start, end, 'day', '[]')
+                    ).reduce((sum, t) => sum + t.amount, 0);
+                    
+                    const monthExpenses = transactions.filter(t => 
+                        t.type === 'expense' && t.status === 'paid' && 
+                        typeof t.amount === 'number' && 
+                        moment(t.date).isBetween(start, end, 'day', '[]')
+                    ).reduce((sum, t) => sum + t.amount, 0);
+                    
+                    balanceData.push(monthIncome - monthExpenses);
+                }
+                
+                overviewCharts.cashflow.data = {
+                    labels,
+                    datasets: [{
+                        label: 'Saldo Mensal (Pago)',
+                        data: balanceData,
+                        backgroundColor: balanceData.map(b => 
+                            b >= 0 ? (isDark ? '#30D158' : '#34C759') : (isDark ? '#FF453A' : '#FF3B30')
+                        ),
+                        borderRadius: 4
+                    }]
+                };
+                
+                try {
+                    overviewCharts.cashflow.update();
+                    console.log("Gráfico de Fluxo de Caixa atualizado com sucesso");
+                } catch (error) {
+                    console.error("Erro ao atualizar gráfico de Fluxo de Caixa:", error);
+                }
+            }
+            
+            // Gráfico Fixas vs Variáveis
+            if (overviewCharts.fixedVariable) {
+                const currentMonthStart = moment().startOf('month');
+                const currentMonthEnd = moment().endOf('month');
+                
+                const monthExpenses = transactions.filter(t => 
+                    t.type === 'expense' && typeof t.amount === 'number' && t.date && 
+                    moment(t.date).isBetween(currentMonthStart, currentMonthEnd, 'day', '[]')
+                );
+                
+                const fixed = monthExpenses.filter(t => t.recurringInfo?.baseId)
+                    .reduce((sum, t) => sum + t.amount, 0);
+                    
+                const variable = monthExpenses.filter(t => !t.recurringInfo?.baseId)
+                    .reduce((sum, t) => sum + t.amount, 0);
+                
+                overviewCharts.fixedVariable.data = {
+                    labels: ['Fixas (Recorrentes)', 'Variáveis'],
+                    datasets: [{
+                        data: [fixed || 0.01, variable || 0.01], // Usa valores mínimos para evitar gráfico vazio
+                        backgroundColor: [
+                            isDark ? '#0A84FF' : '#007AFF',
+                            isDark ? '#BF5AF2' : '#AF52DE'
+                        ],
+                        borderColor: isDark ? '#000000' : '#FFFFFF',
+                        borderWidth: 2
+                    }]
+                };
+                
+                try {
+                    overviewCharts.fixedVariable.update();
+                    console.log("Gráfico Fixas vs Variáveis atualizado com sucesso");
+                } catch (error) {
+                    console.error("Erro ao atualizar gráfico Fixas vs Variáveis:", error);
+                }
+            }
+            
+            // Gráfico de Tendência
+            if (overviewCharts.trend) {
+                const labels = [];
+                const data = [];
+                
+                for (let i = 5; i >= 0; i--) {
+                    const month = moment().subtract(i, 'months');
+                    labels.push(month.format('MMM/YY'));
+                    
+                    const start = month.startOf('month');
+                    const end = month.endOf('month');
+                    
+                    const monthExpenses = transactions.filter(t => 
+                        t.type === 'expense' && t.status === 'paid' && 
+                        typeof t.amount === 'number' && t.date && 
+                        moment(t.date).isBetween(start, end, 'day', '[]')
+                    ).reduce((sum, t) => sum + t.amount, 0);
+                    
+                    data.push(monthExpenses);
+                }
+                
+                overviewCharts.trend.data = {
+                    labels,
+                    datasets: [{
+                        label: 'Despesas Pagas',
+                        data: data,
+                        borderColor: isDark ? '#FF9F0A' : '#FF9500',
+                        backgroundColor: isDark ? 'rgba(255, 159, 10, 0.15)' : 'rgba(255, 149, 0, 0.1)',
+                        fill: true
+                    }]
+                };
+                
+                try {
+                    overviewCharts.trend.update();
+                    console.log("Gráfico de Tendência atualizado com sucesso");
+                } catch (error) {
+                    console.error("Erro ao atualizar gráfico de Tendência:", error);
+                }
+            }
+            
+            console.log("Todos os gráficos de Visão Geral atualizados com sucesso");
+        } catch (error) {
+            console.error("Erro na atualização dos gráficos de Visão Geral:", error);
+            showToast("Erro ao atualizar gráficos. Tente recarregar a página.", "danger");
+        }
     }
+    
     function updateAnalysisCharts(monthlyTransactions) {
-         if (!analysisCharts || Object.keys(analysisCharts).length === 0) { console.warn("Gráficos de Análise não inicializados. Abortando atualização."); return; }
-         console.log("Atualizando gráficos de Análise Mensal..."); const isDark = root.getAttribute('data-theme') === 'dark';
-        if (analysisCharts.categoryPie) { const expensesByCategory = monthlyTransactions.filter(t => t.type === 'expense').reduce((acc, t) => { const catId = t.category || 'unknown'; const category = categories.find(c => c.id === catId) || { id: 'unknown', name: 'Desconhecida', color: '#8E8E93', icon: '❓' }; acc[category.id] = (acc[category.id] || { name: `${category.icon} ${category.name}`, value: 0, color: category.color }); acc[category.id].value += t.amount; return acc; }, {}); const sortedCategories = Object.values(expensesByCategory).sort((a, b) => b.value - a.value); const maxCategories = 7; let displayLabels = sortedCategories.slice(0, maxCategories).map(c => c.name); let displayData = sortedCategories.slice(0, maxCategories).map(c => c.value); let displayColors = sortedCategories.slice(0, maxCategories).map(c => c.color); if (sortedCategories.length > maxCategories) { const otherValue = sortedCategories.slice(maxCategories).reduce((sum, c) => sum + c.value, 0); if (otherValue > 0) { displayLabels.push("Outros"); displayData.push(otherValue); displayColors.push(isDark ? '#48484A' : '#C7C7CC'); } } analysisCharts.categoryPie.data = { labels: displayLabels, datasets: [{ data: displayData, backgroundColor: displayColors, borderColor: isDark ? '#000000' : '#FFFFFF', borderWidth: 2 }] }; analysisCharts.categoryPie.update(); }
-        if (analysisCharts.balanceLine) { const selectedMonth = moment(currentAnalysisMonthYear); const daysInMonth = selectedMonth.daysInMonth(); const labels = Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString()); const dailyBalances = []; let cumulativeBalance = 0; const startOfMonth = selectedMonth.startOf('month'); const initialBalance = transactions.filter(t => t.status === 'paid' && typeof t.amount === 'number' && t.date && moment(t.date).isBefore(startOfMonth, 'day')).reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0); cumulativeBalance = initialBalance; for (let day = 1; day <= daysInMonth; day++) { const currentDayMoment = moment(currentAnalysisMonthYear).date(day); const balanceChangeToday = monthlyTransactions.filter(t => t.status === 'paid' && moment(t.date).isSame(currentDayMoment, 'day')).reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0); cumulativeBalance += balanceChangeToday; dailyBalances.push(cumulativeBalance); } analysisCharts.balanceLine.data = { labels, datasets: [{ label: 'Saldo Acumulado (Pago)', data: dailyBalances, borderColor: isDark ? '#0A84FF' : '#007AFF', backgroundColor: isDark ? 'rgba(10, 132, 255, 0.15)' : 'rgba(0, 122, 255, 0.1)', fill: true }] }; analysisCharts.balanceLine.update(); }
-         console.log("Gráficos de Análise Mensal atualizados.");
+        if (!analysisCharts || Object.keys(analysisCharts).length === 0) {
+            console.warn("Gráficos de Análise não inicializados. Tentando reinicializar...");
+            initCharts();
+            return;
+        }
+        
+        console.log("Atualizando gráficos de Análise Mensal...");
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        
+        try {
+            // Gráfico de Categorias (Pie)
+            if (analysisCharts.categoryPie) {
+                const expensesByCategory = monthlyTransactions.filter(t => t.type === 'expense')
+                    .reduce((acc, t) => {
+                        const catId = t.category || 'unknown';
+                        const category = categories.find(c => c.id === catId) || 
+                            { id: 'unknown', name: 'Desconhecida', color: '#8E8E93', icon: '❓' };
+                        
+                        if (!acc[category.id]) {
+                            acc[category.id] = {
+                                name: `${category.icon} ${category.name}`,
+                                value: 0,
+                                color: category.color
+                            };
+                        }
+                        
+                        acc[category.id].value += t.amount;
+                        return acc;
+                    }, {});
+                
+                const sortedCategories = Object.values(expensesByCategory).sort((a, b) => b.value - a.value);
+                
+                if (sortedCategories.length === 0) {
+                    // Sem dados para mostrar
+                    analysisCharts.categoryPie.data = {
+                        labels: ['Sem dados'],
+                        datasets: [{
+                            data: [1],
+                            backgroundColor: ['#8E8E93'],
+                            borderColor: isDark ? '#000000' : '#FFFFFF',
+                            borderWidth: 2
+                        }]
+                    };
+                } else {
+                    const maxCategories = 7;
+                    let displayLabels = sortedCategories.slice(0, maxCategories).map(c => c.name);
+                    let displayData = sortedCategories.slice(0, maxCategories).map(c => c.value);
+                    let displayColors = sortedCategories.slice(0, maxCategories).map(c => c.color);
+                    
+                    if (sortedCategories.length > maxCategories) {
+                        const otherValue = sortedCategories.slice(maxCategories)
+                            .reduce((sum, c) => sum + c.value, 0);
+                        
+                        if (otherValue > 0) {
+                            displayLabels.push("Outros");
+                            displayData.push(otherValue);
+                            displayColors.push(isDark ? '#48484A' : '#C7C7CC');
+                        }
+                    }
+                    
+                    analysisCharts.categoryPie.data = {
+                        labels: displayLabels,
+                        datasets: [{
+                            data: displayData,
+                            backgroundColor: displayColors,
+                            borderColor: isDark ? '#000000' : '#FFFFFF',
+                            borderWidth: 2
+                        }]
+                    };
+                }
+                
+                try {
+                    analysisCharts.categoryPie.update();
+                    console.log("Gráfico de Categorias da Análise atualizado com sucesso");
+                } catch (error) {
+                    console.error("Erro ao atualizar gráfico de Categorias da Análise:", error);
+                }
+            }
+            
+            // Gráfico de Saldo no Mês (Line)
+            if (analysisCharts.balanceLine) {
+                const selectedMonth = moment(currentAnalysisMonthYear);
+                const daysInMonth = selectedMonth.daysInMonth();
+                const labels = Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString());
+                const dailyBalances = [];
+                let cumulativeBalance = 0;
+                
+                // Saldo inicial (baseado em transações anteriores)
+                const startOfMonth = selectedMonth.startOf('month');
+                const initialBalance = transactions.filter(t => 
+                    t.status === 'paid' && typeof t.amount === 'number' && t.date && 
+                    moment(t.date).isBefore(startOfMonth, 'day')
+                ).reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0);
+                
+                cumulativeBalance = initialBalance;
+                
+                // Calcula o saldo para cada dia do mês
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const currentDayMoment = moment(currentAnalysisMonthYear).date(day);
+                    
+                    const balanceChangeToday = monthlyTransactions.filter(t => 
+                        t.status === 'paid' && moment(t.date).isSame(currentDayMoment, 'day')
+                    ).reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0);
+                    
+                    cumulativeBalance += balanceChangeToday;
+                    dailyBalances.push(cumulativeBalance);
+                }
+                
+                analysisCharts.balanceLine.data = {
+                    labels,
+                    datasets: [{
+                        label: 'Saldo Acumulado (Pago)',
+                        data: dailyBalances.length > 0 ? dailyBalances : Array(daysInMonth).fill(0),
+                        borderColor: isDark ? '#0A84FF' : '#007AFF',
+                        backgroundColor: isDark ? 'rgba(10, 132, 255, 0.15)' : 'rgba(0, 122, 255, 0.1)',
+                        fill: true
+                    }]
+                };
+                
+                try {
+                    analysisCharts.balanceLine.update();
+                    console.log("Gráfico de Saldo Mensal da Análise atualizado com sucesso");
+                } catch (error) {
+                    console.error("Erro ao atualizar gráfico de Saldo Mensal da Análise:", error);
+                }
+            }
+
+            console.log("Todos os gráficos de Análise Mensal atualizados com sucesso");
+        } catch (error) {
+            console.error("Erro na atualização dos gráficos de Análise Mensal:", error);
+            showToast("Erro ao atualizar gráficos de análise. Tente recarregar a página.", "danger");
+        }
     }
 
     // ===== Inicialização da Aplicação =====
     async function init() {
-        showLoading(); console.log("Iniciando aplicação...");
+        showLoading(); 
+        console.log("Iniciando aplicação...");
+        
         try {
             setupTheme();
-             if(db) { await loadCategories(); }
-             else { console.error("Banco de dados não inicializado. Carregando categorias padrão localmente."); categories = [...DEFAULT_INCOME_CATEGORIES, ...DEFAULT_EXPENSE_CATEGORIES].sort((a, b) => a.name.localeCompare(b.name)); populateCategoryFilters(); }
+            
+            if(db) {
+                await loadCategories();
+            } else {
+                console.error("Banco de dados não inicializado. Carregando categorias padrão localmente.");
+                categories = [...DEFAULT_INCOME_CATEGORIES, ...DEFAULT_EXPENSE_CATEGORIES].sort((a, b) => a.name.localeCompare(b.name));
+                populateCategoryFilters();
+            }
+            
             initTabs();
             populateYearMonthFilters(); // Chama a nova função de filtro Ano/Mês - Change #3
-            initCharts();
+            
+            // Inicializa os gráficos após garantir que os elementos DOM existam
+            setTimeout(() => {
+                console.log("Iniciando gráficos após delay para garantir DOM carregado...");
+                initCharts();
+            }, 500);
+            
             setupEventListeners();
-            if(db) { setupFirestoreListeners(); }
-            else { console.error("Listeners do Firestore não iniciados - DB indisponível."); updateDashboard(); }
+            
+            if(db) {
+                setupFirestoreListeners();
+            } else {
+                console.error("Listeners do Firestore não iniciados - DB indisponível.");
+                updateDashboard();
+            }
+            
             console.log("Estrutura da aplicação inicializada. Aguardando dados do Firestore...");
+            
+            // Forçar uma atualização dos gráficos após algum tempo para garantir que sejam renderizados
+            setTimeout(() => {
+                console.log("Forçando atualização de gráficos após inicialização completa");
+                if (currentTab === 'overview') {
+                    updateOverviewCharts();
+                } else if (currentTab === 'analysis') {
+                    updateMonthlyAnalysis();
+                }
+            }, 2000);
+            
         } catch (error) {
-            console.error("Erro fatal durante a inicialização:", error); showToast("Erro grave ao iniciar. Verifique o console (F12) e recarregue a página.", "danger", 10000);
-             try { initTabs(); setupEventListeners(); } catch (uiError) { console.error("Erro ao configurar UI de fallback:", uiError); }
-        } finally { setTimeout(hideLoading, 500); }
+            console.error("Erro fatal durante a inicialização:", error);
+            showToast("Erro grave ao iniciar. Verifique o console (F12) e recarregue a página.", "danger", 10000);
+            
+            try {
+                initTabs();
+                setupEventListeners();
+            } catch (uiError) {
+                console.error("Erro ao configurar UI de fallback:", uiError);
+            }
+        } finally {
+            setTimeout(hideLoading, 500);
+        }
     }
 
     // --- Ponto de Entrada ---
-    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+    
     window.addEventListener('beforeunload', stopFirestoreListeners);
-
+    
+    // Adiciona um listener de redimensionamento para ajustar os gráficos quando a janela for redimensionada
+    window.addEventListener('resize', function() {
+        if (Object.keys(overviewCharts).length > 0 || Object.keys(analysisCharts).length > 0) {
+            console.log("Janela redimensionada, ajustando gráficos...");
+            setTimeout(() => {
+                // Atualiza todos os gráficos para se ajustarem ao novo tamanho
+                Object.values(overviewCharts).forEach(chart => {
+                    if (chart && typeof chart.resize === 'function') {
+                        chart.resize();
+                    }
+                });
+                
+                Object.values(analysisCharts).forEach(chart => {
+                    if (chart && typeof chart.resize === 'function') {
+                        chart.resize();
+                    }
+                });
+            }, 100);
+        }
+    });
   </script>
 </body>
 </html>

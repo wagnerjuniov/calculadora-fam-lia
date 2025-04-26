@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
@@ -2285,7 +2284,8 @@
             }
             closeModal(document.getElementById('transaction-modal'));
         } catch (error) {
-            console.error("Erro ao salvar transação: ", error); showToast(`Erro ao salvar transação: ${error.message || 'Erro desconhecido'}`, "danger", 5000);
+            console.error("Erro ao salvar transação: ", error);
+            showToast(`Erro ao salvar transação: ${error.message || 'Erro desconhecido'}`, "danger", 5000);
         } finally {
             updateMonthlyAnalysis();
             hideLoading();

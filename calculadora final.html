@@ -2582,10 +2582,20 @@ function populateMonthYearFilter() {
 
 // Função para atualizar a data de análise atual
 function updateCurrentAnalysisDate() {
-    const year = document.getElementById('analysis-year').value;
-    const month = document.getElementById('analysis-month').value;
-    currentAnalysisMonthYear = `${year}-${String(Number(month) + 1).padStart(2, '0')}`;
-    updateMonthlyAnalysis();
+    const yearSelect = document.getElementById('analysis-year');
+    const monthSelect = document.getElementById('analysis-month');
+    
+    // Verificar se os elementos existem antes de acessar suas propriedades
+    if (yearSelect && monthSelect) {
+        const year = yearSelect.value;
+        const month = monthSelect.value;
+        currentAnalysisMonthYear = `${year}-${String(Number(month) + 1).padStart(2, '0')}`;
+        updateMonthlyAnalysis();
+    } else {
+        console.error("Elementos de filtro de ano/mês não encontrados");
+        // Usar data atual como fallback
+        currentAnalysisMonthYear = moment().format('YYYY-MM');
+    }
 }
 
      // Setup dos Event Listeners
@@ -2880,12 +2890,15 @@ function updateCurrentAnalysisDate() {
         updateTrend(currentMonthExpenses, lastMonthExpenses, 'expenses-trend', 'expenses-trend-indicator'); // Já inverte a lógica na função
     }
 
-
     // ===== Lógica da Análise Mensal =====
+function updateMonthlyAnalysis() {
+    showLoading();
+    
+    if (!currentAnalysisMonthYear) {
+        currentAnalysisMonthYear = moment().format('YYYY-MM'); // Usa mês atual como fallback
+    }
 
-    function updateMonthlyAnalysis() {
-        showLoading();
-        const selectedMonthYear = document.getElementById('analysis-month-year').value; // YYYY-MM
+        const selectedMonthYear = currentAnalysisMonthYear;
         const selectedCategory = document.getElementById('analysis-category').value;
         const selectedType = document.getElementById('analysis-type').value;
         const selectedImportance = document.getElementById('analysis-importance').value;
@@ -3612,38 +3625,83 @@ function renderMonthlyTransactionList(monthlyTransactions) {
         }
     }
 
-    // ===== Inicialização da Aplicação =====
-    async function init() {
-        showLoading();
-        console.log("Iniciando aplicação...");
-        try {
-            // 1. Configurar Tema
-            setupTheme();
-            // 2. Carregar Categorias (Garantindo Padrões se necessário)
-            await loadCategories(); // Espera carregar antes de continuar
-            // 3. Inicializar Componentes da UI (Filtros, Modais, Tabs)
-            initTabs();
-            populateMonthYearFilter(); // Popula filtro de Ano/Mês
-            setupEventListeners(); // Configura todos os listeners
-            initCharts(); // Inicializa gráficos
-            // 4. Listeners do Firestore
-            setupFirestoreListeners();
-            console.log("Aplicação inicializada com sucesso!");
-        } catch (error) {
-            console.error("Erro fatal durante a inicialização:", error);
-            showToast("Erro grave ao iniciar...", "danger", 10000);
-            // Tenta inicializar o mínimo possível
-            initTabs();
-            setupEventListeners();
-        } finally {
-            // Garante que o loading seja escondido mesmo se houver erro parcial
-            setTimeout(hideLoading, 300);
-        }
+<script>
+// ===== Inicialização da Aplicação =====
+
+// Popular filtros de Ano e Mês separados para Análise
+function populateMonthYearFilter() {
+    const yearSelect = document.getElementById('analysis-year');
+    const monthSelect = document.getElementById('analysis-month');
+    
+    // Verificar se os novos elementos existem
+    if (!yearSelect || !monthSelect) {
+        console.error("Elementos de filtro de ano/mês não encontrados no DOM");
+        return; // Sair da função se os elementos não existirem
     }
-    // --- Ponto de Entrada ---
-    document.addEventListener('DOMContentLoaded', init);
-    // --- Limpeza ao Sair ---
-    window.addEventListener('beforeunload', stopFirestoreListeners);
-  </script>
+    
+    // Limpa os selects
+    yearSelect.innerHTML = '';
+    monthSelect.innerHTML = '';
+    
+    // Anos (atual +/- 2 anos)
+    const currentYear = moment().year();
+    for (let year = currentYear - 2; year <= currentYear + 2; year++) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    }
+    
+    // Meses
+    const months = moment.months();
+    months.forEach((month, index) => {
+        const option = document.createElement('option');
+        option.value = index; // 0-11
+        option.textContent = month.charAt(0).toUpperCase() + month.slice(1); // Capitalize
+        monthSelect.appendChild(option);
+    });
+    
+    // Define valores atuais
+    yearSelect.value = moment().year();
+    monthSelect.value = moment().month();
+    
+    // Atualiza a variável de estado com o formato YYYY-MM
+    updateCurrentAnalysisDate();
+}
+
+async function init() {
+    showLoading();
+    console.log("Iniciando aplicação...");
+    try {
+        // 1. Configurar Tema
+        setupTheme();
+        // 2. Carregar Categorias (Garantindo Padrões se necessário)
+        await loadCategories(); // Espera carregar antes de continuar
+        // 3. Inicializar Componentes da UI (Filtros, Modais, Tabs)
+        initTabs();
+        populateMonthYearFilter(); // Popula filtro de Ano/Mês
+        setupEventListeners(); // Configura todos os listeners
+        initCharts(); // Inicializa gráficos
+        // 4. Listeners do Firestore
+        setupFirestoreListeners();
+        console.log("Aplicação inicializada com sucesso!");
+    } catch (error) {
+        console.error("Erro fatal durante a inicialização:", error);
+        showToast("Erro grave ao iniciar...", "danger", 10000);
+        // Tenta inicializar o mínimo possível
+        initTabs();
+        setupEventListeners();
+    } finally {
+        // Garante que o loading seja escondido mesmo se houver erro parcial
+        setTimeout(hideLoading, 300);
+    }
+}
+
+// --- Ponto de Entrada ---
+document.addEventListener('DOMContentLoaded', init);
+
+// --- Limpeza ao Sair ---
+window.addEventListener('beforeunload', stopFirestoreListeners);
+</script>
 </body>
 </html>

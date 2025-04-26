@@ -2365,37 +2365,28 @@
         toggleDeleteCategoryButton();
     }
     function populateCategorySelect(type = 'expense') {
-        const select = document.getElementById('transaction-category'); 
-        if (!select) return; 
-        
-        // Limpa o select
-        select.innerHTML = '';
-        
-        // Filtra categorias pelo tipo (receita ou despesa)
-        const filteredCategories = categories.filter(cat => cat.type === type);
-        
-        if (filteredCategories.length === 0) { 
-            // Mensagem quando não há categorias do tipo selecionado
-            const option = document.createElement('option'); 
-            option.value = ""; 
-            option.textContent = `Nenhuma categoria de ${type === 'income' ? 'receita' : 'despesa'} encontrada`; 
-            option.disabled = true; 
-            select.appendChild(option); 
-        } else { 
-            // Adiciona cada categoria encontrada ao select
-            filteredCategories.forEach(cat => { 
-                const option = document.createElement('option'); 
-                option.value = cat.id; 
-                option.textContent = `${cat.icon || ''} ${cat.name || 'Categoria sem nome'}`; 
-                select.appendChild(option); 
-            }); 
-        }
-        
-        // Certifica-se de que ao menos uma opção esteja selecionada
-        if (select.options.length > 0 && !select.value) {
-            select.selectedIndex = 0;
-        }
+    const select = document.getElementById('transaction-category');
+    if (!select) return;
+    
+    select.innerHTML = '';
+
+    const filteredCategories = categories.filter(cat => cat.type === type);
+
+    if (filteredCategories.length === 0) {
+        const option = document.createElement('option');
+        option.value = "";
+        option.textContent = `Nenhuma categoria de ${type === 'income' ? 'receita' : 'despesa'} encontrada`;
+        option.disabled = true;
+        select.appendChild(option);
+    } else {
+        filteredCategories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat.id;
+            option.textContent = `${cat.icon || ''} ${cat.name || 'Categoria sem nome'}`;
+            select.appendChild(option);
+        });
     }
+}
     function toggleDeleteCategoryButton() {
         const select = document.getElementById('analysis-category'); const deleteButton = document.getElementById('btn-delete-category'); if (!select || !deleteButton) return;
         if (select.value !== 'all') { const category = categories.find(c => c.id === select.value); if (category && !category.isDefault) { deleteButton.style.display = 'inline-flex'; } else { deleteButton.style.display = 'none'; } }

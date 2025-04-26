@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
@@ -2361,14 +2360,18 @@
         analysisCategorySelect.innerHTML = '<option value="all">Todas as Categorias</option>'; transactionCategorySelect.innerHTML = '';
         categories.forEach(cat => { const option = document.createElement('option'); option.value = cat.id; option.textContent = `${cat.icon || ''} ${cat.name || 'Categoria sem nome'}`; analysisCategorySelect.appendChild(option); });
         const currentTransactionType = document.getElementById('transaction-type')?.value || 'expense'; populateCategorySelect(currentTransactionType);
-        if (analysisCategorySelect.querySelector(`option[value="${selectedAnalysisCategory}"]`)) { analysisCategorySelect.value = selectedAnalysisCategory; } else { analysisCategorySelect.value = 'all'; }
-        toggleDeleteCategoryButton();
-    }
+        if (analysisCategorySelect.querySelector(`option[value="${selectedAnalysisCategory}"]`)) { 
+    analysisCategorySelect.value = selectedAnalysisCategory; 
+} else { 
+    analysisCategorySelect.value = 'all'; 
+}
+toggleDeleteCategoryButton();
+}
 
-    function populateCategorySelect(type = 'expense') {
+function populateCategorySelect(type = 'expense') {
     const select = document.getElementById('transaction-category'); 
     if (!select) return; 
-    
+   
     select.innerHTML = '';
     
     const filteredCategories = categories.filter(cat => cat.type === type);

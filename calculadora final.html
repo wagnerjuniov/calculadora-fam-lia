@@ -1019,6 +1019,54 @@
         visibility: visible;
         opacity: 1;
       }
+      
+      /* Estilos corrigidos para abas de categorias */
+      .nav-tabs {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0 0 20px 0;
+        border-bottom: 1px solid var(--color-outline);
+      }
+      
+      .nav-item {
+        margin-bottom: -1px;
+      }
+      
+      .nav-link {
+        display: block;
+        padding: var(--spacing-sm) var(--spacing-md);
+        text-decoration: none;
+        color: var(--color-on-surface-variant);
+        border-bottom: 2px solid transparent;
+        transition: all var(--transition-normal);
+      }
+      
+      .nav-link:hover {
+        color: var(--color-primary);
+      }
+      
+      .nav-link.active {
+        color: var(--color-primary);
+        border-bottom-color: var(--color-primary);
+        font-weight: var(--font-weight-medium);
+      }
+      
+      .tab-content {
+        position: relative;
+      }
+      
+      .tab-pane {
+        display: none;
+      }
+      
+      .tab-pane.active {
+        display: block;
+      }
+      
+      .tab-pane.show {
+        opacity: 1;
+      }
     }
   </style>
 <!-- ===== FIM: PARTE 2 - CSS DE LAYOUT E COMPONENTES ================================ -->
@@ -1115,6 +1163,10 @@
             <option value="2024">2024</option>
             <option value="2025" selected>2025</option>
             <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+            <option value="2030">2030</option>
           </select>
           <svg class="select-icon" width="16" height="16">
             <use href="#icon-chevron-down"></use>
@@ -1876,7 +1928,7 @@
       </div>
       
       <div class="modal-body">
-        <ul class="nav nav-tabs" id="categoryTabs" role="tablist">
+        <ul class="nav-tabs" id="categoryTabs" role="tablist">
           <li class="nav-item" style="margin-right: 20px;">
             <a class="nav-link active" id="income-cat-tab" data-toggle="tab" href="#income-cat" role="tab">Categorias de Receita</a>
           </li>
@@ -2113,9 +2165,43 @@
     measurementId: "G-YM5TR661S6"
   };
   
-  // Inicializar Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  // Inicializar Firebase com tratamento de erro
+  let db;
+  try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    
+    // Configurar persistência offline para melhor experiência do usuário
+    // Agora com verificação para múltiplas abas abertas
+    db.enablePersistence({experimentalForceOwningTab: true})
+      .catch(err => {
+        if (err.code === 'failed-precondition') {
+          console.warn('Múltiplas abas abertas, persistência não suportada. Usando apenas modo online.');
+          // Continuar sem persistência
+        } else if (err.code === 'unimplemented') {
+          console.warn('O navegador não suporta persistência offline. Usando apenas modo online.');
+          // Continuar sem persistência
+        }
+      });
+      
+    console.log('Firebase inicializado com sucesso');
+  } catch (error) {
+    console.error('Erro ao inicializar Firebase:', error);
+    showToast('Erro de conexão com o Firebase. Tente recarregar a página.', 'error');
+    // Inicializar um banco de dados falso para evitar erros
+    db = {
+      collection: () => ({
+        get: () => Promise.resolve({ docs: [], empty: true }),
+        doc: () => ({ 
+          get: () => Promise.resolve({ exists: false, data: () => ({}) }),
+          set: () => Promise.resolve(),
+          update: () => Promise.resolve(),
+          delete: () => Promise.resolve()
+        }),
+        add: () => Promise.resolve({ id: 'temp-id' })
+      })
+    };
+  }
   
   // IDs únicos
   const generateId = () => {
@@ -2125,6 +2211,8 @@
   // Toast notifications
   const showToast = (message, type = 'success') => {
     const toastContainer = $('#toastContainer');
+    if (!toastContainer) return; // Safety check
+    
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     
@@ -2169,7 +2257,9 @@
     toast.querySelector('.toast-close').addEventListener('click', () => {
       toast.classList.remove('show');
       setTimeout(() => {
-        toast.remove();
+        if (toast.parentNode) {
+          toast.remove();
+        }
       }, 300);
     });
     
@@ -2189,12 +2279,16 @@
   // Funções para manipulação de modais
   const openModal = modalId => {
     const modal = $(`#${modalId}`);
+    if (!modal) return; // Safety check
+    
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
   };
   
   const closeModal = modalId => {
     const modal = $(`#${modalId}`);
+    if (!modal) return; // Safety check
+    
     modal.classList.remove('active');
     document.body.style.overflow = '';
   };
@@ -2209,6 +2303,8 @@
   // Manipulação de date inputs
   const setDateInputValue = (inputId, date) => {
     const input = $(`#${inputId}`);
+    if (!input) return; // Safety check
+    
     const dateObj = date instanceof Date ? date : new Date(date);
     
     // Formato YYYY-MM-DD para inputs de data
@@ -2221,7 +2317,24 @@
   
   const getDateInputValue = inputId => {
     const input = $(`#${inputId}`);
-    return input.value ? new Date(input.value) : null;
+    return input && input.value ? new Date(input.value) : null;
+  };
+  
+  // Função para atualizar as opções de anos até 2030
+  const updateYearOptions = () => {
+    const yearSelect = $('#yearSelect');
+    
+    if (yearSelect) {
+      yearSelect.innerHTML = '';
+      
+      for (let year = 2023; year <= 2030; year++) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        option.selected = year === state.year;
+        yearSelect.appendChild(option);
+      }
+    }
   };
   
   // Função para carregar categorias e métodos de pagamento
@@ -2296,10 +2409,14 @@
     // Selects de categorias de receita
     const incomeSelects = [
       $('#incomeCategory'),
-      // Outros selects que precisem de categorias de receita
+      $('#editCategory')
     ];
     
     incomeSelects.forEach(select => {
+      if (select && select.id === 'editCategory' && select.dataset.type === 'expense') {
+        return; // Pular se for select de edição para despesa
+      }
+      
       if (select) {
         select.innerHTML = '';
         
@@ -2315,10 +2432,14 @@
     // Selects de categorias de despesa
     const expenseSelects = [
       $('#expenseCategory'),
-      // Outros selects que precisem de categorias de despesa
+      $('#editCategory')
     ];
     
     expenseSelects.forEach(select => {
+      if (select && select.id === 'editCategory' && select.dataset.type === 'income') {
+        return; // Pular se for select de edição para receita
+      }
+      
       if (select) {
         select.innerHTML = '';
         
@@ -2337,7 +2458,7 @@
     const paymentMethodSelects = [
       $('#incomePaymentMethod'),
       $('#expensePaymentMethod'),
-      // Outros selects que precisem de formas de pagamento
+      $('#editPaymentMethod')
     ];
     
     paymentMethodSelects.forEach(select => {
@@ -2353,11 +2474,399 @@
       }
     });
   };
+  
+  // Função para carregar cartões
+  const loadCards = async () => {
+    try {
+      const snapshot = await db.collection('cards').get();
+      
+      state.cards = [];
+      
+      if (!snapshot.empty) {
+        snapshot.docs.forEach(doc => {
+          const card = { id: doc.id, ...doc.data() };
+          // Calcular limite disponível
+          if (!card.availableLimit) {
+            card.availableLimit = card.limit;
+          }
+          // Inicializar fatura atual se não existir
+          if (!card.currentInvoice) {
+            card.currentInvoice = 0;
+          }
+          state.cards.push(card);
+        });
+      }
+      
+      // Atualizar UI
+      updateCardsList();
+      updateCreditCardSelects();
+      updateKPIs();
+      
+    } catch (error) {
+      console.error('Erro ao carregar cartões:', error);
+      showToast('Erro ao carregar cartões. Tente novamente.', 'error');
+    }
+  };
+  
+  // Função para adicionar cartão
+  const addCard = async (cardData) => {
+    try {
+      // Criar objeto do cartão
+      const card = {
+        ...cardData,
+        availableLimit: cardData.limit,
+        currentInvoice: 0,
+        createdAt: new Date().toISOString()
+      };
+      
+      // Salvar no Firestore
+      const docRef = await db.collection('cards').add(card);
+      
+      // Atualizar o ID
+      card.id = docRef.id;
+      
+      // Adicionar ao estado local
+      state.cards.push(card);
+      
+      // Atualizar UI
+      updateCardsList();
+      updateCreditCardSelects();
+      
+      showToast('Cartão adicionado com sucesso!', 'success');
+      
+    } catch (error) {
+      console.error('Erro ao adicionar cartão:', error);
+      showToast('Erro ao adicionar cartão. Tente novamente.', 'error');
+    }
+  };
+  
+  // Função para atualizar cartão
+  const updateCard = async (cardId, updates) => {
+    try {
+      // Atualizar no Firestore
+      await db.collection('cards').doc(cardId).update(updates);
+      
+      // Atualizar no estado local
+      const index = state.cards.findIndex(c => c.id === cardId);
+      
+      if (index !== -1) {
+        state.cards[index] = { ...state.cards[index], ...updates };
+      }
+      
+      // Atualizar UI
+      updateCardsList();
+      updateCreditCardSelects();
+      
+      showToast('Cartão atualizado com sucesso!', 'success');
+      
+    } catch (error) {
+      console.error('Erro ao atualizar cartão:', error);
+      showToast('Erro ao atualizar cartão. Tente novamente.', 'error');
+    }
+  };
+  
+  // Função para excluir cartão
+  const deleteCard = async (cardId) => {
+    try {
+      // Verificar se há transações vinculadas
+      const transactionsWithCard = state.transactions.filter(t => 
+        t.type === 'expense' && 
+        t.paymentMethod === 'credito' && 
+        t.creditCardId === cardId
+      );
+      
+      if (transactionsWithCard.length > 0) {
+        if (!confirm(`Este cartão possui ${transactionsWithCard.length} transações vinculadas. Deseja excluir mesmo assim?`)) {
+          return;
+        }
+        
+        // Atualizar as transações para remover a referência ao cartão
+        const batch = db.batch();
+        
+        transactionsWithCard.forEach(transaction => {
+          const docRef = db.collection('transactions').doc(transaction.id);
+          batch.update(docRef, { 
+            paymentMethod: 'outros',
+            creditCardId: null,
+            creditCardName: null
+          });
+          
+          // Atualizar no estado local
+          const index = state.transactions.findIndex(t => t.id === transaction.id);
+          if (index !== -1) {
+            state.transactions[index].paymentMethod = 'outros';
+            state.transactions[index].creditCardId = null;
+            state.transactions[index].creditCardName = null;
+          }
+        });
+        
+        await batch.commit();
+      }
+      
+      // Excluir o cartão
+      await db.collection('cards').doc(cardId).delete();
+      
+      // Remover do estado local
+      state.cards = state.cards.filter(c => c.id !== cardId);
+      
+      // Atualizar UI
+      updateCardsList();
+      updateCreditCardSelects();
+      filterTransactionsByMonth();
+      updateKPIs();
+      
+      showToast('Cartão excluído com sucesso!', 'success');
+      
+    } catch (error) {
+      console.error('Erro ao excluir cartão:', error);
+      showToast('Erro ao excluir cartão. Tente novamente.', 'error');
+    }
+  };
+  
+  // Função para pagar fatura do cartão
+  const payCardInvoice = async (cardId) => {
+    try {
+      const card = state.cards.find(c => c.id === cardId);
+      
+      if (!card) {
+        showToast('Cartão não encontrado.', 'error');
+        return;
+      }
+      
+      // Encontrar todas as transações da fatura atual
+      const today = new Date();
+      let closingDate = new Date(today.getFullYear(), today.getMonth(), card.closingDay);
+      
+      // Se hoje é após o dia de fechamento, a data de fechamento será no próximo mês
+      if (today.getDate() > card.closingDay) {
+        closingDate.setMonth(closingDate.getMonth() + 1);
+      }
+      
+      // Data de fechamento anterior
+      const previousClosing = new Date(closingDate);
+      previousClosing.setMonth(previousClosing.getMonth() - 1);
+      
+      // Buscar transações do período
+      const invoiceTransactions = state.transactions.filter(t => 
+        t.type === 'expense' && 
+        t.paymentMethod === 'credito' && 
+        t.creditCardId === card.id &&
+        t.status !== 'paid' &&
+        new Date(t.date) >= previousClosing &&
+        new Date(t.date) < closingDate
+      );
+      
+      if (invoiceTransactions.length === 0) {
+        showToast('Não há despesas pendentes para esta fatura.', 'info');
+        closeModal('payInvoiceConfirmModal');
+        return;
+      }
+      
+      // Marcar todas as transações como pagas
+      const batch = db.batch();
+      
+      invoiceTransactions.forEach(transaction => {
+        const docRef = db.collection('transactions').doc(transaction.id);
+        batch.update(docRef, { status: 'paid' });
+        
+        // Atualizar no estado local
+        const index = state.transactions.findIndex(t => t.id === transaction.id);
+        if (index !== -1) {
+          state.transactions[index].status = 'paid';
+        }
+      });
+      
+      // Resetar a fatura atual do cartão
+      const cardRef = db.collection('cards').doc(cardId);
+      batch.update(cardRef, { 
+        currentInvoice: 0,
+        availableLimit: card.limit // Restaurar o limite disponível
+      });
+      
+      // Atualizar no estado local
+      const cardIndex = state.cards.findIndex(c => c.id === cardId);
+      if (cardIndex !== -1) {
+        state.cards[cardIndex].currentInvoice = 0;
+        state.cards[cardIndex].availableLimit = card.limit;
+      }
+      
+      await batch.commit();
+      
+      // Atualizar UI
+      updateCardsList();
+      updateTransactionsTable();
+      updateKPIs();
+      updateCharts();
+      
+      closeModal('payInvoiceConfirmModal');
+      showToast('Fatura paga com sucesso!', 'success');
+      
+    } catch (error) {
+      console.error('Erro ao pagar fatura:', error);
+      showToast('Erro ao pagar fatura. Tente novamente.', 'error');
+    }
+  };
+  
+  // Função para atualizar os selects de cartões de crédito
+  const updateCreditCardSelects = () => {
+    const cardSelects = [
+      $('#expenseCreditCard'),
+      $('#editCreditCard')
+    ];
+    
+    cardSelects.forEach(select => {
+      if (select) {
+        select.innerHTML = '';
+        
+        if (state.cards.length === 0) {
+          // Adicionar opção de placeholder se não houver cartões
+          const option = document.createElement('option');
+          option.value = '';
+          option.textContent = 'Nenhum cartão cadastrado';
+          option.disabled = true;
+          option.selected = true;
+          select.appendChild(option);
+        } else {
+          state.cards.forEach(card => {
+            const option = document.createElement('option');
+            option.value = card.id;
+            option.textContent = `${card.name} (Disp: ${formatCurrency(card.availableLimit)})`;
+            select.appendChild(option);
+          });
+        }
+      }
+    });
+  };
+  
+  // Funções para transações
+  const loadTransactions = async () => {
+    try {
+      const snapshot = await db.collection('transactions').get();
+      
+      state.transactions = [];
+      
+      if (!snapshot.empty) {
+        snapshot.docs.forEach(doc => {
+          const transaction = { id: doc.id, ...doc.data() };
+          state.transactions.push(transaction);
+        });
+      }
+      
+      // Filtrar por mês atual
+      filterTransactionsByMonth();
+      
+      // Atualizar UI
+      updateTransactionsTable();
+      updateKPIs();
+      updateCharts();
+      renderCommitments();
+      generateInsights();
+      
+    } catch (error) {
+      console.error('Erro ao carregar transações:', error);
+      showToast('Erro ao carregar transações. Tente novamente.', 'error');
+    }
+  };
+  
+  // Filtrar transações por mês/ano
+  const filterTransactionsByMonth = () => {
+    state.filteredTransactions = state.transactions.filter(transaction => {
+      const date = new Date(transaction.date);
+      return date.getMonth() === state.month && date.getFullYear() === state.year;
+    });
+    
+    // Ordenar por data (mais recentes primeiro)
+    state.filteredTransactions.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date);
+    });
+    
+    // Atualizar a UI
+    updateTransactionsTable();
+    updateKPIs();
+    updateCharts();
+  };
+  
+  // Atualizar título do mês/ano
+  const updateMonthYearTitle = () => {
+    const monthNames = [
+      'Janeiro', 'Fevereiro', 'Março', 'Abril',
+      'Maio', 'Junho', 'Julho', 'Agosto',
+      'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+    
+    // Se houver um elemento para o título
+    const titleElement = $('#monthYearTitle');
+    if (titleElement) {
+      titleElement.textContent = `${monthNames[state.month]} de ${state.year}`;
+    }
+  };
+  
+  // Atualizar KPIs (indicadores chave)
+  const updateKPIs = () => {
+    // Cálculos para o mês atual filtrado
+    const totalIncome = state.filteredTransactions
+      .filter(t => t.type === 'income')
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    
+    const totalExpense = state.filteredTransactions
+      .filter(t => t.type === 'expense')
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    
+    const incomeReceived = state.filteredTransactions
+      .filter(t => t.type === 'income' && t.status === 'received')
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    
+    const incomePending = state.filteredTransactions
+      .filter(t => t.type === 'income' && t.status !== 'received')
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    
+    const expensePaid = state.filteredTransactions
+      .filter(t => t.type === 'expense' && t.status === 'paid')
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    
+    const expensePending = state.filteredTransactions
+      .filter(t => t.type === 'expense' && t.status !== 'paid')
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    
+    const balance = incomeReceived - expensePaid;
+    
+    // Atualizar elementos da UI
+    if ($('#incomeValue')) $('#incomeValue').textContent = formatCurrency(totalIncome);
+    if ($('#expenseValue')) $('#expenseValue').textContent = formatCurrency(totalExpense);
+    if ($('#balanceValue')) $('#balanceValue').textContent = formatCurrency(balance);
+    
+    if ($('#incomeReceivedValue')) $('#incomeReceivedValue').textContent = `${formatCurrency(incomeReceived)} recebidos`;
+    if ($('#incomePendingValue')) $('#incomePendingValue').textContent = `${formatCurrency(incomePending)} pendentes`;
+    
+    if ($('#expensePaidValue')) $('#expensePaidValue').textContent = `${formatCurrency(expensePaid)} pagos`;
+    if ($('#expensePendingValue')) $('#expensePendingValue').textContent = `${formatCurrency(expensePending)} pendentes`;
+    
+    // Se houver cartões, mostrar informações da fatura atual
+    if (state.cards.length > 0) {
+      // Usar o primeiro cartão para o KPI
+      const card = state.cards[0];
+      
+      if ($('#invoiceValue')) $('#invoiceValue').textContent = formatCurrency(card.currentInvoice || 0);
+      
+      // Calcular data de vencimento
+      const today = new Date();
+      let dueDate = new Date(today.getFullYear(), today.getMonth(), card.dueDay);
+      
+      // Se hoje é após o dia de vencimento, a data de vencimento será no próximo mês
+      if (today.getDate() > card.dueDay) {
+        dueDate.setMonth(dueDate.getMonth() + 1);
+      }
+      
+      if ($('#invoiceDueDate')) $('#invoiceDueDate').textContent = formatDate(dueDate);
+    } else {
+      if ($('#invoiceValue')) $('#invoiceValue').textContent = formatCurrency(0);
+      if ($('#invoiceDueDate')) $('#invoiceDueDate').textContent = '--/--/----';
+    }
+  };
 </script>
 <!-- ===== FIM: PARTE 4 - INÍCIO DO SCRIPT ================================ -->
 
-<script>
-  // ===== INICIO: PARTE 5A - LÓGICA JAVASCRIPT CORRIGIDA ================================ -->
+<!-- ===== INICIO: PARTE 5A - LÓGICA JAVASCRIPT CORRIGIDA ================================ -->
   // CRUD de categorias no Firestore
   const renderCategoryLists = () => {
     // Categorias de receita
@@ -2406,7 +2915,7 @@
       $$('.delete-category-btn[data-type="income"]').forEach(btn => {
         btn.addEventListener('click', e => {
           const id = e.currentTarget.dataset.id;
-          deleteCategory(id);
+          deleteCategory(id, 'income');
         });
       });
     }
@@ -2457,7 +2966,7 @@
       $$('.delete-category-btn[data-type="expense"]').forEach(btn => {
         btn.addEventListener('click', e => {
           const id = e.currentTarget.dataset.id;
-          deleteCategory(id);
+          deleteCategory(id, 'expense');
         });
       });
     }
@@ -2518,6 +3027,8 @@
   // Atualizar a lista de cartões
   const updateCardsList = () => {
     const cardsList = $('#cardsList');
+    if (!cardsList) return;
+    
     cardsList.innerHTML = '';
     
     if (state.cards.length === 0) {
@@ -2752,6 +3263,8 @@
   // Atualizar a tabela de transações
   const updateTransactionsTable = () => {
     const tableBody = $('#transactionsTableBody');
+    if (!tableBody) return;
+    
     tableBody.innerHTML = '';
     
     // Ordenar transações por data (mais recentes primeiro)
@@ -2762,11 +3275,9 @@
     if (sortedTransactions.length === 0) {
       const emptyRow = document.createElement('tr');
       emptyRow.innerHTML = `
-        <tr>
-          <td colspan="10" style="text-align: center; padding: var(--spacing-xl);">
-            Nenhuma transação encontrada para este mês.
-          </td>
-        </tr>
+        <td colspan="10" style="text-align: center; padding: var(--spacing-xl);">
+          Nenhuma transação encontrada para este mês.
+        </td>
       `;
       tableBody.appendChild(emptyRow);
       return;
@@ -2850,6 +3361,8 @@
   // Renderizar insights na UI
   const renderInsights = () => {
     const insightsBanner = $('#insightsBanner');
+    if (!insightsBanner) return;
+    
     insightsBanner.innerHTML = '';
     
     // Ordenar insights por nível de prioridade
@@ -2904,6 +3417,8 @@
   // Renderizar compromissos longos
   const renderCommitments = () => {
     const content = $('#commitmentsContent');
+    if (!content) return;
+    
     content.innerHTML = '';
     
     // Buscar todas as transações recorrentes
@@ -3093,8 +3608,27 @@
       
       // Mostrar campo de cartão de crédito se aplicável
       $('#editCreditCardGroup').style.display = transaction.paymentMethod === 'credito' ? 'block' : 'none';
-      if (transaction.creditCardId) {
-        $('#editCreditCard').value = transaction.creditCardId;
+      
+      // Preencher opções de cartão de crédito
+      const editCreditCard = $('#editCreditCard');
+      if (editCreditCard) {
+        editCreditCard.innerHTML = '';
+        
+        if (state.cards.length === 0) {
+          const option = document.createElement('option');
+          option.value = '';
+          option.textContent = 'Nenhum cartão cadastrado';
+          option.disabled = true;
+          editCreditCard.appendChild(option);
+        } else {
+          state.cards.forEach(card => {
+            const option = document.createElement('option');
+            option.value = card.id;
+            option.textContent = `${card.name} (Disp: ${formatCurrency(card.availableLimit)})`;
+            option.selected = card.id === transaction.creditCardId;
+            editCreditCard.appendChild(option);
+          });
+        }
       }
       
     } else {
@@ -3131,7 +3665,7 @@
       
       state.paymentMethods.forEach(method => {
         // Filtrar métodos aplicáveis para receitas
-        if (['pix', 'dinheiro', 'transferencia', 'outros'].includes(method.id)) {
+        if (['pix', 'dinheiro', 'transferencia', 'debito_conta', 'outros'].includes(method.id)) {
           const option = document.createElement('option');
           option.value = method.id;
           option.textContent = `${method.icon || ''} ${method.name}`;
@@ -3183,107 +3717,393 @@
     // Exibir o modal
     openModal('editModal');
   };
-  // ===== FIM: PARTE 5A - LÓGICA JAVASCRIPT CORRIGIDA ================================ -->
-</script>
-
-<!-- ===== INICIO: PARTE 5B - LÓGICA DE GRÁFICOS E EVENT LISTENERS ================================ -->
-<script>
-  // Atualizar a tabela de transações
-  const updateTransactionsTable = () => {
-    const tableBody = $('#transactionsTableBody');
-    tableBody.innerHTML = '';
-    
-    // Ordenar transações por data (mais recentes primeiro)
-    const sortedTransactions = [...state.filteredTransactions].sort((a, b) => {
-      return new Date(b.date) - new Date(a.date);
-    });
-    
-    if (sortedTransactions.length === 0) {
-      const emptyRow = document.createElement('tr');
-      emptyRow.innerHTML = `
-        <td colspan="10" style="text-align: center; padding: var(--spacing-xl);">
-          Nenhuma transação encontrada para este mês.
-        </td>
-      `;
-      tableBody.appendChild(emptyRow);
-      return;
+  
+  // Funções para gerenciamento de categorias
+  const addCategory = async (name, icon, type) => {
+    try {
+      // Validação básica
+      if (!name) {
+        showToast('Por favor, informe o nome da categoria.', 'error');
+        return;
+      }
+      
+      // Criar ID único
+      const id = generateId();
+      
+      // Criar objeto da categoria
+      const category = {
+        id,
+        name,
+        icon: icon || (type === 'income' ? '💰' : '📦'),
+        type
+      };
+      
+      // Salvar no Firestore
+      await db.collection('categories').doc(id).set(category);
+      
+      // Adicionar ao estado local
+      if (type === 'income') {
+        state.categories.income.push(category);
+      } else {
+        state.categories.expense.push(category);
+      }
+      
+      // Atualizar UI
+      renderCategoryLists();
+      updateCategorySelects();
+      
+      showToast('Categoria adicionada com sucesso!', 'success');
+      
+    } catch (error) {
+      console.error('Erro ao adicionar categoria:', error);
+      showToast('Erro ao adicionar categoria. Tente novamente.', 'error');
     }
-    
-    sortedTransactions.forEach(transaction => {
-      const row = document.createElement('tr');
+  };
+  
+  const updateCategory = async (categoryId, updates) => {
+    try {
+      // Buscar categoria
+      const categoryRef = db.collection('categories').doc(categoryId);
+      const categoryDoc = await categoryRef.get();
       
-      // Verificar se está vencida e não está paga
-      const isDue = transaction.type === 'expense' && 
-                   transaction.status !== 'paid' && 
-                   new Date(transaction.dueDate) < new Date();
+      if (!categoryDoc.exists) {
+        showToast('Categoria não encontrada.', 'error');
+        return;
+      }
       
-      // Status badge
-      let statusBadgeClass = '';
-      let statusText = '';
+      const category = categoryDoc.data();
       
-      if (transaction.type === 'income') {
-        if (transaction.status === 'received' || transaction.status === 'paid') {
-          statusBadgeClass = 'badge-success';
-          statusText = 'Recebido';
-        } else {
-          statusBadgeClass = 'badge-warning';
-          statusText = 'A Receber';
+      // Atualizar no Firestore
+      await categoryRef.update(updates);
+      
+      // Atualizar no estado local
+      if (category.type === 'income') {
+        const index = state.categories.income.findIndex(c => c.id === categoryId);
+        if (index !== -1) {
+          state.categories.income[index] = { ...state.categories.income[index], ...updates };
         }
       } else {
-        if (transaction.status === 'paid') {
-          statusBadgeClass = 'badge-success';
-          statusText = 'Pago';
-        } else if (transaction.status === 'scheduled') {
-          statusBadgeClass = 'badge-info';
-          statusText = 'Agendado';
-        } else {
-          statusBadgeClass = isDue ? 'badge-danger' : 'badge-warning';
-          statusText = isDue ? 'Vencido' : 'Pendente';
+        const index = state.categories.expense.findIndex(c => c.id === categoryId);
+        if (index !== -1) {
+          state.categories.expense[index] = { ...state.categories.expense[index], ...updates };
         }
       }
       
-      row.innerHTML = `
-        <td>
-          <div class="transaction-icon" style="background-color: ${transaction.type === 'income' ? 'rgba(52, 199, 89, 0.1)' : 'rgba(255, 59, 48, 0.1)'}; color: ${transaction.type === 'income' ? 'var(--color-income)' : 'var(--color-expense)'};">
-            ${transaction.categoryIcon || (transaction.type === 'income' ? '💰' : '📦')}
-          </div>
-        </td>
-        <td>${transaction.name}</td>
-        <td>${transaction.categoryName || transaction.category}</td>
-        <td>${formatDate(transaction.date)}</td>
-        <td>${transaction.dueDate ? formatDate(transaction.dueDate) : '-'}</td>
-        <td style="${isDue ? 'color: var(--color-error);' : ''}">${formatCurrency(transaction.amount)}${isDue ? ' 🔔' : ''}</td>
-        <td><span class="badge ${statusBadgeClass}">${statusText}</span></td>
-        <td>${transaction.paymentMethodName || transaction.paymentMethod}${transaction.paymentMethod === 'credito' && transaction.creditCardName ? ` (${transaction.creditCardName})` : ''}</td>
-        <td>
-          <div class="checkbox-wrapper">
-            <input type="checkbox" class="checkbox transaction-paid-checkbox" id="paid-${transaction.id}" 
-                  ${(transaction.status === 'paid' || transaction.status === 'received') ? 'checked' : ''}
-                  data-id="${transaction.id}" data-type="${transaction.type}">
-            <label class="checkbox-label" for="paid-${transaction.id}"></label>
-          </div>
-        </td>
-        <td class="actions-cell">
-          <button class="btn btn-icon btn-outline edit-transaction-btn" data-id="${transaction.id}">
-            <svg width="16" height="16">
-              <use href="#icon-edit"></use>
-            </svg>
-          </button>
-          <button class="btn btn-icon btn-outline delete-transaction-btn" data-id="${transaction.id}" data-recurrent="${transaction.isRecurrent}">
-            <svg width="16" height="16">
-              <use href="#icon-trash"></use>
-            </svg>
-          </button>
-        </td>
-      `;
+      // Atualizar todas as transações que usam esta categoria
+      const transactionsToUpdate = state.transactions.filter(t => t.category === categoryId);
       
-      tableBody.appendChild(row);
-    });
-    
-    // Adicionar event listeners para os botões de ação
-    addTableActionListeners();
+      if (transactionsToUpdate.length > 0) {
+        const batch = db.batch();
+        
+        transactionsToUpdate.forEach(transaction => {
+          const docRef = db.collection('transactions').doc(transaction.id);
+          batch.update(docRef, { 
+            categoryName: updates.name,
+            categoryIcon: updates.icon
+          });
+          
+          // Atualizar no estado local
+          const index = state.transactions.findIndex(t => t.id === transaction.id);
+          if (index !== -1) {
+            state.transactions[index].categoryName = updates.name;
+            state.transactions[index].categoryIcon = updates.icon;
+          }
+        });
+        
+        await batch.commit();
+      }
+      
+      // Atualizar UI
+      renderCategoryLists();
+      updateCategorySelects();
+      updateTransactionsTable();
+      
+      // Fechar o modal
+      closeModal('editCategoryModal');
+      
+      showToast('Categoria atualizada com sucesso!', 'success');
+      
+    } catch (error) {
+      console.error('Erro ao atualizar categoria:', error);
+      showToast('Erro ao atualizar categoria. Tente novamente.', 'error');
+    }
   };
   
+  const deleteCategory = async (categoryId, type) => {
+    try {
+      // Verificar se há transações usando esta categoria
+      const transactionsWithCategory = state.transactions.filter(t => t.category === categoryId);
+      
+      if (transactionsWithCategory.length > 0) {
+        if (!confirm(`Esta categoria possui ${transactionsWithCategory.length} transações vinculadas. Deseja excluir mesmo assim?`)) {
+          return;
+        }
+        
+        // Obter categoria padrão para substituição
+        const defaultCategoryId = type === 'income' ? 'outros_income' : 'outros_expense';
+        const defaultCategory = type === 'income' 
+          ? state.categories.income.find(c => c.id === defaultCategoryId)
+          : state.categories.expense.find(c => c.id === defaultCategoryId);
+        
+        if (!defaultCategory) {
+          showToast('Não foi possível encontrar uma categoria padrão para substituição.', 'error');
+          return;
+        }
+        
+        // Atualizar as transações para usar a categoria padrão
+        const batch = db.batch();
+        
+        transactionsWithCategory.forEach(transaction => {
+          const docRef = db.collection('transactions').doc(transaction.id);
+          batch.update(docRef, { 
+            category: defaultCategory.id,
+            categoryName: defaultCategory.name,
+            categoryIcon: defaultCategory.icon
+          });
+          
+          // Atualizar no estado local
+          const index = state.transactions.findIndex(t => t.id === transaction.id);
+          if (index !== -1) {
+            state.transactions[index].category = defaultCategory.id;
+            state.transactions[index].categoryName = defaultCategory.name;
+            state.transactions[index].categoryIcon = defaultCategory.icon;
+          }
+        });
+        
+        await batch.commit();
+      }
+      
+      // Excluir a categoria
+      await db.collection('categories').doc(categoryId).delete();
+      
+      // Remover do estado local
+      if (type === 'income') {
+        state.categories.income = state.categories.income.filter(c => c.id !== categoryId);
+      } else {
+        state.categories.expense = state.categories.expense.filter(c => c.id !== categoryId);
+      }
+      
+      // Atualizar UI
+      renderCategoryLists();
+      updateCategorySelects();
+      updateTransactionsTable();
+      
+      showToast('Categoria excluída com sucesso!', 'success');
+      
+    } catch (error) {
+      console.error('Erro ao excluir categoria:', error);
+      showToast('Erro ao excluir categoria. Tente novamente.', 'error');
+    }
+  };
+  
+  // Abrir o modal de edição de categoria
+  const openEditCategoryModal = (category, type) => {
+    if (!category) return;
+    
+    // Salvar a referência à categoria atual
+    state.currentCategory = { ...category, type };
+    
+    // Preencher o formulário
+    $('#editCategoryId').value = category.id;
+    $('#editCategoryType').value = type;
+    $('#editCategoryName').value = category.name;
+    
+    // Definir o ícone atual
+    const iconPreview = $('#editCategoryIconPreview');
+    if (category.icon) {
+      iconPreview.innerHTML = category.icon;
+    } else {
+      iconPreview.innerHTML = type === 'income' ? '💰' : '📦';
+    }
+    $('#editCategoryIconInput').value = category.icon || '';
+    
+    // Exibir o modal
+    openModal('editCategoryModal');
+  };
+  
+  // Funções para gerenciamento de métodos de pagamento
+  const addPaymentMethod = async (name, icon) => {
+    try {
+      // Validação básica
+      if (!name) {
+        showToast('Por favor, informe o nome do método de pagamento.', 'error');
+        return;
+      }
+      
+      // Criar ID único
+      const id = generateId();
+      
+      // Criar objeto do método de pagamento
+      const method = {
+        id,
+        name,
+        icon: icon || '💵'
+      };
+      
+      // Salvar no Firestore
+      await db.collection('paymentMethods').doc(id).set(method);
+      
+      // Adicionar ao estado local
+      state.paymentMethods.push(method);
+      
+      // Atualizar UI
+      renderPaymentMethodsList();
+      updatePaymentMethodSelects();
+      
+      showToast('Método de pagamento adicionado com sucesso!', 'success');
+      
+    } catch (error) {
+      console.error('Erro ao adicionar método de pagamento:', error);
+      showToast('Erro ao adicionar método de pagamento. Tente novamente.', 'error');
+    }
+  };
+  
+  const updatePaymentMethod = async (methodId, updates) => {
+    try {
+      // Atualizar no Firestore
+      await db.collection('paymentMethods').doc(methodId).update(updates);
+      
+      // Atualizar no estado local
+      const index = state.paymentMethods.findIndex(m => m.id === methodId);
+      if (index !== -1) {
+        state.paymentMethods[index] = { ...state.paymentMethods[index], ...updates };
+      }
+      
+      // Atualizar todas as transações que usam este método
+      const transactionsToUpdate = state.transactions.filter(t => t.paymentMethod === methodId);
+      
+      if (transactionsToUpdate.length > 0) {
+        const batch = db.batch();
+        
+        transactionsToUpdate.forEach(transaction => {
+          const docRef = db.collection('transactions').doc(transaction.id);
+          batch.update(docRef, { paymentMethodName: updates.name });
+          
+          // Atualizar no estado local
+          const index = state.transactions.findIndex(t => t.id === transaction.id);
+          if (index !== -1) {
+            state.transactions[index].paymentMethodName = updates.name;
+          }
+        });
+        
+        await batch.commit();
+      }
+      
+      // Atualizar UI
+      renderPaymentMethodsList();
+      updatePaymentMethodSelects();
+      updateTransactionsTable();
+      
+      // Fechar o modal
+      closeModal('editCategoryModal');
+      
+      showToast('Método de pagamento atualizado com sucesso!', 'success');
+      
+    } catch (error) {
+      console.error('Erro ao atualizar método de pagamento:', error);
+      showToast('Erro ao atualizar método de pagamento. Tente novamente.', 'error');
+    }
+  };
+  
+  const deletePaymentMethod = async (methodId) => {
+    try {
+      // Verificar se há transações usando este método
+      const transactionsWithMethod = state.transactions.filter(t => t.paymentMethod === methodId);
+      
+      if (transactionsWithMethod.length > 0) {
+        if (!confirm(`Este método de pagamento possui ${transactionsWithMethod.length} transações vinculadas. Deseja excluir mesmo assim?`)) {
+          return;
+        }
+        
+        // Obter método padrão para substituição
+        const defaultMethod = state.paymentMethods.find(m => m.id === 'outros');
+        
+        if (!defaultMethod) {
+          // Se não houver 'outros', usar o primeiro método disponível
+          if (state.paymentMethods.length > 1) {
+            const otherMethod = state.paymentMethods.find(m => m.id !== methodId);
+            if (otherMethod) {
+              defaultMethod = otherMethod;
+            } else {
+              showToast('Não foi possível encontrar um método de pagamento para substituição.', 'error');
+              return;
+            }
+          } else {
+            showToast('Não é possível excluir o único método de pagamento disponível.', 'error');
+            return;
+          }
+        }
+        
+        // Atualizar as transações para usar o método padrão
+        const batch = db.batch();
+        
+        transactionsWithMethod.forEach(transaction => {
+          const docRef = db.collection('transactions').doc(transaction.id);
+          batch.update(docRef, { 
+            paymentMethod: defaultMethod.id,
+            paymentMethodName: defaultMethod.name
+          });
+          
+          // Atualizar no estado local
+          const index = state.transactions.findIndex(t => t.id === transaction.id);
+          if (index !== -1) {
+            state.transactions[index].paymentMethod = defaultMethod.id;
+            state.transactions[index].paymentMethodName = defaultMethod.name;
+          }
+        });
+        
+        await batch.commit();
+      }
+      
+      // Excluir o método
+      await db.collection('paymentMethods').doc(methodId).delete();
+      
+      // Remover do estado local
+      state.paymentMethods = state.paymentMethods.filter(m => m.id !== methodId);
+      
+      // Atualizar UI
+      renderPaymentMethodsList();
+      updatePaymentMethodSelects();
+      updateTransactionsTable();
+      
+      showToast('Método de pagamento excluído com sucesso!', 'success');
+      
+    } catch (error) {
+      console.error('Erro ao excluir método de pagamento:', error);
+      showToast('Erro ao excluir método de pagamento. Tente novamente.', 'error');
+    }
+  };
+  
+  // Abrir o modal de edição de método de pagamento
+  const openEditPaymentMethodModal = (method) => {
+    if (!method) return;
+    
+    // Salvar a referência ao método atual
+    state.currentCategory = { ...method, type: 'payment' };
+    
+    // Atualizar o título do modal
+    $('#editCategoryTitle').textContent = 'Editar Forma de Pagamento';
+    
+    // Preencher o formulário
+    $('#editCategoryId').value = method.id;
+    $('#editCategoryType').value = 'payment';
+    $('#editCategoryName').value = method.name;
+    
+    // Definir o ícone atual
+    const iconPreview = $('#editCategoryIconPreview');
+    if (method.icon) {
+      iconPreview.innerHTML = method.icon;
+    } else {
+      iconPreview.innerHTML = '💵';
+    }
+    $('#editCategoryIconInput').value = method.icon || '';
+    
+    // Exibir o modal
+    openModal('editCategoryModal');
+  };
+<!-- ===== FIM: PARTE 5A - LÓGICA JAVASCRIPT CORRIGIDA ================================ -->
+
+<!-- ===== INICIO: PARTE 5B - LÓGICA DE GRÁFICOS E EVENT LISTENERS ================================ -->
   // Adicionar event listeners para os botões da tabela de transações
   const addTableActionListeners = () => {
     // Checkboxes de pagamento
@@ -3330,201 +4150,588 @@
     });
   };
   
-  // Abrir modal de edição de transação
-  const openEditModal = transaction => {
-    if (!transaction) return;
-    
-    // Definir o título do modal
-    $('#editModalTitle').textContent = transaction.type === 'income' ? 'Editar Receita' : 'Editar Despesa';
-    
-    // Preencher os campos com os dados da transação
-    $('#editTransactionId').value = transaction.id;
-    $('#editTransactionType').value = transaction.type;
-    $('#editName').value = transaction.name;
-    $('#editAmount').value = transaction.amount;
-    
-    // Atualizar o seletor de categorias com base no tipo
-    const editCategory = $('#editCategory');
-    editCategory.innerHTML = '';
-    
-    if (transaction.type === 'income') {
-      state.categories.income.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category.id;
-        option.textContent = `${category.icon || ''} ${category.name}`;
-        option.selected = category.id === transaction.category;
-        editCategory.appendChild(option);
-      });
-    } else {
-      state.categories.expense.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category.id;
-        option.textContent = `${category.icon || ''} ${category.name}`;
-        option.selected = category.id === transaction.category;
-        editCategory.appendChild(option);
-      });
-    }
-    
-    // Definir o ícone atual
-    const iconPreview = $('#editIconPreview');
-    if (transaction.categoryIcon) {
-      iconPreview.innerHTML = transaction.categoryIcon;
-    } else {
-      iconPreview.innerHTML = transaction.type === 'income' ? '💰' : '📦';
-    }
-    $('#editIconInput').value = transaction.categoryIcon || '';
-    
-    // Definir data de lançamento
-    setDateInputValue('editDate', new Date(transaction.date));
-    
-    // Obter status atual (nome diferente para receitas/despesas)
-    let statusValue = transaction.status;
-    if (transaction.type === 'income') {
-      statusValue = statusValue === 'received' ? 'received' : 'pending';
-    }
-    
-    // Preencher campos específicos de tipo
-    if (transaction.type === 'expense') {
-      // Mostrar campo de data de vencimento
-      $('#editDueDateGroup').style.display = 'block';
-      setDateInputValue('editDueDate', new Date(transaction.dueDate));
-      
-      // Preencher o status
-      $('#editStatusGroup').innerHTML = `
-        <div class="radio-wrapper">
-          <input type="radio" class="radio" id="editStatusPaid" name="editStatus" value="paid" ${statusValue === 'paid' ? 'checked' : ''}>
-          <label class="radio-label" for="editStatusPaid">
-            <span class="radio-circle"></span>
-            Pago
-          </label>
-        </div>
-        
-        <div class="radio-wrapper">
-          <input type="radio" class="radio" id="editStatusPending" name="editStatus" value="pending" ${statusValue === 'pending' ? 'checked' : ''}>
-          <label class="radio-label" for="editStatusPending">
-            <span class="radio-circle"></span>
-            Pendente
-          </label>
-        </div>
-        
-        <div class="radio-wrapper">
-          <input type="radio" class="radio" id="editStatusScheduled" name="editStatus" value="scheduled" ${statusValue === 'scheduled' ? 'checked' : ''}>
-          <label class="radio-label" for="editStatusScheduled">
-            <span class="radio-circle"></span>
-            Agendado
-          </label>
-        </div>
-      `;
-      
-      // Mostrar campo de data de agendamento se aplicável
-      $('#editScheduledDateGroup').style.display = statusValue === 'scheduled' ? 'block' : 'none';
-      if (transaction.scheduledDate) {
-        setDateInputValue('editScheduledDate', new Date(transaction.scheduledDate));
+  // Operações CRUD de transações
+  const addTransaction = async (transaction) => {
+    try {
+      // Atribuir ID único se não tiver
+      if (!transaction.id) {
+        transaction.id = generateId();
       }
       
-      // Preencher opções de método de pagamento
-      const editPaymentMethod = $('#editPaymentMethod');
-      editPaymentMethod.innerHTML = '';
+      // Adicionar campos de auditoria
+      transaction.createdAt = new Date().toISOString();
       
-      state.paymentMethods.forEach(method => {
-        const option = document.createElement('option');
-        option.value = method.id;
-        option.textContent = `${method.icon || ''} ${method.name}`;
-        option.selected = method.id === transaction.paymentMethod;
-        editPaymentMethod.appendChild(option);
-      });
-      
-      // Mostrar campo de cartão de crédito se aplicável
-      $('#editCreditCardGroup').style.display = transaction.paymentMethod === 'credito' ? 'block' : 'none';
-      if (transaction.creditCardId) {
-        $('#editCreditCard').value = transaction.creditCardId;
-      }
-      
-    } else {
-      // É uma receita
-      
-      // Esconder campo de data de vencimento
-      $('#editDueDateGroup').style.display = 'none';
-      
-      // Preencher o status
-      $('#editStatusGroup').innerHTML = `
-        <div class="radio-wrapper">
-          <input type="radio" class="radio" id="editStatusReceived" name="editStatus" value="received" ${statusValue === 'received' ? 'checked' : ''}>
-          <label class="radio-label" for="editStatusReceived">
-            <span class="radio-circle"></span>
-            Recebido
-          </label>
-        </div>
-        
-        <div class="radio-wrapper">
-          <input type="radio" class="radio" id="editStatusPending" name="editStatus" value="pending" ${statusValue === 'pending' ? 'checked' : ''}>
-          <label class="radio-label" for="editStatusPending">
-            <span class="radio-circle"></span>
-            A Receber
-          </label>
-        </div>
-      `;
-      
-      // Esconder campo de data de agendamento
-      $('#editScheduledDateGroup').style.display = 'none';
-      
-      // Preencher opções de método de pagamento
-      const editPaymentMethod = $('#editPaymentMethod');
-      editPaymentMethod.innerHTML = '';
-      
-      state.paymentMethods.forEach(method => {
-        // Filtrar métodos aplicáveis para receitas
-        if (['pix', 'dinheiro', 'transferencia', 'outros'].includes(method.id)) {
-          const option = document.createElement('option');
-          option.value = method.id;
-          option.textContent = `${method.icon || ''} ${method.name}`;
-          option.selected = method.id === transaction.paymentMethod;
-          editPaymentMethod.appendChild(option);
+      // Buscar dados relacionados (categoria e forma de pagamento)
+      if (transaction.type === 'income') {
+        const category = state.categories.income.find(c => c.id === transaction.category);
+        if (category) {
+          transaction.categoryName = category.name;
+          if (!transaction.categoryIcon) {
+            transaction.categoryIcon = category.icon;
+          }
         }
-      });
+      } else {
+        const category = state.categories.expense.find(c => c.id === transaction.category);
+        if (category) {
+          transaction.categoryName = category.name;
+          if (!transaction.categoryIcon) {
+            transaction.categoryIcon = category.icon;
+          }
+        }
+      }
       
-      // Esconder campo de cartão de crédito
-      $('#editCreditCardGroup').style.display = 'none';
+      const paymentMethod = state.paymentMethods.find(m => m.id === transaction.paymentMethod);
+      if (paymentMethod) {
+        transaction.paymentMethodName = paymentMethod.name;
+      }
+      
+      // Se for despesa no cartão de crédito, atualizar o cartão
+      if (transaction.type === 'expense' && 
+         transaction.paymentMethod === 'credito' && 
+         transaction.creditCardId) {
+        
+        // Buscar o cartão
+        const card = state.cards.find(c => c.id === transaction.creditCardId);
+        
+        if (card) {
+          transaction.creditCardName = card.name;
+          
+          // Atualizar limite disponível e fatura atual
+          const amount = parseFloat(transaction.amount);
+          const newAvailableLimit = card.availableLimit - amount;
+          const newCurrentInvoice = (card.currentInvoice || 0) + amount;
+          
+          // Atualizar o cartão no Firestore
+          await db.collection('cards').doc(card.id).update({
+            availableLimit: newAvailableLimit,
+            currentInvoice: newCurrentInvoice
+          });
+          
+          // Atualizar no estado local
+          const cardIndex = state.cards.findIndex(c => c.id === card.id);
+          if (cardIndex !== -1) {
+            state.cards[cardIndex].availableLimit = newAvailableLimit;
+            state.cards[cardIndex].currentInvoice = newCurrentInvoice;
+          }
+        }
+      }
+      
+      // Salvar no Firestore
+      await db.collection('transactions').doc(transaction.id).set(transaction);
+      
+      // Adicionar ao estado local
+      state.transactions.push(transaction);
+      
+      // Filtrar novamente para atualizar a lista atual
+      filterTransactionsByMonth();
+      
+      // Atualizar a UI
+      updateTransactionsTable();
+      updateKPIs();
+      updateCharts();
+      
+      showToast(`${transaction.type === 'income' ? 'Receita' : 'Despesa'} adicionada com sucesso!`, 'success');
+      
+    } catch (error) {
+      console.error('Erro ao adicionar transação:', error);
+      showToast('Erro ao adicionar transação. Tente novamente.', 'error');
+    }
+  };
+  
+  // Função para gerar transações recorrentes
+  const generateRecurrentTransactions = (baseTransaction) => {
+    const transactions = [];
+    
+    // Criar ID de recorrência
+    const recurrenceId = generateId();
+    
+    // Criar as parcelas
+    for (let i = 0; i < baseTransaction.installments; i++) {
+      const installmentDate = new Date(baseTransaction.date);
+      installmentDate.setMonth(installmentDate.getMonth() + i);
+      
+      // Para despesas, também ajustar a data de vencimento
+      let installmentDueDate = null;
+      if (baseTransaction.type === 'expense' && baseTransaction.dueDate) {
+        installmentDueDate = new Date(baseTransaction.dueDate);
+        installmentDueDate.setMonth(installmentDueDate.getMonth() + i);
+      }
+      
+      // Criar transação da parcela
+      const transaction = { ...baseTransaction };
+      
+      // Gerar ID único para cada parcela
+      transaction.id = generateId();
+      
+      // Atualizar dados específicos da parcela
+      transaction.date = installmentDate.toISOString();
+      if (installmentDueDate) {
+        transaction.dueDate = installmentDueDate.toISOString();
+      }
+      
+      // Adicionar dados de recorrência
+      transaction.recurrenceId = recurrenceId;
+      transaction.currentInstallment = i + 1;
+      
+      // Atualizar nome para incluir parcela
+      transaction.name = `${baseTransaction.name} (${i + 1}/${baseTransaction.installments})`;
+      
+      transactions.push(transaction);
     }
     
-    // Preencher campo de recorrência
-    $('#editIsRecurrent').checked = transaction.isRecurrent;
-    $('#editRecurrenceGroup').style.display = transaction.isRecurrent ? 'block' : 'none';
-    
-    if (transaction.installments) {
-      $('#editInstallments').value = transaction.installments;
-    }
-    
-    // Preencher campo de observação
-    if (transaction.notes) {
-      $('#editNotes').value = transaction.notes;
-    }
-    
-    // Adicionar event listeners para campos condicionais
-    if (transaction.type === 'expense') {
-      // Status (mostrar campo de data de agendamento se aplicável)
-      $$('input[name="editStatus"]').forEach(radio => {
-        radio.addEventListener('change', e => {
-          const status = e.target.value;
-          $('#editScheduledDateGroup').style.display = status === 'scheduled' ? 'block' : 'none';
+    return transactions;
+  };
+  
+  // Função para salvar múltiplas transações (para recorrências)
+  const saveMultipleTransactions = async (transactions) => {
+    try {
+      const batch = db.batch();
+      
+      // Processar cada transação
+      let cardUpdates = {};
+      
+      for (const transaction of transactions) {
+        // Buscar dados relacionados (categoria e forma de pagamento)
+        if (transaction.type === 'income') {
+          const category = state.categories.income.find(c => c.id === transaction.category);
+          if (category) {
+            transaction.categoryName = category.name;
+            if (!transaction.categoryIcon) {
+              transaction.categoryIcon = category.icon;
+            }
+          }
+        } else {
+          const category = state.categories.expense.find(c => c.id === transaction.category);
+          if (category) {
+            transaction.categoryName = category.name;
+            if (!transaction.categoryIcon) {
+              transaction.categoryIcon = category.icon;
+            }
+          }
+        }
+        
+        const paymentMethod = state.paymentMethods.find(m => m.id === transaction.paymentMethod);
+        if (paymentMethod) {
+          transaction.paymentMethodName = paymentMethod.name;
+        }
+        
+        // Se for a primeira parcela de despesa no cartão de crédito, registrar para atualizar o cartão
+        if (transaction.type === 'expense' && 
+           transaction.paymentMethod === 'credito' && 
+           transaction.creditCardId &&
+           transaction.currentInstallment === 1) {
+          
+          // Buscar o cartão
+          const card = state.cards.find(c => c.id === transaction.creditCardId);
+          
+          if (card) {
+            transaction.creditCardName = card.name;
+            
+            // Adicionar à lista de atualizações de cartão
+            if (!cardUpdates[card.id]) {
+              cardUpdates[card.id] = {
+                card,
+                amount: 0
+              };
+            }
+            
+            // Adicionar o valor total de todas as parcelas
+            const totalAmount = parseFloat(transaction.amount) * transaction.installments;
+            cardUpdates[card.id].amount += totalAmount;
+          }
+        }
+        
+        // Adicionar transação ao batch
+        const docRef = db.collection('transactions').doc(transaction.id);
+        batch.set(docRef, {
+          ...transaction,
+          createdAt: new Date().toISOString()
         });
-      });
+      }
       
-      // Forma de pagamento (mostrar campo de cartão de crédito se aplicável)
-      $('#editPaymentMethod').addEventListener('change', e => {
-        const method = e.target.value;
-        $('#editCreditCardGroup').style.display = method === 'credito' ? 'block' : 'none';
-      });
+      // Atualizar os cartões afetados
+      for (const cardId in cardUpdates) {
+        const { card, amount } = cardUpdates[cardId];
+        
+        // Atualizar limite disponível e fatura atual
+        const newAvailableLimit = card.availableLimit - amount;
+        const newCurrentInvoice = (card.currentInvoice || 0) + amount;
+        
+        // Adicionar atualização ao batch
+        const cardRef = db.collection('cards').doc(cardId);
+        batch.update(cardRef, {
+          availableLimit: newAvailableLimit,
+          currentInvoice: newCurrentInvoice
+        });
+        
+        // Atualizar no estado local
+        const cardIndex = state.cards.findIndex(c => c.id === cardId);
+        if (cardIndex !== -1) {
+          state.cards[cardIndex].availableLimit = newAvailableLimit;
+          state.cards[cardIndex].currentInvoice = newCurrentInvoice;
+        }
+      }
+      
+      // Executar o batch
+      await batch.commit();
+      
+      // Adicionar ao estado local
+      state.transactions = [...state.transactions, ...transactions];
+      
+      // Filtrar novamente para atualizar a lista atual
+      filterTransactionsByMonth();
+      
+      // Atualizar a UI
+      updateTransactionsTable();
+      updateKPIs();
+      updateCharts();
+      
+      showToast(`${transactions[0].type === 'income' ? 'Receita' : 'Despesa'} recorrente adicionada com sucesso!`, 'success');
+      
+    } catch (error) {
+      console.error('Erro ao adicionar transações recorrentes:', error);
+      showToast('Erro ao adicionar transações recorrentes. Tente novamente.', 'error');
     }
-    
-    // Toggle de campos de recorrência
-    $('#editIsRecurrent').addEventListener('change', e => {
-      const isRecurrent = e.target.checked;
-      $('#editRecurrenceGroup').style.display = isRecurrent ? 'block' : 'none';
-    });
-    
-    // Exibir o modal
-    openModal('editModal');
+  };
+  
+  const updateTransaction = async (transactionId, updates) => {
+    try {
+      // Buscar a transação atual
+      const transaction = state.transactions.find(t => t.id === transactionId);
+      
+      if (!transaction) {
+        showToast('Transação não encontrada.', 'error');
+        return;
+      }
+      
+      // Se estiver atualizando o status de 'pending' para 'paid' em uma despesa de cartão de crédito,
+      // não é necessário atualizar o cartão, pois o valor já foi contabilizado
+      
+      // Mas se estiver mudando de método de pagamento de/para cartão de crédito, precisa atualizar o cartão
+      if (transaction.type === 'expense' && 
+         ((transaction.paymentMethod !== 'credito' && updates.paymentMethod === 'credito') ||
+          (transaction.paymentMethod === 'credito' && updates.paymentMethod && updates.paymentMethod !== 'credito') ||
+          (transaction.paymentMethod === 'credito' && transaction.creditCardId !== updates.creditCardId && updates.creditCardId))) {
+        
+        // Se está mudando DE cartão de crédito para outro método
+        if (transaction.paymentMethod === 'credito' && transaction.creditCardId && 
+            updates.paymentMethod && updates.paymentMethod !== 'credito') {
+          
+          // Restaurar o limite do cartão antigo
+          const oldCard = state.cards.find(c => c.id === transaction.creditCardId);
+          
+          if (oldCard) {
+            const amount = parseFloat(transaction.amount);
+            const newAvailableLimit = oldCard.availableLimit + amount;
+            const newCurrentInvoice = Math.max(0, (oldCard.currentInvoice || 0) - amount);
+            
+            // Atualizar o cartão no Firestore
+            await db.collection('cards').doc(oldCard.id).update({
+              availableLimit: newAvailableLimit,
+              currentInvoice: newCurrentInvoice
+            });
+            
+            // Atualizar no estado local
+            const cardIndex = state.cards.findIndex(c => c.id === oldCard.id);
+            if (cardIndex !== -1) {
+              state.cards[cardIndex].availableLimit = newAvailableLimit;
+              state.cards[cardIndex].currentInvoice = newCurrentInvoice;
+            }
+          }
+        }
+        
+        // Se está mudando PARA cartão de crédito ou mudando de cartão
+        if (updates.paymentMethod === 'credito' && updates.creditCardId) {
+          // Reduzir o limite do novo cartão
+          const newCard = state.cards.find(c => c.id === updates.creditCardId);
+          
+          if (newCard) {
+            // Usar o valor atualizado, se houver
+            const amount = updates.amount ? parseFloat(updates.amount) : parseFloat(transaction.amount);
+            
+            // Se está mudando de um cartão para outro, não precisa adicionar o valor novamente
+            // pois ele já foi contabilizado do cartão antigo (e vai ser restaurado acima)
+            if (transaction.paymentMethod !== 'credito' || transaction.creditCardId !== updates.creditCardId) {
+              const newAvailableLimit = newCard.availableLimit - amount;
+              const newCurrentInvoice = (newCard.currentInvoice || 0) + amount;
+              
+              // Validar se há limite disponível
+              if (newAvailableLimit < 0) {
+                showToast(`O valor excede o limite disponível do cartão ${newCard.name}.`, 'error');
+                return;
+              }
+              
+              // Atualizar o cartão no Firestore
+              await db.collection('cards').doc(newCard.id).update({
+                availableLimit: newAvailableLimit,
+                currentInvoice: newCurrentInvoice
+              });
+              
+              // Atualizar no estado local
+              const cardIndex = state.cards.findIndex(c => c.id === newCard.id);
+              if (cardIndex !== -1) {
+                state.cards[cardIndex].availableLimit = newAvailableLimit;
+                state.cards[cardIndex].currentInvoice = newCurrentInvoice;
+              }
+              
+              // Adicionar o nome do cartão às atualizações
+              updates.creditCardName = newCard.name;
+            }
+          }
+        }
+      }
+      
+      // Se está apenas mudando o valor de uma despesa no cartão de crédito
+      if (transaction.type === 'expense' && 
+         transaction.paymentMethod === 'credito' && 
+         transaction.creditCardId &&
+         updates.amount && 
+         parseFloat(updates.amount) !== parseFloat(transaction.amount)) {
+        
+        const card = state.cards.find(c => c.id === transaction.creditCardId);
+        
+        if (card) {
+          const oldAmount = parseFloat(transaction.amount);
+          const newAmount = parseFloat(updates.amount);
+          const difference = newAmount - oldAmount;
+          
+          // Atualizar limite disponível e fatura atual
+          const newAvailableLimit = card.availableLimit - difference;
+          const newCurrentInvoice = (card.currentInvoice || 0) + difference;
+          
+          // Validar se há limite disponível
+          if (newAvailableLimit < 0) {
+            showToast(`O valor excede o limite disponível do cartão ${card.name}.`, 'error');
+            return;
+          }
+          
+          // Atualizar o cartão no Firestore
+          await db.collection('cards').doc(card.id).update({
+            availableLimit: newAvailableLimit,
+            currentInvoice: newCurrentInvoice
+          });
+          
+          // Atualizar no estado local
+          const cardIndex = state.cards.findIndex(c => c.id === card.id);
+          if (cardIndex !== -1) {
+            state.cards[cardIndex].availableLimit = newAvailableLimit;
+            state.cards[cardIndex].currentInvoice = newCurrentInvoice;
+          }
+        }
+      }
+      
+      // Se estiver atualizando a categoria
+      if (updates.category && updates.category !== transaction.category) {
+        if (transaction.type === 'income') {
+          const category = state.categories.income.find(c => c.id === updates.category);
+          if (category) {
+            updates.categoryName = category.name;
+            updates.categoryIcon = category.icon;
+          }
+        } else {
+          const category = state.categories.expense.find(c => c.id === updates.category);
+          if (category) {
+            updates.categoryName = category.name;
+            updates.categoryIcon = category.icon;
+          }
+        }
+      }
+      
+      // Se estiver atualizando o método de pagamento
+      if (updates.paymentMethod && updates.paymentMethod !== transaction.paymentMethod) {
+        const paymentMethod = state.paymentMethods.find(m => m.id === updates.paymentMethod);
+        if (paymentMethod) {
+          updates.paymentMethodName = paymentMethod.name;
+        }
+      }
+      
+      // Adicionar campos de auditoria
+      updates.updatedAt = new Date().toISOString();
+      
+      // Atualizar no Firestore
+      await db.collection('transactions').doc(transactionId).update(updates);
+      
+      // Atualizar no estado local
+      const index = state.transactions.findIndex(t => t.id === transactionId);
+      if (index !== -1) {
+        state.transactions[index] = { ...state.transactions[index], ...updates };
+      }
+      
+      // Se este é parte de uma recorrência e estamos atualizando todas as parcelas futuras
+      if (transaction.isRecurrent && transaction.recurrenceId && 
+          confirm('Deseja aplicar esta alteração a todas as parcelas futuras?')) {
+        
+        // Buscar todas as parcelas futuras
+        const futureParcels = state.transactions.filter(t => 
+          t.recurrenceId === transaction.recurrenceId && 
+          t.currentInstallment > transaction.currentInstallment
+        );
+        
+        if (futureParcels.length > 0) {
+          const batch = db.batch();
+          
+          futureParcels.forEach(parcel => {
+            const docRef = db.collection('transactions').doc(parcel.id);
+            
+            // Criar atualizações específicas para cada parcela
+            const parcelUpdates = { ...updates };
+            
+            // Manter o nome original com o número da parcela
+            if (updates.name) {
+              parcelUpdates.name = `${updates.name} (${parcel.currentInstallment}/${transaction.installments})`;
+            }
+            
+            // Atualizar no batch
+            batch.update(docRef, parcelUpdates);
+            
+            // Atualizar no estado local
+            const parcelIndex = state.transactions.findIndex(t => t.id === parcel.id);
+            if (parcelIndex !== -1) {
+              state.transactions[parcelIndex] = { ...state.transactions[parcelIndex], ...parcelUpdates };
+            }
+          });
+          
+          await batch.commit();
+        }
+      }
+      
+      // Filtrar novamente para atualizar a lista atual
+      filterTransactionsByMonth();
+      
+      // Atualizar a UI
+      updateTransactionsTable();
+      updateKPIs();
+      updateCharts();
+      updateCardsList();
+      
+      // Fechar o modal de edição, se estiver aberto
+      closeModal('editModal');
+      
+      showToast(`${transaction.type === 'income' ? 'Receita' : 'Despesa'} atualizada com sucesso!`, 'success');
+      
+    } catch (error) {
+      console.error('Erro ao atualizar transação:', error);
+      showToast('Erro ao atualizar transação. Tente novamente.', 'error');
+    }
+  };
+  
+  const deleteTransaction = async (transactionId, deleteOption = 'single') => {
+    try {
+      // Buscar a transação atual
+      const transaction = state.transactions.find(t => t.id === transactionId);
+      
+      if (!transaction) {
+        showToast('Transação não encontrada.', 'error');
+        return;
+      }
+      
+      // Se for uma despesa no cartão de crédito, restaurar o limite
+      if (transaction.type === 'expense' && 
+         transaction.paymentMethod === 'credito' && 
+         transaction.creditCardId) {
+        
+        // Buscar o cartão
+        const card = state.cards.find(c => c.id === transaction.creditCardId);
+        
+        if (card) {
+          const amount = parseFloat(transaction.amount);
+          const newAvailableLimit = card.availableLimit + amount;
+          const newCurrentInvoice = Math.max(0, (card.currentInvoice || 0) - amount);
+          
+          // Atualizar o cartão no Firestore
+          await db.collection('cards').doc(card.id).update({
+            availableLimit: newAvailableLimit,
+            currentInvoice: newCurrentInvoice
+          });
+          
+          // Atualizar no estado local
+          const cardIndex = state.cards.findIndex(c => c.id === card.id);
+          if (cardIndex !== -1) {
+            state.cards[cardIndex].availableLimit = newAvailableLimit;
+            state.cards[cardIndex].currentInvoice = newCurrentInvoice;
+          }
+        }
+      }
+      
+      // Se for uma transação recorrente e a opção for excluir todas as parcelas futuras
+      if (transaction.isRecurrent && transaction.recurrenceId && deleteOption === 'future') {
+        // Buscar todas as parcelas futuras (incluindo a atual)
+        const futureParcels = state.transactions.filter(t => 
+          t.recurrenceId === transaction.recurrenceId && 
+          t.currentInstallment >= transaction.currentInstallment
+        );
+        
+        if (futureParcels.length > 0) {
+          const batch = db.batch();
+          
+          // Para cada parcela futura de cartão de crédito, restaurar o limite
+          for (const parcel of futureParcels) {
+            if (parcel.type === 'expense' && 
+               parcel.paymentMethod === 'credito' && 
+               parcel.creditCardId) {
+              
+              // Buscar o cartão
+              const card = state.cards.find(c => c.id === parcel.creditCardId);
+              
+              if (card && parcel.id !== transactionId) { // Evitar duplicação para a parcela atual
+                const amount = parseFloat(parcel.amount);
+                const newAvailableLimit = card.availableLimit + amount;
+                const newCurrentInvoice = Math.max(0, (card.currentInvoice || 0) - amount);
+                
+                // Atualizar o cartão no Firestore
+                await db.collection('cards').doc(card.id).update({
+                  availableLimit: newAvailableLimit,
+                  currentInvoice: newCurrentInvoice
+                });
+                
+                // Atualizar no estado local
+                const cardIndex = state.cards.findIndex(c => c.id === card.id);
+                if (cardIndex !== -1) {
+                  state.cards[cardIndex].availableLimit = newAvailableLimit;
+                  state.cards[cardIndex].currentInvoice = newCurrentInvoice;
+                }
+              }
+            }
+            
+            // Adicionar exclusão ao batch
+            const docRef = db.collection('transactions').doc(parcel.id);
+            batch.delete(docRef);
+          }
+          
+          await batch.commit();
+          
+          // Remover do estado local
+          state.transactions = state.transactions.filter(t => 
+            !(t.recurrenceId === transaction.recurrenceId && 
+              t.currentInstallment >= transaction.currentInstallment)
+          );
+        }
+      } else {
+        // Excluir apenas a transação atual
+        await db.collection('transactions').doc(transactionId).delete();
+        
+        // Remover do estado local
+        state.transactions = state.transactions.filter(t => t.id !== transactionId);
+      }
+      
+      // Filtrar novamente para atualizar a lista atual
+      filterTransactionsByMonth();
+      
+      // Atualizar a UI
+      updateTransactionsTable();
+      updateKPIs();
+      updateCharts();
+      updateCardsList();
+      
+      // Fechar o modal de confirmação
+      closeModal('deleteConfirmModal');
+      
+      showToast(`${transaction.type === 'income' ? 'Receita' : 'Despesa'} excluída com sucesso!`, 'success');
+      
+    } catch (error) {
+      console.error('Erro ao excluir transação:', error);
+      showToast('Erro ao excluir transação. Tente novamente.', 'error');
+    }
   };
   
   // Abrir o modal de edição de cartão
@@ -3532,7 +4739,7 @@
     if (!card) return;
     
     // Atualizar título do modal
-    $('#editModalTitle').textContent = 'Editar Cartão';
+    $('#newCardModal .modal-title').textContent = 'Editar Cartão';
     
     // Preencher os campos
     $('#cardName').value = card.name;
@@ -3545,396 +4752,6 @@
     
     // Exibir o modal
     openModal('newCardModal');
-  };
-  
-  // Gerar insights
-  const generateInsights = () => {
-    state.insights = [];
-    const today = new Date();
-    
-    // Verificar cartões com fatura > 70% do limite
-    state.cards.forEach(card => {
-      if ((card.currentInvoice / card.limit) >= 0.7) {
-        state.insights.push({
-          id: generateId(),
-          level: 'danger',
-          message: `Fatura do cartão ${card.name} está em ${Math.round((card.currentInvoice / card.limit) * 100)}% do limite`,
-          actionText: 'Ver fatura',
-          action: () => openCardInvoice(card.id),
-          icon: 'icon-credit-card',
-          seen: false
-        });
-      }
-    });
-    
-    // Verificar receitas pendentes vencidas
-    const overdueIncomes = state.transactions.filter(t => 
-      t.type === 'income' && 
-      t.status !== 'received' && 
-      new Date(t.dueDate) < today
-    );
-    
-    if (overdueIncomes.length > 0) {
-      state.insights.push({
-        id: generateId(),
-        level: 'danger',
-        message: `Você tem ${overdueIncomes.length} receita${overdueIncomes.length > 1 ? 's' : ''} pendente${overdueIncomes.length > 1 ? 's' : ''} vencida${overdueIncomes.length > 1 ? 's' : ''}`,
-        actionText: 'Marcar recebido',
-        action: () => filterPendingIncomes(),
-        icon: 'icon-alert',
-        seen: false
-      });
-    }
-    
-    // Verificar despesas duplicadas suspeitas
-    const groupedExpenses = state.transactions.reduce((acc, t) => {
-      if (t.type === 'expense') {
-        const key = `${t.name}-${t.amount}-${t.date}`;
-        if (!acc[key]) {
-          acc[key] = [];
-        }
-        acc[key].push(t);
-      }
-      return acc;
-    }, {});
-    
-    const duplicates = Object.values(groupedExpenses).filter(group => group.length > 1);
-    
-    if (duplicates.length > 0) {
-      state.insights.push({
-        id: generateId(),
-        level: 'warning',
-        message: `Encontradas ${duplicates.length} possíveis despesas duplicadas`,
-        actionText: 'Verificar',
-        action: () => showDuplicatesModal(duplicates),
-        icon: 'icon-alert',
-        seen: false
-      });
-    }
-    
-    // Calcular gasto médio diário
-    const currentMonthExpenses = state.filteredTransactions.filter(t => 
-      t.type === 'expense' && t.status === 'paid'
-    ).reduce((sum, t) => sum + parseFloat(t.amount), 0);
-    
-    const daysInMonth = new Date(state.year, state.month + 1, 0).getDate();
-    const dayOfMonth = Math.min(today.getDate(), daysInMonth);
-    const dailyAverage = dayOfMonth > 0 ? currentMonthExpenses / dayOfMonth : 0;
-    
-    // Calcular média de 90 dias (3 meses anteriores)
-    let last90DaysTotal = 0;
-    let daysCount = 0;
-    
-    for (let i = 1; i <= 3; i++) {
-      const prevMonth = new Date(state.year, state.month - i, 1);
-      const prevMonthYear = prevMonth.getFullYear();
-      const prevMonthMonth = prevMonth.getMonth();
-      
-      const prevMonthExpenses = state.transactions.filter(t => 
-        t.type === 'expense' && 
-        t.status === 'paid' &&
-        new Date(t.date).getMonth() === prevMonthMonth &&
-        new Date(t.date).getFullYear() === prevMonthYear
-      ).reduce((sum, t) => sum + parseFloat(t.amount), 0);
-      
-      const daysInPrevMonth = new Date(prevMonthYear, prevMonthMonth + 1, 0).getDate();
-      last90DaysTotal += prevMonthExpenses;
-      daysCount += daysInPrevMonth;
-    }
-    
-    const daily90Average = daysCount > 0 ? last90DaysTotal / daysCount : 0;
-    
-    if (dailyAverage > (daily90Average * 1.25) && daily90Average > 0) {
-      state.insights.push({
-        id: generateId(),
-        level: 'warning',
-        message: `Seu gasto médio diário está 25% acima da média dos últimos 3 meses`,
-        actionText: 'Ver análise',
-        action: () => showSpendingAnalysisModal(),
-        icon: 'icon-chart',
-        seen: false
-      });
-    }
-    
-    // Verificar concentração de método de pagamento
-    const paymentMethods = state.filteredTransactions
-      .filter(t => t.type === 'expense')
-      .reduce((acc, t) => {
-        if (!acc[t.paymentMethod]) {
-          acc[t.paymentMethod] = 0;
-        }
-        acc[t.paymentMethod]++;
-        return acc;
-      }, {});
-    
-    const totalPayments = Object.values(paymentMethods).reduce((sum, count) => sum + count, 0);
-    
-    for (const [method, count] of Object.entries(paymentMethods)) {
-      if (count / totalPayments >= 0.9 && totalPayments >= 5) {
-        state.insights.push({
-          id: generateId(),
-          level: 'info',
-          message: `${Math.round((count / totalPayments) * 100)}% das suas transações usam ${method}`,
-          actionText: 'Dicas de cashback',
-          action: () => showCashbackTipsModal(),
-          icon: 'icon-info',
-          seen: false
-        });
-        break;
-      }
-    }
-    
-    // Verificar parcelas recorrentes prestes a acabar
-    const almostFinishedRecurrences = state.transactions.filter(t => 
-      t.isRecurrent && 
-      t.currentInstallment && 
-      t.installments && 
-      (t.installments - t.currentInstallment <= 1)
-    );
-    
-    if (almostFinishedRecurrences.length > 0) {
-      state.insights.push({
-        id: generateId(),
-        level: 'success',
-        message: `Você tem ${almostFinishedRecurrences.length} recorrência${almostFinishedRecurrences.length > 1 ? 's' : ''} prestes a terminar`,
-        actionText: 'Quitar',
-        action: () => showFinishingRecurrencesModal(almostFinishedRecurrences),
-        icon: 'icon-check',
-        seen: false
-      });
-    }
-    
-    // Renderizar insights na UI
-    renderInsights();
-  };
-  
-  // Renderizar insights na UI
-  const renderInsights = () => {
-    const insightsBanner = $('#insightsBanner');
-    insightsBanner.innerHTML = '';
-    
-    // Ordenar insights por nível de prioridade
-    const priorityOrder = { 'danger': 1, 'warning': 2, 'info': 3, 'success': 4 };
-    const sortedInsights = [...state.insights].sort((a, b) => {
-      return priorityOrder[a.level] - priorityOrder[b.level];
-    });
-    
-    // Exibir apenas os 2 primeiros insights
-    const topInsights = sortedInsights.slice(0, 2);
-    
-    if (topInsights.length === 0) {
-      insightsBanner.style.display = 'none';
-      return;
-    }
-    
-    insightsBanner.style.display = 'block';
-    
-    topInsights.forEach(insight => {
-      const insightElement = document.createElement('div');
-      insightElement.className = `insight-banner insight-${insight.level}`;
-      
-      insightElement.innerHTML = `
-        <div class="insight-icon">
-          <svg width="24" height="24">
-            <use href="#${insight.icon}"></use>
-          </svg>
-        </div>
-        <div class="insight-content">
-          <div class="insight-title">${insight.message}</div>
-        </div>
-        <button class="btn btn-outline insight-action" data-id="${insight.id}">${insight.actionText}</button>
-      `;
-      
-      insightsBanner.appendChild(insightElement);
-    });
-    
-    // Adicionar event listeners para os botões de ação dos insights
-    $$('.insight-action').forEach(btn => {
-      btn.addEventListener('click', e => {
-        const id = e.currentTarget.dataset.id;
-        const insight = state.insights.find(i => i.id === id);
-        
-        if (insight && typeof insight.action === 'function') {
-          insight.action();
-          insight.seen = true;
-        }
-      });
-    });
-  };
-  
-  // Gerar lançamentos recorrentes
-  const generateRecurrentTransactions = transaction => {
-    const recurrenceId = generateId();
-    const transactions = [];
-    
-    // Adicionar a transação atual com ID de recorrência
-    const currentTransaction = {
-      ...transaction,
-      recurrenceId,
-      currentInstallment: 1,
-      isRecurrent: true
-    };
-    
-    transactions.push(currentTransaction);
-    
-    // Gerar as parcelas futuras
-    for (let i = 1; i < transaction.installments; i++) {
-      const date = new Date(transaction.date);
-      date.setMonth(date.getMonth() + i);
-      
-      let dueDate = null;
-      if (transaction.dueDate) {
-        dueDate = new Date(transaction.dueDate);
-        dueDate.setMonth(dueDate.getMonth() + i);
-      }
-      
-      const futureTransaction = {
-        ...transaction,
-        id: generateId(),
-        recurrenceId,
-        date: date.toISOString(),
-        dueDate: dueDate ? dueDate.toISOString() : null,
-        currentInstallment: i + 1,
-        isRecurrent: true,
-        status: 'pending' // Todas as parcelas futuras começam como pendentes
-      };
-      
-      transactions.push(futureTransaction);
-    }
-    
-    return transactions;
-  };
-  
-  // Salvar multiple transações no Firestore
-  const saveMultipleTransactions = async transactions => {
-    try {
-      const batch = db.batch();
-      
-      transactions.forEach(transaction => {
-        const docRef = db.collection('transactions').doc(transaction.id);
-        batch.set(docRef, transaction);
-      });
-      
-      await batch.commit();
-      
-      // Adicionar ao state
-      state.transactions = [...state.transactions, ...transactions];
-      
-      // Atualizar a UI
-      filterTransactionsByMonth();
-      updateKPIs();
-      updateCharts();
-      updateTransactionsTable();
-      renderCommitments();
-      generateInsights();
-      
-      return true;
-    } catch (error) {
-      console.error('Erro ao salvar transações recorrentes:', error);
-      showToast('Erro ao salvar transações recorrentes. Tente novamente.', 'error');
-      return false;
-    }
-  };
-  
-  // Renderizar compromissos longos
-  const renderCommitments = () => {
-    const content = $('#commitmentsContent');
-    content.innerHTML = '';
-    
-    // Buscar todas as transações recorrentes
-    const recurrentTransactions = state.transactions.filter(t => 
-      t.isRecurrent && t.recurrenceId && t.installments > 3
-    );
-    
-    // Agrupar por ID de recorrência
-    const grouped = recurrentTransactions.reduce((acc, t) => {
-      if (!acc[t.recurrenceId]) {
-        acc[t.recurrenceId] = [];
-      }
-      acc[t.recurrenceId].push(t);
-      return acc;
-    }, {});
-    
-    // Converter para array e ordenar
-    const commitments = Object.values(grouped).map(group => {
-      // Ordenar por número da parcela
-      group.sort((a, b) => a.currentInstallment - b.currentInstallment);
-      
-      // Verificar parcela atual
-      const currentInstallment = group[0].currentInstallment || 1;
-      const totalInstallments = group[0].installments || 1;
-      
-      // Calcular valor restante
-      const paidInstallments = group.filter(t => t.status === 'paid').length;
-      const remainingInstallments = totalInstallments - paidInstallments;
-      const installmentValue = parseFloat(group[0].amount);
-      const remainingValue = remainingInstallments * installmentValue;
-      
-      // Calcular data final
-      const lastTransaction = group[group.length - 1];
-      const endDate = lastTransaction ? new Date(lastTransaction.date) : new Date();
-      
-      return {
-        id: group[0].recurrenceId,
-        name: group[0].name,
-        currentInstallment,
-        totalInstallments,
-        progress: (currentInstallment / totalInstallments) * 100,
-        remainingValue,
-        endDate,
-        icon: group[0].categoryIcon || (group[0].type === 'income' ? '💰' : '📦')
-      };
-    });
-    
-    if (commitments.length === 0) {
-      content.innerHTML = '<p style="text-align: center; padding: var(--spacing-md);">Nenhum compromisso de longo prazo encontrado.</p>';
-      return;
-    }
-    
-    // Ordenar por progresso (menos completos primeiro)
-    commitments.sort((a, b) => a.progress - b.progress);
-    
-    // Renderizar os 5 primeiros compromissos
-    commitments.slice(0, 5).forEach(commitment => {
-      const item = document.createElement('div');
-      item.className = 'commitment-item';
-      
-      item.innerHTML = `
-        <div class="transaction-icon" style="background-color: rgba(0, 113, 227, 0.1); color: var(--color-primary);">
-          ${commitment.icon}
-        </div>
-        <div style="flex: 1;">
-          <div style="display: flex; justify-content: space-between;">
-            <strong>${commitment.name}</strong>
-            <span>${commitment.currentInstallment}/${commitment.totalInstallments}</span>
-          </div>
-          <div class="commitment-progress">
-            <div class="commitment-progress-bar" style="width: ${commitment.progress}%;"></div>
-          </div>
-          <div style="display: flex; justify-content: space-between; font-size: var(--font-size-xs); color: var(--color-on-surface-variant);">
-            <span>Faltam ${formatCurrency(commitment.remainingValue)}</span>
-            <span>Término: ${formatDate(commitment.endDate)}</span>
-          </div>
-        </div>
-      `;
-      
-      content.appendChild(item);
-    });
-  };
-  
-  // Toggle do dropdown de compromissos
-  const toggleCommitments = () => {
-    const content = $('#commitmentsContent');
-    const header = $('#commitmentsHeader');
-    const chevron = header.querySelector('svg');
-    
-    if (content.style.maxHeight) {
-      content.style.maxHeight = null;
-      chevron.innerHTML = '<use href="#icon-chevron-down"></use>';
-    } else {
-      content.style.maxHeight = content.scrollHeight + 'px';
-      chevron.innerHTML = '<use href="#icon-chevron-up"></use>';
-    }
   };
   
   // Funções para gráficos
@@ -3968,281 +4785,300 @@
     Chart.defaults.borderColor = gridColor;
     Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
     
-    // Gráfico de Pizza - Despesas por Categoria
-    const pieCtx = $('#catPie').getContext('2d');
-    pieChart = new Chart(pieCtx, {
-      type: 'pie',
-      data: {
-        labels: [],
-        datasets: [{
-          data: [],
-          backgroundColor: categoryColors,
-          borderColor: isDarkTheme ? '#000000' : '#ffffff',
-          borderWidth: 2
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: {
-              padding: 20,
-              usePointStyle: true,
-              pointStyle: 'circle'
-            }
+    try {
+      // Gráfico de Pizza - Despesas por Categoria
+      const pieCtx = document.getElementById('catPie');
+      if (pieCtx) {
+        pieChart = new Chart(pieCtx.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: [],
+            datasets: [{
+              data: [],
+              backgroundColor: categoryColors,
+              borderColor: isDarkTheme ? '#000000' : '#ffffff',
+              borderWidth: 2
+            }]
           },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                const value = context.parsed;
-                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                const percentage = Math.round((value / total) * 100);
-                return `${formatCurrency(value)} (${percentage}%)`;
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  padding: 20,
+                  usePointStyle: true,
+                  pointStyle: 'circle'
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const value = context.parsed;
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const percentage = Math.round((value / total) * 100);
+                    return `${formatCurrency(value)} (${percentage}%)`;
+                  }
+                }
               }
             }
           }
-        }
+        });
       }
-    });
-    
-    // Gráfico de Barras - Receitas x Despesas (12 meses)
-    const barCtx = $('#annualBars').getContext('2d');
-    barChart = new Chart(barCtx, {
-      type: 'bar',
-      data: {
-        labels: [],
-        datasets: [
-          {
-            label: 'Receitas',
-            data: [],
-            backgroundColor: 'rgba(52, 199, 89, 0.7)',
-            borderColor: 'rgba(52, 199, 89, 1)',
-            borderWidth: 1
+      
+      // Gráfico de Barras - Receitas x Despesas (12 meses)
+      const barCtx = document.getElementById('annualBars');
+      if (barCtx) {
+        barChart = new Chart(barCtx.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: 'Receitas',
+                data: [],
+                backgroundColor: 'rgba(52, 199, 89, 0.7)',
+                borderColor: 'rgba(52, 199, 89, 1)',
+                borderWidth: 1
+              },
+              {
+                label: 'Despesas',
+                data: [],
+                backgroundColor: 'rgba(255, 59, 48, 0.7)',
+                borderColor: 'rgba(255, 59, 48, 1)',
+                borderWidth: 1
+              }
+            ]
           },
-          {
-            label: 'Despesas',
-            data: [],
-            backgroundColor: 'rgba(255, 59, 48, 0.7)',
-            borderColor: 'rgba(255, 59, 48, 1)',
-            borderWidth: 1
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: {
-            grid: {
-              display: false
-            }
-          },
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: function(value) {
-                return formatCurrency(value);
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: function(value) {
+                    return formatCurrency(value);
+                  }
+                }
+              }
+            },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+                  }
+                }
               }
             }
           }
-        },
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
-              }
-            }
-          }
-        }
+        });
       }
-    });
-    
-    // Gráfico de Área - Limite do Cartão
-    const areaCtx = $('#cardArea').getContext('2d');
-    areaChart = new Chart(areaCtx, {
-      type: 'line',
-      data: {
-        labels: [],
-        datasets: [
-          {
-            label: 'Fatura',
-            data: [],
-            fill: true,
-            backgroundColor: 'rgba(0, 113, 227, 0.2)',
-            borderColor: 'rgba(0, 113, 227, 1)',
-            borderWidth: 2,
-            tension: 0.4
+      
+      // Gráfico de Área - Limite do Cartão
+      const areaCtx = document.getElementById('cardArea');
+      if (areaCtx) {
+        areaChart = new Chart(areaCtx.getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: 'Fatura',
+                data: [],
+                fill: true,
+                backgroundColor: 'rgba(0, 113, 227, 0.2)',
+                borderColor: 'rgba(0, 113, 227, 1)',
+                borderWidth: 2,
+                tension: 0.4
+              },
+              {
+                label: 'Limite',
+                data: [],
+                fill: false,
+                borderColor: 'rgba(255, 59, 48, 0.8)',
+                borderWidth: 2,
+                borderDash: [5, 5],
+                pointRadius: 0
+              }
+            ]
           },
-          {
-            label: 'Limite',
-            data: [],
-            fill: false,
-            borderColor: 'rgba(255, 59, 48, 0.8)',
-            borderWidth: 2,
-            borderDash: [5, 5],
-            pointRadius: 0
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: {
-            grid: {
-              display: false
-            }
-          },
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: function(value) {
-                return formatCurrency(value);
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: function(value) {
+                    return formatCurrency(value);
+                  }
+                }
+              }
+            },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+                  }
+                }
               }
             }
           }
-        },
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
-              }
-            }
-          }
-        }
+        });
       }
-    });
+    } catch (error) {
+      console.error('Erro ao criar gráficos:', error);
+    }
   };
   
   // Atualizar os gráficos com dados recentes
   const updateCharts = () => {
-    // Se os gráficos ainda não foram criados, criar agora
-    if (!pieChart || !barChart || !areaChart) {
-      createCharts();
-    }
-    
-    // Atualizar cores se o tema mudou
-    const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
-    const textColor = isDarkTheme ? '#f5f5f7' : '#1d1d1f';
-    const gridColor = isDarkTheme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-    
-    Chart.defaults.color = textColor;
-    Chart.defaults.borderColor = gridColor;
-    
-    // 1. Atualizar gráfico de pizza - Despesas por categoria
-    const categoryTotals = state.filteredTransactions
-      .filter(t => t.type === 'expense')
-      .reduce((acc, t) => {
-        const categoryName = t.categoryName || t.category;
-        if (!acc[categoryName]) {
-          acc[categoryName] = 0;
-        }
-        acc[categoryName] += parseFloat(t.amount);
-        return acc;
-      }, {});
-    
-    // Converter para arrays para o gráfico
-    const categories = Object.keys(categoryTotals);
-    const categoryValues = categories.map(c => categoryTotals[c]);
-    
-    // Atualizar dados do gráfico de pizza
-    pieChart.data.labels = categories;
-    pieChart.data.datasets[0].data = categoryValues;
-    pieChart.update();
-    
-    // 2. Atualizar gráfico de barras - Receitas x Despesas (12 meses)
-    const months = [];
-    const incomeData = [];
-    const expenseData = [];
-    
-    // Obter os últimos 12 meses
-    const today = new Date();
-    for (let i = 11; i >= 0; i--) {
-      const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
-      const monthName = date.toLocaleString('pt-BR', { month: 'short' });
-      const year = date.getFullYear();
-      const monthYear = `${monthName}/${year.toString().substr(2, 2)}`;
-      
-      months.push(monthYear);
-      
-      // Filtrar transações para este mês
-      const monthTransactions = state.transactions.filter(t => {
-        const tDate = new Date(t.date);
-        return tDate.getMonth() === date.getMonth() && tDate.getFullYear() === date.getFullYear();
-      });
-      
-      // Calcular totais
-      const monthlyIncome = monthTransactions
-        .filter(t => t.type === 'income')
-        .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-      
-      const monthlyExpense = monthTransactions
-        .filter(t => t.type === 'expense')
-        .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-      
-      incomeData.push(monthlyIncome);
-      expenseData.push(monthlyExpense);
-    }
-    
-    // Atualizar dados do gráfico de barras
-    barChart.data.labels = months;
-    barChart.data.datasets[0].data = incomeData;
-    barChart.data.datasets[1].data = expenseData;
-    barChart.update();
-    
-    // 3. Atualizar gráfico de área - Limite do Cartão
-    // Se não houver cartões, mostrar mensagem
-    if (state.cards.length === 0) {
-      areaChart.data.labels = ['Nenhum cartão cadastrado'];
-      areaChart.data.datasets[0].data = [0];
-      areaChart.data.datasets[1].data = [0];
-      areaChart.update();
-      return;
-    }
-    
-    // Usar o primeiro cartão para o gráfico
-    const card = state.cards[0];
-    
-    // Obter os dias do mês atual
-    const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-    const daysLabels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-    
-    // Calcular a fatura acumulada para cada dia
-    const invoiceByDay = daysLabels.map(day => {
-      // Data atual para este dia
-      const dayDate = new Date(today.getFullYear(), today.getMonth(), day);
-      
-      // Se o dia já passou, usar transações reais
-      if (dayDate <= today) {
-        return state.transactions
-          .filter(t => {
-            const tDate = new Date(t.date);
-            return t.type === 'expense' && 
-                  t.paymentMethod === 'credito' && 
-                  t.creditCardId === card.id &&
-                  tDate.getDate() <= day &&
-                  tDate.getMonth() === today.getMonth() &&
-                  tDate.getFullYear() === today.getFullYear();
-          })
-          .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    try {
+      // Se os gráficos ainda não foram criados, criar agora
+      if (!pieChart || !barChart || !areaChart) {
+        createCharts();
       }
       
-      // Para dias futuros, usar o valor atual
-      return card.currentInvoice || 0;
-    });
-    
-    // Linha do limite constante
-    const limitLine = daysLabels.map(() => card.limit);
-    
-    // Atualizar dados do gráfico de área
-    areaChart.data.labels = daysLabels;
-    areaChart.data.datasets[0].data = invoiceByDay;
-    areaChart.data.datasets[1].data = limitLine;
-    areaChart.update();
+      if (!pieChart || !barChart || !areaChart) {
+        console.error('Não foi possível inicializar os gráficos');
+        return;
+      }
+      
+      // Atualizar cores se o tema mudou
+      const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
+      const textColor = isDarkTheme ? '#f5f5f7' : '#1d1d1f';
+      const gridColor = isDarkTheme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+      
+      Chart.defaults.color = textColor;
+      Chart.defaults.borderColor = gridColor;
+      
+      // 1. Atualizar gráfico de pizza - Despesas por categoria
+      const categoryTotals = state.filteredTransactions
+        .filter(t => t.type === 'expense')
+        .reduce((acc, t) => {
+          const categoryName = t.categoryName || t.category;
+          if (!acc[categoryName]) {
+            acc[categoryName] = 0;
+          }
+          acc[categoryName] += parseFloat(t.amount);
+          return acc;
+        }, {});
+      
+      // Converter para arrays para o gráfico
+      const categories = Object.keys(categoryTotals);
+      const categoryValues = categories.map(c => categoryTotals[c]);
+      
+      // Atualizar dados do gráfico de pizza
+      pieChart.data.labels = categories;
+      pieChart.data.datasets[0].data = categoryValues;
+      pieChart.update();
+      
+      // 2. Atualizar gráfico de barras - Receitas x Despesas (12 meses)
+      const months = [];
+      const incomeData = [];
+      const expenseData = [];
+      
+      // Obter os últimos 12 meses
+      const today = new Date();
+      for (let i = 11; i >= 0; i--) {
+        const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+        const monthName = date.toLocaleString('pt-BR', { month: 'short' });
+        const year = date.getFullYear();
+        const monthYear = `${monthName}/${year.toString().substr(2, 2)}`;
+        
+        months.push(monthYear);
+        
+        // Filtrar transações para este mês
+        const monthTransactions = state.transactions.filter(t => {
+          const tDate = new Date(t.date);
+          return tDate.getMonth() === date.getMonth() && tDate.getFullYear() === date.getFullYear();
+        });
+        
+        // Calcular totais
+        const monthlyIncome = monthTransactions
+          .filter(t => t.type === 'income')
+          .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+        
+        const monthlyExpense = monthTransactions
+          .filter(t => t.type === 'expense')
+          .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+        
+        incomeData.push(monthlyIncome);
+        expenseData.push(monthlyExpense);
+      }
+      
+      // Atualizar dados do gráfico de barras
+      barChart.data.labels = months;
+      barChart.data.datasets[0].data = incomeData;
+      barChart.data.datasets[1].data = expenseData;
+      barChart.update();
+      
+      // 3. Atualizar gráfico de área - Limite do Cartão
+      // Se não houver cartões, mostrar mensagem
+      if (state.cards.length === 0) {
+        areaChart.data.labels = ['Nenhum cartão cadastrado'];
+        areaChart.data.datasets[0].data = [0];
+        areaChart.data.datasets[1].data = [0];
+        areaChart.update();
+        return;
+      }
+      
+      // Usar o primeiro cartão para o gráfico
+      const card = state.cards[0];
+      
+      // Obter os dias do mês atual
+      const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+      const daysLabels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+      
+      // Calcular a fatura acumulada para cada dia
+      const invoiceByDay = daysLabels.map(day => {
+        // Data atual para este dia
+        const dayDate = new Date(today.getFullYear(), today.getMonth(), day);
+        
+        // Se o dia já passou, usar transações reais
+        if (dayDate <= today) {
+          return state.transactions
+            .filter(t => {
+              const tDate = new Date(t.date);
+              return t.type === 'expense' && 
+                    t.paymentMethod === 'credito' && 
+                    t.creditCardId === card.id &&
+                    tDate.getDate() <= day &&
+                    tDate.getMonth() === today.getMonth() &&
+                    tDate.getFullYear() === today.getFullYear();
+            })
+            .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+        }
+        
+        // Para dias futuros, usar o valor atual
+        return card.currentInvoice || 0;
+      });
+      
+      // Linha do limite constante
+      const limitLine = daysLabels.map(() => card.limit);
+      
+      // Atualizar dados do gráfico de área
+      areaChart.data.labels = daysLabels;
+      areaChart.data.datasets[0].data = invoiceByDay;
+      areaChart.data.datasets[1].data = limitLine;
+      areaChart.update();
+    } catch (error) {
+      console.error('Erro ao atualizar gráficos:', error);
+    }
   };
 <!-- ===== FIM: PARTE 5B - LÓGICA DE GRÁFICOS E EVENT LISTENERS ================================ -->
 

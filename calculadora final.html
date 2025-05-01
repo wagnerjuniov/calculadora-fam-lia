@@ -2296,14 +2296,14 @@
   const setDateInputValue = (inputId, date) => {
     const input = $(`#${inputId}`);
     if (!input) return; // Safety check
-    
-    const dateObj = date instanceof Date ? date : new Date(date);
-    
+  
+    const dateObj = date instanceof Date ? date : new Date(date + 'T00:00:00');
+  
     // Formato YYYY-MM-DD para inputs de data
     const year = dateObj.getFullYear();
     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
     const day = String(dateObj.getDate()).padStart(2, '0');
-    
+  
     input.value = `${year}-${month}-${day}`;
   };
   

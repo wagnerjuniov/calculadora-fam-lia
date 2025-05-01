@@ -2308,8 +2308,12 @@
   };
   
   const getDateInputValue = inputId => {
-    const input = $(`#${inputId}`);
-    return input && input.value ? new Date(input.value) : null;
+  const input = $(`#${inputId}`);
+      if (!input || !input.value) return null;
+  
+  // Criar data com hora zerada para evitar problemas de timezone
+  const dateParts = input.value.split('-');
+    return new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
   };
   
   // Função para atualizar as opções de anos até 2030

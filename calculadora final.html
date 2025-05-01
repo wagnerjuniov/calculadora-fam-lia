@@ -2104,13 +2104,12 @@
     return dateObj.toLocaleDateString('pt-BR', options);
   };
 
-  // Função para corrigir o problema de fuso horário ao salvar datas
+  // Função corrigida para manipular datas sem problemas de fuso horário
   const localDateToISOString = (date) => {
-    if (!date) return null;
+      if (!date) return null;
       const localDate = new Date(date);
-      const offset = localDate.getTimezoneOffset();
-      const correctedDate = new Date(localDate.getTime() - offset * 60000);
-      return correctedDate.toISOString().split('T')[0] + 'T12:00:00.000Z'; // Meio-dia UTC
+      // Criar uma data ISO com a data local, fixando o horário em meio-dia UTC para evitar problemas de fuso
+      return `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}T12:00:00.000Z`;
   };
 
   // Função de tema claro/escuro
@@ -3896,7 +3895,7 @@
         categoryIcon: category ? category.icon : null,
         paymentMethodName: paymentMethod ? paymentMethod.name : null,
         paymentMethodIcon: paymentMethod ? paymentMethod.icon : null,
-        createdAt: now.toISOString(),
+        createdAt: localDateToISOString(now),
         date: localDateToISOString(new Date(transactionData.date)),
         dueDate: transactionData.dueDate ? localDateToISOString(new Date(transactionData.dueDate)) : null,
         scheduledDate: transactionData.scheduledDate ? localDateToISOString(new Date(transactionData.scheduledDate)) : null
@@ -5070,8 +5069,8 @@
       name,
       amount,
       category,
-      date: date.toISOString(),
-      dueDate: dueDate.toISOString(),
+      date: date,
+      dueDate: dueDate,
       status,
       paymentMethod,
       creditCardId,
@@ -5079,7 +5078,7 @@
       installments,
       notes,
       iconCustom,
-      scheduledDate: scheduledDate ? scheduledDate.toISOString() : null,
+      scheduledDate: scheduledDate,
       type: 'expense'
     };
     

@@ -2108,8 +2108,10 @@
   const localDateToISOString = (date) => {
       if (!date) return null;
       const localDate = new Date(date);
-      // Criar uma data ISO com a data local, fixando o horário em meio-dia UTC para evitar problemas de fuso
-      return `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}T12:00:00.000Z`;
+      // Criar uma string de data no formato ISO, mas mantendo a data local
+      return localDate.getFullYear() + '-' + 
+             String(localDate.getMonth() + 1).padStart(2, '0') + '-' + 
+             String(localDate.getDate()).padStart(2, '0');
   };
 
   // Função de tema claro/escuro

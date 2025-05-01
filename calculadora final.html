@@ -2297,15 +2297,22 @@
     const input = $(`#${inputId}`);
     if (!input) return; // Safety check
   
-    const dateObj = date instanceof Date ? date : new Date(date + 'T00:00:00');
-  
+    // Evitar conversão para UTC
+    let dateObj;
+    if (date instanceof Date) {
+      dateObj = date;
+    } else {
+      const parts = date.split(/[-\/]/);
+      dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
     // Formato YYYY-MM-DD para inputs de data
     const year = dateObj.getFullYear();
     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
     const day = String(dateObj.getDate()).padStart(2, '0');
-  
+
     input.value = `${year}-${month}-${day}`;
-  };
+   };
   
   const getDateInputValue = inputId => {
   const input = $(`#${inputId}`);
@@ -5008,7 +5015,7 @@
       name,
       amount,
       category,
-      date: date.toISOString(),
+      date: date, // Manter como objeto Date em vez de converter para ISO
       status,
       paymentMethod,
       isRecurrent,
@@ -5158,7 +5165,7 @@
       name,
       amount,
       category,
-      date: date.toISOString(),
+      date: date, // Manter como objeto Date em vez de converter para ISO
       status,
       paymentMethod,
       creditCardId,
@@ -5170,8 +5177,8 @@
     
     // Adicionar campos específicos por tipo
     if (type === 'expense') {
-      updates.dueDate = dueDate.toISOString();
-      updates.scheduledDate = scheduledDate ? scheduledDate.toISOString() : null;
+      updates.dueDate = dueDate; // Manter como objeto Date
+      updates.scheduledDate = scheduledDate ? scheduledDate : null; // Manter como objeto Date
     }
     
     // Aplicar atualizações

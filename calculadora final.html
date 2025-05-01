@@ -2100,8 +2100,14 @@
   };
 
   const formatDate = (date, options = {}) => {
-    const dateObj = date instanceof Date ? date : new Date(date);
-    return dateObj.toLocaleDateString('pt-BR', options);
+      let dateObj;
+      if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+          const parts = date.split('-');
+          dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      } else {
+          dateObj = date instanceof Date ? date : new Date(date);
+      }
+      return dateObj.toLocaleDateString('pt-BR', options);
   };
 
   // Função corrigida para manipular datas sem problemas de fuso horário

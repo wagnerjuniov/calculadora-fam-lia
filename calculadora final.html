@@ -2098,12 +2098,21 @@
       currency: 'BRL'
     }).format(value);
   };
-  
+
   const formatDate = (date, options = {}) => {
     const dateObj = date instanceof Date ? date : new Date(date);
     return dateObj.toLocaleDateString('pt-BR', options);
   };
-  
+
+  // Função para corrigir o problema de fuso horário ao salvar datas
+  const localDateToISOString = (date) => {
+    if (!date) return null;
+      const localDate = new Date(date);
+      const offset = localDate.getTimezoneOffset();
+      const correctedDate = new Date(localDate.getTime() - offset * 60000);
+      return correctedDate.toISOString().split('T')[0] + 'T12:00:00.000Z'; // Meio-dia UTC
+  };
+
   // Função de tema claro/escuro
   const toggleTheme = () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -3862,8 +3871,8 @@
             recurrenceId,
             installments: transactionData.installments,
             installmentNumber: i + 1,
-            date: nextDate.toISOString(),
-            dueDate: nextDueDate ? nextDueDate.toISOString() : null
+            date: localDateToISOString(nextDate),
+            dueDate: nextDueDate ? localDateToISOString(nextDueDate) : null
           };
           
           // Remover ID, pois será gerado pelo Firestore
@@ -3887,7 +3896,10 @@
         categoryIcon: category ? category.icon : null,
         paymentMethodName: paymentMethod ? paymentMethod.name : null,
         paymentMethodIcon: paymentMethod ? paymentMethod.icon : null,
-        createdAt: now.toISOString()
+        createdAt: now.toISOString(),
+        date: localDateToISOString(new Date(transactionData.date)),
+        dueDate: transactionData.dueDate ? localDateToISOString(new Date(transactionData.dueDate)) : null,
+        scheduledDate: transactionData.scheduledDate ? localDateToISOString(new Date(transactionData.scheduledDate)) : null
       };
       
       // Salvar no Firestore

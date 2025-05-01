@@ -2107,7 +2107,7 @@
   // Função corrigida para manipular datas sem problemas de fuso horário
   const localDateToISOString = (date) => {
       if (!date) return null;
-      const localDate = new Date(date);
+      const localDate = date instanceof Date ? date : new Date(date);
       // Criar uma string de data no formato ISO, mas mantendo a data local
       return localDate.getFullYear() + '-' + 
              String(localDate.getMonth() + 1).padStart(2, '0') + '-' + 
@@ -3898,9 +3898,9 @@
         paymentMethodName: paymentMethod ? paymentMethod.name : null,
         paymentMethodIcon: paymentMethod ? paymentMethod.icon : null,
         createdAt: localDateToISOString(now),
-        date: localDateToISOString(new Date(transactionData.date)),
-        dueDate: transactionData.dueDate ? localDateToISOString(new Date(transactionData.dueDate)) : null,
-        scheduledDate: transactionData.scheduledDate ? localDateToISOString(new Date(transactionData.scheduledDate)) : null
+        date: localDateToISOString(transactionData.date),
+        dueDate: transactionData.dueDate ? localDateToISOString(transactionData.dueDate) : null,
+        scheduledDate: transactionData.scheduledDate ? localDateToISOString(transactionData.scheduledDate) : null
       };
       
       // Salvar no Firestore

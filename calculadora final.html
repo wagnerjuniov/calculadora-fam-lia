@@ -2656,14 +2656,13 @@
       previousClosing.setMonth(previousClosing.getMonth() - 1);
       
       // Buscar transações do período
-      const invoiceTransactions = state.transactions.filter(t => 
-        t.type === 'expense' && 
-        t.paymentMethod === 'credito' && 
-        t.creditCardId === card.id &&
-        t.status !== 'paid' &&
-        new Date(t.date) >= previousClosing &&
-        new Date(t.date) < closingDate
-      );
+const invoiceTransactions = state.transactions.filter(t => 
+  t.type === 'expense' && 
+  t.paymentMethod === 'credito' && 
+  t.creditCardId === card.id &&
+  parseLocalDateString(t.date) >= previousClosing &&
+  parseLocalDateString(t.date) < closingDate
+);
       
       if (invoiceTransactions.length === 0) {
         showToast('Não há despesas pendentes para esta fatura.', 'info');
@@ -2779,10 +2778,10 @@
   
   // Filtrar transações por mês/ano
   const filterTransactionsByMonth = () => {
-    state.filteredTransactions = state.transactions.filter(transaction => {
-      const date = new Date(transaction.date);
-      return date.getMonth() === state.month && date.getFullYear() === state.year;
-    });
+state.filteredTransactions = state.transactions.filter(transaction => {
+  const date = parseLocalDateString(transaction.date);
+  return date && date.getMonth() === state.month && date.getFullYear() === state.year;
+});
     
     // Ordenar por data (mais recentes primeiro)
     state.filteredTransactions.sort((a, b) => {
@@ -3409,28 +3408,28 @@
       const daysLabels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
       
       // Calcular a fatura acumulada para cada dia
-      const invoiceByDay = daysLabels.map(day => {
-        // Data atual para este dia
-        const dayDate = new Date(today.getFullYear(), today.getMonth(), day);
-        
-        // Se o dia já passou, usar transações reais
-        if (dayDate <= today) {
-          return state.transactions
-            .filter(t => {
-              const tDate = new Date(t.date);
-              return t.type === 'expense' && 
-                    t.paymentMethod === 'credito' && 
-                    t.creditCardId === card.id &&
-                    tDate.getDate() <= day &&
-                    tDate.getMonth() === today.getMonth() &&
-                    tDate.getFullYear() === today.getFullYear();
-            })
-            .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-        }
-        
-        // Para dias futuros, usar o valor atual
-        return card.currentInvoice || 0;
-      });
+const invoiceByDay = daysLabels.map(day => {
+    // Data atual para este dia
+    const dayDate = new Date(today.getFullYear(), today.getMonth(), day);
+    
+    // Se o dia já passou, usar transações reais
+    if (dayDate <= today) {
+      return state.transactions
+        .filter(t => {
+          const tDate = parseLocalDateString(t.date);
+          return tDate && t.type === 'expense' && 
+                t.paymentMethod === 'credito' && 
+                t.creditCardId === card.id &&
+                tDate.getDate() <= day &&
+                tDate.getMonth() === today.getMonth() &&
+                tDate.getFullYear() === today.getFullYear();
+        })
+        .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    }
+    
+    // Para dias futuros, usar o valor atual
+    return card.currentInvoice || 0;
+  });
       
       // Linha do limite constante
       const limitLine = daysLabels.map(() => card.limit);
@@ -3468,11 +3467,11 @@
     const today = new Date();
     
     // Verificar transações vencidas e não pagas
-    const overdueTransactions = state.transactions.filter(t => 
-      t.type === 'expense' && 
-      t.status !== 'paid' && 
-      new Date(t.dueDate) < today
-    );
+const overdueTransactions = state.transactions.filter(t => 
+  t.type === 'expense' && 
+  t.status !== 'paid' && 
+  t.dueDate && parseLocalDateString(t.dueDate) < today
+);
     
     if (overdueTransactions.length > 0) {
       state.insights.push({
@@ -3493,12 +3492,12 @@
     const nextDueDate = new Date(today);
     nextDueDate.setDate(today.getDate() + 5);
     
-    const upcomingTransactions = state.transactions.filter(t => 
-      t.type === 'expense' && 
-      t.status !== 'paid' && 
-      new Date(t.dueDate) > today && 
-      new Date(t.dueDate) <= nextDueDate
-    );
+const upcomingTransactions = state.transactions.filter(t => 
+  t.type === 'expense' && 
+  t.status !== 'paid' && 
+  t.dueDate && parseLocalDateString(t.dueDate) > today && 
+  parseLocalDateString(t.dueDate) <= nextDueDate
+);
     
     if (upcomingTransactions.length > 0) {
       state.insights.push({

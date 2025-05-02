@@ -2791,7 +2791,7 @@
    }
  };
  
- // Filtrar transações por mês/ano - CORRIGIDO
+// Filtrar transações por mês/ano - CORRIGIDO
  const filterTransactionsByMonth = () => {
    state.filteredTransactions = state.transactions.filter(transaction => {
      const date = parseLocalDateString(transaction.date);
@@ -2809,7 +2809,26 @@
    updateTransactionsTable();
    updateKPIs();
    updateCharts();
+  
+   // Verificação de debug (opcional)
+   console.log(`Mês/ano atual: ${state.month}/${state.year}`);
+   console.log(`Total de transações filtradas: ${state.filteredTransactions.length}`);
+   console.log(`Total de transações no sistema: ${state.transactions.length}`);
+   // Verificar parcelas futuras
+   const futureInstallments = state.transactions.filter(t => 
+     t.isRecurrent && t.installmentNumber > 1
+   );
+   console.log(`Total de parcelas futuras: ${futureInstallments.length}`);
+   console.log('Amostra de parcelas futuras:', futureInstallments.slice(0, 2));
  };
+
+ // Atualizar título do mês/ano
+ const updateMonthYearTitle = () => {
+   const monthNames = [
+     'Janeiro', 'Fevereiro', 'Março', 'Abril',
+     'Maio', 'Junho', 'Julho', 'Agosto',
+     'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+   ];
 
  // Atualizar título do mês/ano
  const updateMonthYearTitle = () => {

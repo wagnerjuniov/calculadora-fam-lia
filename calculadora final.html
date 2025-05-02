@@ -3452,33 +3452,36 @@
        return;
      }
      
-     // Usar o primeiro cartão para o gráfico
-       const combinedInvoice = {};
-       const combinedLimit = state.cards.reduce((sum, card) => sum + card.limit, 0);
-     
-     // Obter os dias do mês atual
-     const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-     const daysLabels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-     
-     // Calcular a fatura acumulada para cada dia
-     const invoiceByDay = daysLabels.map(day => {
-       // Data atual para este dia
-       const dayDate = new Date(today.getFullYear(), today.getMonth(), day);
-       
-       // Se o dia já passou, usar transações reais
-       if (dayDate <= today) {
-         return state.transactions
-           .filter(t => {
-             const tDate = parseLocalDateString(t.date);
-             return tDate && t.type === 'expense' && 
-                   t.paymentMethod === 'credito' && 
-                   t.creditCardId === card.id &&
-                   tDate.getDate() <= day &&
-                   tDate.getMonth() === today.getMonth() &&
-                   tDate.getFullYear() === today.getFullYear();
-           })
-           .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-       }
+// Combinar dados de todos os cartões
+const combinedInvoice = {};
+const combinedLimit = state.cards.reduce((sum, card) => sum + card.limit, 0);
+
+// Obter os dias do mês atual
+const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+const daysLabels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+// Calcular a fatura acumulada para cada dia, somando todos os cartões
+daysLabels.forEach(day => {
+  const dayDate = new Date(today.getFullYear(), today.getMonth(), day);
+  combinedInvoice[day] = 0;
+  
+  // Para cada cartão, adicionar suas transações ao dia correspondente
+  state.cards.forEach(card => {
+    const cardInvoiceForDay = state.transactions
+      .filter(t => {
+        const tDate = parseLocalDateString(t.date);
+        return tDate && t.type === 'expense' && 
+              t.paymentMethod === 'credito' && 
+              t.creditCardId === card.id &&
+              tDate.getDate() <= day &&
+              tDate.getMonth() === today.getMonth() &&
+              tDate.getFullYear() === today.getFullYear();
+      })
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    
+    combinedInvoice[day] += cardInvoiceForDay;
+  });
+});
        
        // Para dias futuros, usar o valor atual
        return card.currentInvoice || 0;
@@ -3896,81 +3899,87 @@
        }
      }
      
-     // Processar transação recorrente
-     let recurrenceData = {};
-     if (transactionData.isRecurrent && transactionData.installments > 1) {
-       const recurrenceId = generateId();
-       
-       // Criação da primeira parcela
-       recurrenceData = {
-         isRecurrent: true,
-         recurrenceId,
-         installments: transactionData.installments,
-         installmentNumber: 1
-       };
-       
-       // Criar parcelas futuras
-       const batch = db.batch();
-       
-       // Data de base para parcelas
-       const baseDate = transactionData.date; // Já é um objeto Date
-       let dueDate = transactionData.dueDate ? transactionData.dueDate : null; // Já é um objeto Date ou null
-       
-       // Data de base para as próximas parcelas
-       for (let i = 1; i < transactionData.installments; i++) {
-         // Avançar para o próximo mês
-         const nextDate = new Date(baseDate);
-         nextDate.setMonth(nextDate.getMonth() + i);
-         
-         // Avançar data de vencimento, se houver
-         let nextDueDate = null;
-         if (dueDate) {
-           nextDueDate = new Date(dueDate);
-           nextDueDate.setMonth(nextDueDate.getMonth() + i);
-         }
-         
-         const installmentData = {
-           ...transactionData,
-           ...creditCardData,
-           categoryName: category ? category.name : null,
-           categoryIcon: category ? category.icon : null,
-           paymentMethodName: paymentMethod ? paymentMethod.name : null,
-           paymentMethodIcon: paymentMethod ? paymentMethod.icon : null,
-           createdAt: now.toISOString(),
-           isRecurrent: true,
-           recurrenceId,
-           installments: transactionData.installments,
-           installmentNumber: i + 1,
-           date: localDateToISOString(nextDate),
-           dueDate: nextDueDate ? localDateToISOString(nextDueDate) : null
-         };
-         
-         // Remover ID, pois será gerado pelo Firestore
-         delete installmentData.id;
-         
-         // Adicionar à batch
-         const docRef = db.collection('transactions').doc();
-         batch.set(docRef, installmentData);
-       }
-       
-       // Executar batch
-       await batch.commit();
-     }
-     
-     // Criar objeto final da transação
-     const transaction = {
-       ...transactionData,
-       ...creditCardData,
-       ...recurrenceData,
-       categoryName: category ? category.name : null,
-       categoryIcon: category ? category.icon : null,
-       paymentMethodName: paymentMethod ? paymentMethod.name : null,
-       paymentMethodIcon: paymentMethod ? paymentMethod.icon : null,
-       createdAt: localDateToISOString(now),
-       date: localDateToISOString(transactionData.date),
-       dueDate: transactionData.dueDate ? localDateToISOString(transactionData.dueDate) : null,
-       scheduledDate: transactionData.scheduledDate ? localDateToISOString(transactionData.scheduledDate) : null
-     };
+// Processar transação recorrente
+let recurrenceData = {};
+if (transactionData.isRecurrent && transactionData.installments > 1) {
+ const recurrenceId = generateId();
+ const installmentAmount = parseFloat(transactionData.amount) / transactionData.installments;
+ 
+ // Criação da primeira parcela
+ recurrenceData = {
+   isRecurrent: true,
+   recurrenceId,
+   installments: transactionData.installments,
+   installmentNumber: 1,
+   amount: installmentAmount.toFixed(2)
+ };
+ 
+ // Atualizar o valor da transação para refletir a parcela
+ transactionData.amount = installmentAmount.toFixed(2);
+ 
+ // Criar parcelas futuras
+ const batch = db.batch();
+ 
+ // Data de base para parcelas
+ const baseDate = transactionData.date; // Já é um objeto Date
+ let dueDate = transactionData.dueDate ? transactionData.dueDate : null; // Já é um objeto Date ou null
+ 
+ // Data de base para as próximas parcelas
+ for (let i = 1; i < transactionData.installments; i++) {
+   // Avançar para o próximo mês
+   const nextDate = new Date(baseDate);
+   nextDate.setMonth(nextDate.getMonth() + i);
+   
+   // Avançar data de vencimento, se houver
+   let nextDueDate = null;
+   if (dueDate) {
+     nextDueDate = new Date(dueDate);
+     nextDueDate.setMonth(nextDueDate.getMonth() + i);
+   }
+   
+   const installmentData = {
+     ...transactionData,
+     ...creditCardData,
+     categoryName: category ? category.name : null,
+     categoryIcon: category ? category.icon : null,
+     paymentMethodName: paymentMethod ? paymentMethod.name : null,
+     paymentMethodIcon: paymentMethod ? paymentMethod.icon : null,
+     createdAt: now.toISOString(),
+     isRecurrent: true,
+     recurrenceId,
+     installments: transactionData.installments,
+     installmentNumber: i + 1,
+     amount: installmentAmount.toFixed(2),
+     date: localDateToISOString(nextDate),
+     dueDate: nextDueDate ? localDateToISOString(nextDueDate) : null
+   };
+   
+   // Remover ID, pois será gerado pelo Firestore
+   delete installmentData.id;
+   
+   // Adicionar à batch
+   const docRef = db.collection('transactions').doc();
+   batch.set(docRef, installmentData);
+ }
+ 
+ // Executar batch
+ await batch.commit();
+}
+
+// Criar objeto final da transação
+const transaction = {
+ ...transactionData,
+ ...creditCardData,
+ ...recurrenceData,
+ categoryName: category ? category.name : null,
+ categoryIcon: category ? category.icon : null,
+ paymentMethodName: paymentMethod ? paymentMethod.name : null,
+ paymentMethodIcon: paymentMethod ? paymentMethod.icon : null,
+ createdAt: localDateToISOString(now),
+ date: localDateToISOString(transactionData.date),
+ dueDate: transactionData.dueDate ? localDateToISOString(transactionData.dueDate) : null,
+ scheduledDate: transactionData.scheduledDate ? localDateToISOString(transactionData.scheduledDate) : null
+};
      
      // Salvar no Firestore
      const docRef = await db.collection('transactions').add(transaction);

@@ -3482,19 +3482,15 @@ daysLabels.forEach(day => {
     combinedInvoice[day] += cardInvoiceForDay;
   });
 });
-       
-       // Para dias futuros, usar o valor atual
-       return card.currentInvoice || 0;
-     });
-     
-     // Linha do limite constante
-     const limitLine = daysLabels.map(() => card.limit);
-     
-     // Atualizar dados do gráfico de área
-     areaChart.data.labels = daysLabels;
-     areaChart.data.datasets[0].data = invoiceByDay;
-     areaChart.data.datasets[1].data = limitLine;
-     areaChart.update();
+
+// Linha do limite constante combinado
+const limitLine = daysLabels.map(() => combinedLimit);
+
+// Atualizar dados do gráfico de área
+areaChart.data.labels = daysLabels;
+areaChart.data.datasets[0].data = daysLabels.map(day => combinedInvoice[day]);
+areaChart.data.datasets[1].data = limitLine;
+areaChart.update();
    } catch (error) {
      console.error('Erro ao atualizar gráficos:', error);
    }

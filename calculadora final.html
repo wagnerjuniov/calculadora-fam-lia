@@ -3895,81 +3895,89 @@ areaChart.update();
        }
      }
      
-     // Processar transação recorrente
-     let recurrenceData = {};
-     if (transactionData.isRecurrent && transactionData.installments > 1) {
-       const recurrenceId = generateId();
-       
-       // Criação da primeira parcela
-       recurrenceData = {
-         isRecurrent: true,
-         recurrenceId,
-         installments: transactionData.installments,
-         installmentNumber: 1
-       };
-       
-       // Criar parcelas futuras
-       const batch = db.batch();
-       
-       // Data de base para parcelas
-       const baseDate = transactionData.date; // Já é um objeto Date
-       let dueDate = transactionData.dueDate ? transactionData.dueDate : null; // Já é um objeto Date ou null
-       
-       // Data de base para as próximas parcelas
-       for (let i = 1; i < transactionData.installments; i++) {
-         // Avançar para o próximo mês
-         const nextDate = new Date(baseDate);
-         nextDate.setMonth(nextDate.getMonth() + i);
-         
-         // Avançar data de vencimento, se houver
-         let nextDueDate = null;
-         if (dueDate) {
-           nextDueDate = new Date(dueDate);
-           nextDueDate.setMonth(nextDueDate.getMonth() + i);
-         }
-         
-         const installmentData = {
-           ...transactionData,
-           ...creditCardData,
-           categoryName: category ? category.name : null,
-           categoryIcon: category ? category.icon : null,
-           paymentMethodName: paymentMethod ? paymentMethod.name : null,
-           paymentMethodIcon: paymentMethod ? paymentMethod.icon : null,
-           createdAt: now.toISOString(),
-           isRecurrent: true,
-           recurrenceId,
-           installments: transactionData.installments,
-           installmentNumber: i + 1,
-           date: localDateToISOString(nextDate),
-           dueDate: nextDueDate ? localDateToISOString(nextDueDate) : null
-         };
-         
-         // Remover ID, pois será gerado pelo Firestore
-         delete installmentData.id;
-         
-         // Adicionar à batch
-         const docRef = db.collection('transactions').doc();
-         batch.set(docRef, installmentData);
-       }
-       
-       // Executar batch
-       await batch.commit();
+// Processar transação recorrente
+ let recurrenceData = {};
+ if (transactionData.isRecurrent && transactionData.installments > 1) {
+   const recurrenceId = generateId();
+   
+   // Criação da primeira parcela
+   recurrenceData = {
+     isRecurrent: true,
+     recurrenceId,
+     installments: transactionData.installments,
+     installmentNumber: 1
+   };
+   
+   // Criar parcelas futuras
+   const batch = db.batch();
+   const futureParcels = []; // Array para armazenar parcelas futuras
+   
+   // Data de base para parcelas
+   const baseDate = transactionData.date; // Já é um objeto Date
+   let dueDate = transactionData.dueDate ? transactionData.dueDate : null; // Já é um objeto Date ou null
+   
+   // Data de base para as próximas parcelas
+   for (let i = 1; i < transactionData.installments; i++) {
+     // Avançar para o próximo mês
+     const nextDate = new Date(baseDate);
+     nextDate.setMonth(nextDate.getMonth() + i);
+     
+     // Avançar data de vencimento, se houver
+     let nextDueDate = null;
+     if (dueDate) {
+       nextDueDate = new Date(dueDate);
+       nextDueDate.setMonth(nextDueDate.getMonth() + i);
      }
      
-     // Criar objeto final da transação
-     const transaction = {
+     const installmentData = {
        ...transactionData,
        ...creditCardData,
-       ...recurrenceData,
        categoryName: category ? category.name : null,
        categoryIcon: category ? category.icon : null,
        paymentMethodName: paymentMethod ? paymentMethod.name : null,
        paymentMethodIcon: paymentMethod ? paymentMethod.icon : null,
-       createdAt: localDateToISOString(now),
-       date: localDateToISOString(transactionData.date),
-       dueDate: transactionData.dueDate ? localDateToISOString(transactionData.dueDate) : null,
-       scheduledDate: transactionData.scheduledDate ? localDateToISOString(transactionData.scheduledDate) : null
+       createdAt: now.toISOString(),
+       isRecurrent: true,
+       recurrenceId,
+       installments: transactionData.installments,
+       installmentNumber: i + 1,
+       date: localDateToISOString(nextDate),
+       dueDate: nextDueDate ? localDateToISOString(nextDueDate) : null,
+       type: transactionData.type
      };
+     
+     // Remover ID, pois será gerado pelo Firestore
+     delete installmentData.id;
+     
+     // Adicionar à batch
+     const docRef = db.collection('transactions').doc();
+     batch.set(docRef, installmentData);
+     
+     // Armazenar para adicionar ao estado local posteriormente
+     futureParcels.push({...installmentData, id: docRef.id});
+   }
+   
+   // Executar batch
+   await batch.commit();
+   
+   // Adicionar parcelas futuras ao estado local
+   state.transactions.push(...futureParcels);
+ }
+
+ // Criar objeto final da transação
+ const transaction = {
+   ...transactionData,
+   ...creditCardData,
+   ...recurrenceData,
+   categoryName: category ? category.name : null,
+   categoryIcon: category ? category.icon : null,
+   paymentMethodName: paymentMethod ? paymentMethod.name : null,
+   paymentMethodIcon: paymentMethod ? paymentMethod.icon : null,
+   createdAt: localDateToISOString(now),
+   date: localDateToISOString(transactionData.date),
+   dueDate: transactionData.dueDate ? localDateToISOString(transactionData.dueDate) : null,
+   scheduledDate: transactionData.scheduledDate ? localDateToISOString(transactionData.scheduledDate) : null
+ };
      
      // Salvar no Firestore
      const docRef = await db.collection('transactions').add(transaction);

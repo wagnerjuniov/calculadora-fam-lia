@@ -2793,34 +2793,23 @@
  
 // Filtrar transações por mês/ano - CORRIGIDO
  const filterTransactionsByMonth = () => {
-   state.filteredTransactions = state.transactions.filter(transaction => {
-     const date = parseLocalDateString(transaction.date);
-     return date && date.getMonth() === state.month && date.getFullYear() === state.year;
-   });
-   
-   // Ordenar por data (mais recentes primeiro)
-   state.filteredTransactions.sort((a, b) => {
-     const dateA = parseLocalDateString(a.date);
-     const dateB = parseLocalDateString(b.date);
-     return dateB - dateA;
-   });
-   
-   // Atualizar a UI
-   updateTransactionsTable();
-   updateKPIs();
-   updateCharts();
+  state.filteredTransactions = state.transactions.filter(transaction => {
+    const date = parseLocalDateString(transaction.date);
+    return date && date.getMonth() === state.month && date.getFullYear() === state.year;
+  });
   
-   // Verificação de debug (opcional)
-   console.log(`Mês/ano atual: ${state.month}/${state.year}`);
-   console.log(`Total de transações filtradas: ${state.filteredTransactions.length}`);
-   console.log(`Total de transações no sistema: ${state.transactions.length}`);
-   // Verificar parcelas futuras
-   const futureInstallments = state.transactions.filter(t => 
-     t.isRecurrent && t.installmentNumber > 1
-   );
-   console.log(`Total de parcelas futuras: ${futureInstallments.length}`);
-   console.log('Amostra de parcelas futuras:', futureInstallments.slice(0, 2));
- };
+  // Ordenar por data (mais recentes primeiro)
+  state.filteredTransactions.sort((a, b) => {
+    const dateA = parseLocalDateString(a.date);
+    const dateB = parseLocalDateString(b.date);
+    return dateB - dateA;
+  });
+  
+  // Atualizar a UI
+  updateTransactionsTable();
+  updateKPIs();
+  updateCharts();
+};
 
  // Atualizar título do mês/ano
  const updateMonthYearTitle = () => {

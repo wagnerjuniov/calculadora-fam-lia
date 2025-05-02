@@ -2818,14 +2818,6 @@
      'Maio', 'Junho', 'Julho', 'Agosto',
      'Setembro', 'Outubro', 'Novembro', 'Dezembro'
    ];
-
- // Atualizar título do mês/ano
- const updateMonthYearTitle = () => {
-   const monthNames = [
-     'Janeiro', 'Fevereiro', 'Março', 'Abril',
-     'Maio', 'Junho', 'Julho', 'Agosto',
-     'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-   ];
    
    // Se houver um elemento para o título
    const titleElement = $('#monthYearTitle');
@@ -2834,39 +2826,39 @@
    }
  };
  
-// Atualizar KPIs (indicadores chave)
-  const updateKPIs = () => {
-    // Cálculos para o mês atual filtrado
-    const totalIncome = state.filteredTransactions
-      .filter(t => t.type === 'income')
-      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-    
-    const totalExpense = state.filteredTransactions
-      .filter(t => t.type === 'expense')
-      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-    
-    const incomeReceived = state.filteredTransactions
-      .filter(t => t.type === 'income' && t.status === 'received')
-      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-    
-    const incomePending = state.filteredTransactions
-      .filter(t => t.type === 'income' && t.status !== 'received')
-      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-    
-    const expensePaid = state.filteredTransactions
-      .filter(t => t.type === 'expense' && t.status === 'paid')
-      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-    
-    const expensePending = state.filteredTransactions
-      .filter(t => t.type === 'expense' && t.status !== 'paid')
-      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-    
-    const balance = incomeReceived - expensePaid;
-    
-    // Atualizar elementos da UI
-    if ($('#incomeValue')) $('#incomeValue').textContent = formatCurrency(totalIncome);
-    if ($('#expenseValue')) $('#expenseValue').textContent = formatCurrency(totalExpense);
-    if ($('#balanceValue')) $('#balanceValue').textContent = formatCurrency(balance);
+ // Atualizar KPIs (indicadores chave)
+ const updateKPIs = () => {
+   // Cálculos para o mês atual filtrado
+   const totalIncome = state.filteredTransactions
+     .filter(t => t.type === 'income')
+     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+   
+   const totalExpense = state.filteredTransactions
+     .filter(t => t.type === 'expense')
+     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+   
+   const incomeReceived = state.filteredTransactions
+     .filter(t => t.type === 'income' && t.status === 'received')
+     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+   
+   const incomePending = state.filteredTransactions
+     .filter(t => t.type === 'income' && t.status !== 'received')
+     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+   
+   const expensePaid = state.filteredTransactions
+     .filter(t => t.type === 'expense' && t.status === 'paid')
+     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+   
+   const expensePending = state.filteredTransactions
+     .filter(t => t.type === 'expense' && t.status !== 'paid')
+     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+   
+   const balance = incomeReceived - expensePaid;
+   
+   // Atualizar elementos da UI
+   if ($('#incomeValue')) $('#incomeValue').textContent = formatCurrency(totalIncome);
+   if ($('#expenseValue')) $('#expenseValue').textContent = formatCurrency(totalExpense);
+   if ($('#balanceValue')) $('#balanceValue').textContent = formatCurrency(balance);
     
     if ($('#incomeReceivedValue')) $('#incomeReceivedValue').textContent = `${formatCurrency(incomeReceived)} recebidos`;
     if ($('#incomePendingValue')) $('#incomePendingValue').textContent = `${formatCurrency(incomePending)} pendentes`;

@@ -2826,82 +2826,122 @@
    }
  };
  
- // Atualizar KPIs (indicadores chave)
- const updateKPIs = () => {
-   // Cálculos para o mês atual filtrado
-   const totalIncome = state.filteredTransactions
-     .filter(t => t.type === 'income')
-     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-   
-   const totalExpense = state.filteredTransactions
-     .filter(t => t.type === 'expense')
-     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-   
-   const incomeReceived = state.filteredTransactions
-     .filter(t => t.type === 'income' && t.status === 'received')
-     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-   
-   const incomePending = state.filteredTransactions
-     .filter(t => t.type === 'income' && t.status !== 'received')
-     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-   
-   const expensePaid = state.filteredTransactions
-     .filter(t => t.type === 'expense' && t.status === 'paid')
-     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-   
-   const expensePending = state.filteredTransactions
-     .filter(t => t.type === 'expense' && t.status !== 'paid')
-     .reduce((sum, t) => sum + parseFloat(t.amount), 0);
-   
-   const balance = incomeReceived - expensePaid;
-   
-   // Atualizar elementos da UI
-   if ($('#incomeValue')) $('#incomeValue').textContent = formatCurrency(totalIncome);
-   if ($('#expenseValue')) $('#expenseValue').textContent = formatCurrency(totalExpense);
-   if ($('#balanceValue')) $('#balanceValue').textContent = formatCurrency(balance);
-   
-   if ($('#incomeReceivedValue')) $('#incomeReceivedValue').textContent = `${formatCurrency(incomeReceived)} recebidos`;
-   if ($('#incomePendingValue')) $('#incomePendingValue').textContent = `${formatCurrency(incomePending)} pendentes`;
-   
-   if ($('#expensePaidValue')) $('#expensePaidValue').textContent = `${formatCurrency(expensePaid)} pagos`;
-   if ($('#expensePendingValue')) $('#expensePendingValue').textContent = `${formatCurrency(expensePending)} pendentes`;
-   
-   // Se houver cartões, mostrar informações da fatura atual
-   if (state.cards.length > 0) {
-     // Usar o primeiro cartão para o KPI
-     const card = state.cards[0];
-     
-     if ($('#invoiceValue')) $('#invoiceValue').textContent = formatCurrency(card.currentInvoice || 0);
-     
-     // Calcular data de vencimento
-     const today = new Date();
-     let dueDate = new Date(today.getFullYear(), today.getMonth(), card.dueDay);
-     
-     // Se hoje é após o dia de vencimento, a data de vencimento será no próximo mês
-     if (today.getDate() > card.dueDay) {
-       dueDate.setMonth(dueDate.getMonth() + 1);
-     }
-     
-     if ($('#invoiceDueDate')) $('#invoiceDueDate').textContent = formatDate(dueDate);
-   } else {
-     if ($('#invoiceValue')) $('#invoiceValue').textContent = formatCurrency(0);
-     if ($('#invoiceDueDate')) $('#invoiceDueDate').textContent = '--/--/----';
-   }
- };
+// Atualizar KPIs (indicadores chave)
+  const updateKPIs = () => {
+    // Cálculos para o mês atual filtrado
+    const totalIncome = state.filteredTransactions
+      .filter(t => t.type === 'income')
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    
+    const totalExpense = state.filteredTransactions
+      .filter(t => t.type === 'expense')
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    
+    const incomeReceived = state.filteredTransactions
+      .filter(t => t.type === 'income' && t.status === 'received')
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    
+    const incomePending = state.filteredTransactions
+      .filter(t => t.type === 'income' && t.status !== 'received')
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    
+    const expensePaid = state.filteredTransactions
+      .filter(t => t.type === 'expense' && t.status === 'paid')
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    
+    const expensePending = state.filteredTransactions
+      .filter(t => t.type === 'expense' && t.status !== 'paid')
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    
+    const balance = incomeReceived - expensePaid;
+    
+    // Atualizar elementos da UI
+    if ($('#incomeValue')) $('#incomeValue').textContent = formatCurrency(totalIncome);
+    if ($('#expenseValue')) $('#expenseValue').textContent = formatCurrency(totalExpense);
+    if ($('#balanceValue')) $('#balanceValue').textContent = formatCurrency(balance);
+    
+    if ($('#incomeReceivedValue')) $('#incomeReceivedValue').textContent = `${formatCurrency(incomeReceived)} recebidos`;
+    if ($('#incomePendingValue')) $('#incomePendingValue').textContent = `${formatCurrency(incomePending)} pendentes`;
+    
+    if ($('#expensePaidValue')) $('#expensePaidValue').textContent = `${formatCurrency(expensePaid)} pagos`;
+    if ($('#expensePendingValue')) $('#expensePendingValue').textContent = `${formatCurrency(expensePending)} pendentes`;
+    
+    // Se houver cartões, mostrar informações da fatura atual
+    if (state.cards.length > 0) {
+      // Somar a fatura atual de todos os cartões
+      const totalInvoice = state.cards.reduce((sum, card) => sum + (card.currentInvoice || 0), 0);
+      
+      if ($('#invoiceValue')) $('#invoiceValue').textContent = formatCurrency(totalInvoice);
+      
+      // Usar o primeiro cartão para a data de vencimento (ou poderia ser o mais próximo)
+      const card = state.cards[0];
+      const today = new Date();
+      let dueDate = new Date(today.getFullYear(), today.getMonth(), card.dueDay);
+      
+      // Se hoje é após o dia de vencimento, a data de vencimento será no próximo mês
+      if (today.getDate() > card.dueDay) {
+        dueDate.setMonth(dueDate.getMonth() + 1);
+      }
+      
+      if ($('#invoiceDueDate')) $('#invoiceDueDate').textContent = formatDate(dueDate);
+    } else {
+      if ($('#invoiceValue')) $('#invoiceValue').textContent = formatCurrency(0);
+      if ($('#invoiceDueDate')) $('#invoiceDueDate').textContent = '--/--/----';
+    }
+  };
 
- // Atualizar a lista de cartões
- const updateCardsList = () => {
-   const cardsList = $('#cardsList');
-   if (!cardsList) return;
-   
-   cardsList.innerHTML = '';
-   
-   if (state.cards.length === 0) {
-     cardsList.innerHTML = '<p style="text-align: center; padding: var(--spacing-md);">Nenhum cartão cadastrado.</p>';
-     return;
-   }
-   
-   state.cards.forEach(card => {
+// Atualizar a lista de cartões
+  const updateCardsList = () => {
+    const cardsList = $('#cardsList');
+    if (!cardsList) return;
+    
+    cardsList.innerHTML = '';
+    
+    if (state.cards.length === 0) {
+      cardsList.innerHTML = '<p style="text-align: center; padding: var(--spacing-md);">Nenhum cartão cadastrado.</p>';
+      return;
+    }
+    
+    // Adicionar sumário de todos os cartões se houver mais de um
+    if (state.cards.length > 1) {
+      const totalLimit = state.cards.reduce((sum, card) => sum + card.limit, 0);
+      const totalAvailable = state.cards.reduce((sum, card) => sum + card.availableLimit, 0);
+      const totalInvoice = state.cards.reduce((sum, card) => sum + (card.currentInvoice || 0), 0);
+      const limitPercentage = totalLimit > 0 ? ((totalLimit - totalAvailable) / totalLimit) * 100 : 0;
+      
+      const summaryElement = document.createElement('div');
+      summaryElement.className = 'card';
+      summaryElement.style.marginBottom = 'var(--spacing-xl)';
+      summaryElement.style.backgroundColor = 'var(--color-surface-variant)';
+      summaryElement.style.borderLeft = '4px solid var(--color-primary)';
+      
+      summaryElement.innerHTML = `
+        <h3 style="margin-bottom: var(--spacing-md);">Resumo de Todos os Cartões</h3>
+        
+        <div style="margin-bottom: var(--spacing-xs);">
+          <div style="display: flex; justify-content: space-between;">
+            <span>Limite Total:</span>
+            <strong>${formatCurrency(totalLimit)}</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Limite Disponível:</span>
+            <strong>${formatCurrency(totalAvailable)}</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: var(--spacing-xs);">
+            <span>Fatura Total:</span>
+            <strong>${formatCurrency(totalInvoice)}</strong>
+          </div>
+        </div>
+        
+        <div class="commitment-progress" style="margin-top: var(--spacing-md);">
+          <div class="commitment-progress-bar" style="width: ${limitPercentage}%; background-color: ${limitPercentage > 70 ? 'var(--color-error)' : 'var(--color-primary)'}"></div>
+        </div>
+      `;
+      
+      cardsList.appendChild(summaryElement);
+    }
+    
+    state.cards.forEach(card => {
      const cardElement = document.createElement('div');
      cardElement.className = 'card';
      cardElement.style.marginBottom = 'var(--spacing-md)';
@@ -3413,7 +3453,8 @@
      }
      
      // Usar o primeiro cartão para o gráfico
-     const card = state.cards[0];
+       const combinedInvoice = {};
+       const combinedLimit = state.cards.reduce((sum, card) => sum + card.limit, 0);
      
      // Obter os dias do mês atual
      const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();

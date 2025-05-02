@@ -3898,23 +3898,23 @@ areaChart.update();
 // Processar transação recorrente
 let recurrenceData = {};
 if (transactionData.isRecurrent && transactionData.installments > 1) {
- const recurrenceId = generateId();
- const installmentAmount = parseFloat(transactionData.amount) / transactionData.installments;
- 
- // Criação da primeira parcela
- recurrenceData = {
-   isRecurrent: true,
-   recurrenceId,
-   installments: transactionData.installments,
-   installmentNumber: 1,
-   amount: installmentAmount.toFixed(2)
- };
- 
- // Atualizar o valor da transação para refletir a parcela
- transactionData.amount = installmentAmount.toFixed(2);
- 
- // Criar parcelas futuras
- const batch = db.batch();
+  const recurrenceId = generateId();
+  const installmentAmount = parseFloat(transactionData.amount) / transactionData.installments;
+  
+  // Criação da primeira parcela
+  recurrenceData = {
+    isRecurrent: true,
+    recurrenceId,
+    installments: transactionData.installments,
+    installmentNumber: 1,
+    amount: installmentAmount.toFixed(2)
+  };
+  
+  // Atualizar o valor da transação para refletir a parcela
+  transactionData.amount = installmentAmount.toFixed(2);
+  
+  // Criar parcelas futuras
+  const batch = db.batch();
  
  // Data de base para parcelas
  const baseDate = transactionData.date; // Já é um objeto Date
@@ -3933,22 +3933,22 @@ if (transactionData.isRecurrent && transactionData.installments > 1) {
      nextDueDate.setMonth(nextDueDate.getMonth() + i);
    }
    
-   const installmentData = {
-     ...transactionData,
-     ...creditCardData,
-     categoryName: category ? category.name : null,
-     categoryIcon: category ? category.icon : null,
-     paymentMethodName: paymentMethod ? paymentMethod.name : null,
-     paymentMethodIcon: paymentMethod ? paymentMethod.icon : null,
-     createdAt: now.toISOString(),
-     isRecurrent: true,
-     recurrenceId,
-     installments: transactionData.installments,
-     installmentNumber: i + 1,
-     amount: installmentAmount.toFixed(2),
-     date: localDateToISOString(nextDate),
-     dueDate: nextDueDate ? localDateToISOString(nextDueDate) : null
-   };
+const installmentData = {
+  ...transactionData,
+  ...creditCardData,
+  categoryName: category ? category.name : null,
+  categoryIcon: category ? category.icon : null,
+  paymentMethodName: paymentMethod ? paymentMethod.name : null,
+  paymentMethodIcon: paymentMethod ? paymentMethod.icon : null,
+  createdAt: now.toISOString(),
+  isRecurrent: true,
+  recurrenceId,
+  installments: transactionData.installments,
+  installmentNumber: i + 1,
+  amount: installmentAmount.toFixed(2),
+  date: localDateToISOString(nextDate),
+  dueDate: nextDueDate ? localDateToISOString(nextDueDate) : null
+};
    
    // Remover ID, pois será gerado pelo Firestore
    delete installmentData.id;

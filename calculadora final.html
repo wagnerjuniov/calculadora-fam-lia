@@ -1,52 +1,85 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light"> <!-- Define o tema inicial -->
+<html lang="pt-BR" data-theme="dark"> <!-- Começa com tema escuro como padrão -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Calculadora da Família - Preview Tema Apple">
-  <title>Calculadora da Família - Preview Tema</title>
+  <meta name="description" content="Calculadora da Família - Preview Visual Estilo Apple">
+  <title>Calculadora da Família - Preview</title>
   
-  <!-- Fonte Inter via Google Fonts (Alternativa próxima à San Francisco) -->
+  <!-- Fonte Inter via Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- ===== INÍCIO: BLOCO 1 - CSS Essencial (Estilo Apple) ===== -->
   <style>
-    /* Design-tokens em :root (Tema Claro por padrão) */
+    /* Design-tokens :root (Tema Claro - será sobrescrito pelo [data-theme="dark"]) */
     :root {
       /* Cores Neutras (Light Mode) */
-      --color-background: #ffffff; /* Branco puro */
-      --color-surface-variant: #f0f0f0; /* Cinza muito claro para botões/elementos sutis */
-      --color-on-surface: #1d1d1f; /* Preto/Cinza escuro para texto principal */
-      --color-on-surface-variant: #6e6e73; /* Cinza médio para texto secundário/ícones */
-      --color-outline: #d2d2d7; /* Cinza claro para bordas sutis (se necessário) */
+      --color-background: #ffffff;
+      --color-surface: #f5f5f7; /* Fundo de cards */
+      --color-surface-variant: #e8e8ed; /* Fundo sutil (botão tema) */
+      --color-on-surface: #1d1d1f; /* Texto principal */
+      --color-on-surface-variant: #6e6e73; /* Texto secundário/ícones */
+      --color-outline: #d2d2d7; /* Bordas sutis */
+      
+      /* Cores Semânticas */
+      --color-primary: #007aff; /* Azul Apple */
+      --color-on-primary: #ffffff;
+      --color-success: #34c759; /* Verde Apple */
+      --color-error: #ff3b30; /* Vermelho Apple */
+      
+      /* Cores Indicadores (Exemplo KPI) */
+      --color-kpi-balance: var(--color-primary);
+      --color-kpi-income: var(--color-success);
+      --color-kpi-expense: var(--color-error);
       
       /* Tipografia */
-      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Inter como fallback, -apple-system prioriza San Francisco */
-      --font-size-md: 1rem; /* 16px ou 17px é comum na Apple */
-      --font-size-xl: 1.75rem; /* Tamanho para H1 (ex: 28px) */
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      --font-size-xs: 0.75rem;  /* 12px */
+      --font-size-sm: 0.875rem; /* 14px */
+      --font-size-md: 1.0625rem;/* 17px (Comum no iOS) */
+      --font-size-lg: 1.25rem;  /* 20px */
+      --font-size-xl: 1.75rem;  /* 28px */
+      --font-size-2xl: 2.125rem; /* 34px (Título Grande) */
       --font-weight-regular: 400;
-      --font-weight-semibold: 600; /* Usado no H1 */
+      --font-weight-medium: 500;
+      --font-weight-semibold: 600;
+      --font-weight-bold: 700;
       
       /* Espaçamento */
-      --spacing-md: 1rem; /* 16px */
-      --spacing-xl: 2rem; /* 32px */
+      --spacing-xs: 0.5rem;  /* 8px */
+      --spacing-sm: 0.75rem; /* 12px */
+      --spacing-md: 1rem;    /* 16px */
+      --spacing-lg: 1.5rem;  /* 24px */
+      --spacing-xl: 2rem;    /* 32px */
+      --spacing-2xl: 3rem;   /* 48px */
       
       /* Bordas e Raios */
-      --radius-full: 9999px; /* Para botões circulares */
+      --radius-md: 0.75rem; /* 12px */
+      --radius-lg: 1rem;    /* 16px */
+      --radius-full: 9999px;
+      
+      /* Sombras */
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04); /* Sombra bem sutil */
+      --shadow-md: 0 3px 5px rgba(0, 0, 0, 0.06); /* Sombra um pouco mais presente */
       
       /* Animações */
-      --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Transição suave padrão */
+      --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     /* Tema Escuro */
     [data-theme="dark"] {
-      --color-background: #000000; /* Preto absoluto */
-      --color-surface-variant: #333333; /* Cinza escuro para botões/elementos */
-      --color-on-surface: #ffffff; /* Branco para texto principal */
-      --color-on-surface-variant: #8e8e93; /* Cinza claro para texto secundário/ícones */
-      --color-outline: #38383a; /* Cinza escuro para bordas sutis */
+      --color-background: #000000;
+      --color-surface: #1c1c1e; /* Cinza escuro para cards */
+      --color-surface-variant: #333333; /* Cinza para botão tema */
+      --color-on-surface: #ffffff; /* Texto branco */
+      --color-on-surface-variant: #8e8e93; /* Cinza claro para texto secundário */
+      --color-outline: #38383a; /* Borda escura */
+      
+      /* Ajuste de sombras para modo escuro (podem ser mais sutis ou diferentes) */
+      --shadow-sm: 0 1px 1px rgba(255, 255, 255, 0.05);
+      --shadow-md: 0 3px 5px rgba(0, 0, 0, 0.1); /* Sombra pode ser mais escura */
     }
     
     /* Reset Básico */
@@ -56,73 +89,131 @@
       padding: 0;
     }
     
-    html, body {
-      height: 100%;
+    html {
+      font-size: 100%; /* Garante base consistente */
+    }
+
+    body {
+      min-height: 100vh; /* Garante altura mínima */
       font-family: var(--font-family);
       background-color: var(--color-background);
       color: var(--color-on-surface);
       font-size: var(--font-size-md);
-      line-height: 1.5; /* Espaçamento entre linhas */
+      line-height: 1.45; /* Espaçamento Apple */
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       transition: background-color var(--transition-normal), color var(--transition-normal);
-      display: flex; /* Para centralizar conteúdo */
-      align-items: center;
-      justify-content: center;
-      flex-direction: column; /* Empilha título e botão */
     }
 
-    /* Container Simples (Opcional, ajuda a organizar) */
+    /* Layout Principal */
     .container {
-       text-align: center;
-       padding: var(--spacing-xl);
+      width: 100%;
+      max-width: 1100px; /* Largura comum em layouts Apple */
+      margin: 0 auto;
+      padding: var(--spacing-lg) var(--spacing-md); /* Mais padding vertical */
+    }
+  
+    /* Header Simples */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-sm) 0; /* Padding menor no header */
+      margin-bottom: var(--spacing-xl);
+      /* background-color: var(--color-background); /* Pode ser fixo se necessário */
+      /* position: sticky; top: 0; z-index: 100; */ /* Desativado para preview simples */
     }
 
-    /* Estilo do Título (H1) */
-    h1 {
-      font-size: var(--font-size-xl);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-on-surface); /* Usa a cor principal do texto do tema */
-      margin-bottom: var(--spacing-xl); /* Espaço abaixo do título */
-      transition: color var(--transition-normal); /* Anima a troca de cor */
+    .header h1 {
+        font-size: var(--font-size-2xl); /* Título grande */
+        font-weight: var(--font-weight-bold);
+        color: var(--color-on-surface);
+        margin: 0; /* Remove margem padrão do h1 */
+        transition: color var(--transition-normal);
     }
     
-    /* Estilo do Botão de Tema */
+    /* Botão de Tema (Ajustado) */
     .theme-toggle {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 44px; /* Tamanho comum para botões de toque */
-      height: 44px;
-      border-radius: var(--radius-full); /* Totalmente redondo */
+      width: 36px; /* Tamanho menor, mais discreto */
+      height: 36px;
+      border-radius: var(--radius-full);
       cursor: pointer;
-      background-color: var(--color-surface-variant); /* Fundo sutil */
-      border: 1px solid var(--color-outline); /* Borda muito sutil */
-      transition: background-color var(--transition-normal), border-color var(--transition-normal);
+      background-color: var(--color-surface-variant);
+      border: none; /* Sem borda explícita */
+      transition: background-color var(--transition-normal);
+      flex-shrink: 0; /* Impede que encolha */
     }
-
     .theme-toggle:hover {
-        filter: brightness(0.9); /* Escurece um pouco no hover */
+        filter: brightness(0.9);
+    }
+    .theme-toggle svg {
+      width: 18px;
+      height: 18px;
+      color: var(--color-on-surface-variant);
+      transition: color var(--transition-normal);
+    }
+    [data-theme="light"] .theme-toggle .icon-moon { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+
+    /* Grid para os Cards de KPI */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Ajusta tamanho mínimo */
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-xl);
     }
     
-    .theme-toggle .icon-sun,
-    .theme-toggle .icon-moon {
-      width: 22px; /* Tamanho do ícone */
-      height: 22px;
-      color: var(--color-on-surface-variant); /* Cor do ícone */
+    /* Estilo dos Cards de KPI (Estilo Apple Wallet/App Store) */
+    .kpi-card {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-lg); /* Cantos mais arredondados */
+      padding: var(--spacing-md) var(--spacing-lg); /* Mais padding interno */
+      box-shadow: var(--shadow-sm); /* Sombra sutil */
+      transition: background-color var(--transition-normal), box-shadow var(--transition-normal);
+      border: 1px solid var(--color-outline); /* Borda sutil opcional */
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs); /* Espaço entre elementos internos */
+    }
+
+    /* Linha colorida sutil no topo (opcional, como no App Bolsa) */
+    .kpi-card::before {
+        content: '';
+        display: block;
+        height: 4px; /* Altura da linha */
+        margin: calc(-1 * var(--spacing-md)) calc(-1 * var(--spacing-lg)) var(--spacing-sm); /* Posiciona acima do padding */
+        border-top-left-radius: var(--radius-lg); /* Acompanha o raio do card */
+        border-top-right-radius: var(--radius-lg);
+    }
+    .kpi-balance::before { background-color: var(--color-kpi-balance); }
+    .kpi-income::before { background-color: var(--color-kpi-income); }
+    .kpi-expense::before { background-color: var(--color-kpi-expense); }
+    
+    .kpi-title {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-on-surface-variant); /* Cinza secundário */
       transition: color var(--transition-normal);
     }
     
-    /* Esconder o ícone não ativo baseado no tema */
-    [data-theme="light"] .theme-toggle .icon-moon {
-      display: none;
+    .kpi-value {
+      font-size: var(--font-size-xl); /* Valor destacado */
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-on-surface); /* Cor principal */
+      line-height: 1.2; /* Linha mais justa para números */
+      transition: color var(--transition-normal);
     }
     
-    [data-theme="dark"] .theme-toggle .icon-sun {
-      display: none;
+    .kpi-subtitle {
+      font-size: var(--font-size-xs);
+      color: var(--color-on-surface-variant);
+      transition: color var(--transition-normal);
     }
 
-    /* Classe auxiliar para forçar recálculo de cores (se necessário) */
+    /* Classe auxiliar para forçar recálculo de cores */
     [data-recolor] {
       color: var(--color-on-surface);
       transition: color var(--transition-normal);
@@ -145,16 +236,44 @@
 
   <!-- ===== INÍCIO: BLOCO 3 - Conteúdo do Preview ===== -->
   <div class="container">
-    <h1 data-recolor>Calculadora da Família</h1>
+    <!-- Header -->
+    <header class="header">
+      <h1 data-recolor>Visão Geral</h1>
+      <div id="themeToggle" class="theme-toggle" role="button" aria-label="Alternar tema">
+        <svg class="icon-sun"><use href="#icon-sun"></use></svg>
+        <svg class="icon-moon"><use href="#icon-moon"></use></svg>
+      </div>
+    </header>
     
-    <div id="themeToggle" class="theme-toggle" role="button" aria-label="Alternar tema">
-      <svg class="icon-sun" width="22" height="22">
-        <use href="#icon-sun"></use>
-      </svg>
-      <svg class="icon-moon" width="22" height="22">
-        <use href="#icon-moon"></use>
-      </svg>
+    <!-- KPIs de Exemplo -->
+    <div class="kpi-grid">
+      <div class="kpi-card kpi-balance">
+        <div class="kpi-title" data-recolor>Saldo Atual</div>
+        <div class="kpi-value" data-recolor>R$ 1.234,56</div>
+        <div class="kpi-subtitle" data-recolor>Atualizado hoje</div>
+      </div>
+      
+      <div class="kpi-card kpi-income">
+        <div class="kpi-title" data-recolor>Receitas (Mês)</div>
+        <div class="kpi-value" data-recolor>R$ 5.800,00</div>
+        <div class="kpi-subtitle" data-recolor>Previsto: R$ 6.000,00</div>
+      </div>
+      
+      <div class="kpi-card kpi-expense">
+        <div class="kpi-title" data-recolor>Despesas (Mês)</div>
+        <div class="kpi-value" data-recolor>R$ 3.150,75</div>
+        <div class="kpi-subtitle" data-recolor>Meta: R$ 3.500,00</div>
+      </div>
+
+      <div class="kpi-card"> <!-- Card genérico -->
+        <div class="kpi-title" data-recolor>Próxima Fatura</div>
+        <div class="kpi-value" data-recolor>R$ 987,10</div>
+        <div class="kpi-subtitle" data-recolor>Vence em 17/06/2024</div>
+      </div>
     </div>
+
+    <!-- Outras seções podem ser adicionadas aqui para testar mais componentes -->
+
   </div>
   <!-- ===== FIM: BLOCO 3 - Conteúdo do Preview ===== -->
 
@@ -170,25 +289,23 @@
       const newTheme = currentTheme === 'light' ? 'dark' : 'light';
       
       htmlElement.setAttribute('data-theme', newTheme);
-      // Armazenar preferência em localStorage para persistência
-      localStorage.setItem('themePreference', newTheme);
+      localStorage.setItem('themePreference', newTheme); // Salva preferência
 
-      // Força o navegador a recalcular estilos para elementos com data-recolor (opcional, mas bom para garantir transições)
+      // Força recálculo de estilos para elementos marcados (melhora transição)
        document.querySelectorAll('[data-recolor]').forEach(el => {
-           el.style.transition = 'none'; // Desabilita transição temporariamente
-           el.style.color = ''; // Força reavaliação da variável CSS
-           // Força reflow (leitura de propriedade que depende do layout)
+           el.style.transition = 'none'; 
+           el.style.color = ''; 
            void el.offsetWidth; 
-           el.style.transition = ''; // Reabilita a transição
+           el.style.transition = ''; 
        });
     };
     
     // Inicializa o tema ao carregar a página
     const initTheme = () => {
       const savedTheme = localStorage.getItem('themePreference');
-      // Verifica preferência do sistema se não houver tema salvo
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+      // Define o tema escuro como padrão se não houver preferência salva
+      const initialTheme = savedTheme || 'dark'; 
       
       document.documentElement.setAttribute('data-theme', initialTheme);
       

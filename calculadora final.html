@@ -1,248 +1,210 @@
-<!-- ================================================================================================
-     CALCULADORA FINANCEIRA FAMILIAR (LAYOUT “ESTILO APPLE” v2)
-     Copie todo este arquivo para index.html e abra no navegador.
-================================================================================================ -->
-
-<!-- ===== INÍCIO: BLOCO 1 – Estrutura HTML & Metadados ========================================== -->
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="dark">
+<html lang="pt-BR" data-theme="light"> <!-- Define o tema inicial -->
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Calculadora Financeira Familiar</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculadora da Família - Preview Tema Apple">
+  <title>Calculadora da Família - Preview Tema</title>
+  
+  <!-- Fonte Inter via Google Fonts (Alternativa próxima à San Francisco) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- ===== INÍCIO: BLOCO 1 - CSS Essencial (Estilo Apple) ===== -->
+  <style>
+    /* Design-tokens em :root (Tema Claro por padrão) */
+    :root {
+      /* Cores Neutras (Light Mode) */
+      --color-background: #ffffff; /* Branco puro */
+      --color-surface-variant: #f0f0f0; /* Cinza muito claro para botões/elementos sutis */
+      --color-on-surface: #1d1d1f; /* Preto/Cinza escuro para texto principal */
+      --color-on-surface-variant: #6e6e73; /* Cinza médio para texto secundário/ícones */
+      --color-outline: #d2d2d7; /* Cinza claro para bordas sutis (se necessário) */
+      
+      /* Tipografia */
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Inter como fallback, -apple-system prioriza San Francisco */
+      --font-size-md: 1rem; /* 16px ou 17px é comum na Apple */
+      --font-size-xl: 1.75rem; /* Tamanho para H1 (ex: 28px) */
+      --font-weight-regular: 400;
+      --font-weight-semibold: 600; /* Usado no H1 */
+      
+      /* Espaçamento */
+      --spacing-md: 1rem; /* 16px */
+      --spacing-xl: 2rem; /* 32px */
+      
+      /* Bordas e Raios */
+      --radius-full: 9999px; /* Para botões circulares */
+      
+      /* Animações */
+      --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Transição suave padrão */
+    }
+    
+    /* Tema Escuro */
+    [data-theme="dark"] {
+      --color-background: #000000; /* Preto absoluto */
+      --color-surface-variant: #333333; /* Cinza escuro para botões/elementos */
+      --color-on-surface: #ffffff; /* Branco para texto principal */
+      --color-on-surface-variant: #8e8e93; /* Cinza claro para texto secundário/ícones */
+      --color-outline: #38383a; /* Cinza escuro para bordas sutis */
+    }
+    
+    /* Reset Básico */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      height: 100%;
+      font-family: var(--font-family);
+      background-color: var(--color-background);
+      color: var(--color-on-surface);
+      font-size: var(--font-size-md);
+      line-height: 1.5; /* Espaçamento entre linhas */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color var(--transition-normal), color var(--transition-normal);
+      display: flex; /* Para centralizar conteúdo */
+      align-items: center;
+      justify-content: center;
+      flex-direction: column; /* Empilha título e botão */
+    }
 
-  <!-- Chart.js (gráfico rápido) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    /* Container Simples (Opcional, ajuda a organizar) */
+    .container {
+       text-align: center;
+       padding: var(--spacing-xl);
+    }
 
-<!-- ===== INÍCIO: BLOCO 2 – CSS (variáveis, layout, animações) ================================ -->
-<style>
-/* ---------- Variáveis de tema ---------- */
-:root{
-  --font: -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, sans-serif;
-  --radius: 18px; --shadow: 0 4px 12px rgba(0,0,0,.25); --tab-h: 60px;
+    /* Estilo do Título (H1) */
+    h1 {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-on-surface); /* Usa a cor principal do texto do tema */
+      margin-bottom: var(--spacing-xl); /* Espaço abaixo do título */
+      transition: color var(--transition-normal); /* Anima a troca de cor */
+    }
+    
+    /* Estilo do Botão de Tema */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px; /* Tamanho comum para botões de toque */
+      height: 44px;
+      border-radius: var(--radius-full); /* Totalmente redondo */
+      cursor: pointer;
+      background-color: var(--color-surface-variant); /* Fundo sutil */
+      border: 1px solid var(--color-outline); /* Borda muito sutil */
+      transition: background-color var(--transition-normal), border-color var(--transition-normal);
+    }
 
-  /* Light */
-  --cl-bg:#ffffff; --cl-card:#f5f5f7; --cl-text:#1c1c1e; --cl-sub:#6e6e73;
-  --cl-accent:#007aff; --cl-pos:#32d74b; --cl-neg:#ff453a; --cl-border:#d2d2d7;
-  /* Dark */
-  --dk-bg:#000000; --dk-card:#1c1c1e; --dk-text:#f2f2f2; --dk-sub:#8e8e93;
-  --dk-accent:#0a84ff; --dk-pos:#32d74b; --dk-neg:#ff453a; --dk-border:#2c2c2e;
-}
+    .theme-toggle:hover {
+        filter: brightness(0.9); /* Escurece um pouco no hover */
+    }
+    
+    .theme-toggle .icon-sun,
+    .theme-toggle .icon-moon {
+      width: 22px; /* Tamanho do ícone */
+      height: 22px;
+      color: var(--color-on-surface-variant); /* Cor do ícone */
+      transition: color var(--transition-normal);
+    }
+    
+    /* Esconder o ícone não ativo baseado no tema */
+    [data-theme="light"] .theme-toggle .icon-moon {
+      display: none;
+    }
+    
+    [data-theme="dark"] .theme-toggle .icon-sun {
+      display: none;
+    }
 
-/* Tema dinâmico */
-html[data-theme="light"]{
-  --bg:var(--cl-bg); --card:var(--cl-card); --text:var(--cl-text); --sub:var(--cl-sub);
-  --accent:var(--cl-accent); --pos:var(--cl-pos); --neg:var(--cl-neg); --border:var(--cl-border);
-}
-html[data-theme="dark"]{
-  --bg:var(--dk-bg); --card:var(--dk-card); --text:var(--dk-text); --sub:var(--dk-sub);
-  --accent:var(--dk-accent); --pos:var(--dk-pos); --neg:var(--dk-neg); --border:var(--dk-border);
-}
+    /* Classe auxiliar para forçar recálculo de cores (se necessário) */
+    [data-recolor] {
+      color: var(--color-on-surface);
+      transition: color var(--transition-normal);
+    }
+  </style>
+  <!-- ===== FIM: BLOCO 1 - CSS Essencial (Estilo Apple) ===== -->
 
-/* ---------- Reset & base ---------- */
-*{box-sizing:border-box;margin:0;padding:0;}
-body{
-  font-family:var(--font); background:var(--bg); color:var(--text);
-  line-height:1.4; min-height:100vh; display:flex; flex-direction:column;
-  transition:background .4s ease,color .4s ease,opacity .6s ease;
-  padding-bottom:var(--tab-h);
-  opacity:0; /* splash fade‑in */
-}
-h1{font-weight:700;font-size:2rem;}
-button{font-family:inherit;border:none;cursor:pointer;transition:filter .3s;}
-button:hover{filter:brightness(1.1);}
-input,select{font-family:inherit;color:var(--text);background:transparent;border:1px solid var(--border);}
-input::placeholder{color:var(--sub);}
-
-/* ---------- Header ---------- */
-header{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;}
-#themeToggle{
-  inline-size:3rem;block-size:1.5rem;border-radius:var(--radius);
-  background:var(--card);box-shadow:var(--shadow);position:relative;
-}
-#themeToggle::after{
-  content:"☀️"; position:absolute; inset:0; display:flex;justify-content:center;align-items:center;
-  transition:transform .4s;
-}
-html[data-theme="dark"] #themeToggle::after{content:"🌙"; transform:rotate(180deg);}
-
-/* ---------- Cards resumo ---------- */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;padding:0 1.5rem 1rem;}
-.card{
-  background:var(--card);border-radius:var(--radius);padding:1rem;box-shadow:var(--shadow);
-  backdrop-filter:blur(10px); /* efeito vidro */
-}
-.label{font-size:.875rem;color:var(--sub);}
-.value{font-size:1.25rem;font-weight:600;margin-top:.25rem;}
-
-/* ---------- Formulário ---------- */
-form{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin:0 1.5rem 1rem;padding:1rem;}
-.row{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:.75rem;}
-input,select{flex:1 1 150px;padding:.55rem .75rem;border-radius:var(--radius);}
-form button{
-  background:var(--accent);color:#fff;font-weight:600;padding:.55rem 1.25rem;border-radius:var(--radius);
-}
-
-/* ---------- Tabela ---------- */
-table{width:100%;border-collapse:collapse;margin:0 1.5rem 2rem;font-size:.875rem;}
-th,td{padding:.75rem;border-bottom:1px solid var(--card);}
-th{color:var(--sub);font-weight:500;text-align:left;}
-.pos{color:var(--pos);} .neg{color:var(--neg);}
-
-/* ---------- Gráfico ---------- */
-#chartBox{margin:0 1.5rem 2.5rem;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1rem;}
-canvas{max-inline-size:100%;block-size:260px;}
-
-/* ---------- Tab Bar (navegação iOS) ---------- */
-.tabbar{
-  position:fixed;bottom:0;left:0;right:0;height:var(--tab-h);
-  background:rgba(249,249,249,.3); /* translucência genérica */
-  backdrop-filter:blur(20px);display:flex;justify-content:space-around;align-items:center;
-  border-top:1px solid var(--border);
-}
-.tab{display:flex;flex-direction:column;align-items:center;gap:.15rem;color:var(--sub);font-size:.675rem;cursor:pointer;transition:color .25s;}
-.tab .icon{font-size:1.15rem;line-height:1;}
-.tab.active{color:var(--accent);}
-.tab:active{transform:scale(.95);}
-
-/* ---------- Animações ---------- */
-.fade-slide{opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease;}
-.fade-slide.show{opacity:1;transform:none;}
-</style>
-<!-- ===== FIM: BLOCO 2 – CSS ==================================================================== -->
 </head>
-
-<!-- ===== INÍCIO: BLOCO 3 – Corpo & Layout ====================================================== -->
 <body>
-<header>
-  <h1 class="fade-slide">Calculadora Familiar</h1>
-  <button id="themeToggle" aria-label="Alternar tema" class="fade-slide"></button>
-</header>
+  <!-- ===== INÍCIO: BLOCO 2 - SVG Sprite (Apenas Ícones de Tema) ===== -->
+  <svg style="display: none;">
+    <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+    </symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+    </symbol>
+  </svg>
+  <!-- ===== FIM: BLOCO 2 - SVG Sprite (Apenas Ícones de Tema) ===== -->
 
-<section class="cards fade-slide">
-  <div class="card"><span class="label">Saldo&nbsp;Geral</span><span id="saldoGeral" class="value">R$ 0,00</span></div>
-  <div class="card"><span class="label">Receitas</span><span id="totalReceitas" class="value pos">R$ 0,00</span></div>
-  <div class="card"><span class="label">Despesas</span><span id="totalDespesas" class="value neg">R$ 0,00</span></div>
-</section>
-
-<form id="formLancamento" class="fade-slide">
-  <div class="row">
-    <select id="tipo">
-      <option value="receita">Receita</option>
-      <option value="despesa">Despesa</option>
-    </select>
-    <input id="categoria" type="text" placeholder="Categoria (ex.: Salário, Mercado)" required />
-    <input id="valor" type="number" step="0.01" placeholder="Valor (R$)" required />
-    <input id="data" type="date" required />
+  <!-- ===== INÍCIO: BLOCO 3 - Conteúdo do Preview ===== -->
+  <div class="container">
+    <h1 data-recolor>Calculadora da Família</h1>
+    
+    <div id="themeToggle" class="theme-toggle" role="button" aria-label="Alternar tema">
+      <svg class="icon-sun" width="22" height="22">
+        <use href="#icon-sun"></use>
+      </svg>
+      <svg class="icon-moon" width="22" height="22">
+        <use href="#icon-moon"></use>
+      </svg>
+    </div>
   </div>
-  <button type="submit">Adicionar</button>
-</form>
+  <!-- ===== FIM: BLOCO 3 - Conteúdo do Preview ===== -->
 
-<table class="fade-slide">
-  <thead><tr><th>Data</th><th>Categoria</th><th>Tipo</th><th>Valor</th></tr></thead>
-  <tbody id="listaLancamentos"></tbody>
-</table>
+  <!-- ===== INÍCIO: BLOCO 4 - JavaScript Mínimo (Toggle Tema) ===== -->
+  <script>
+    // Helper DOM Simples
+    const $ = selector => document.querySelector(selector);
+    
+    // Função de tema claro/escuro
+    const toggleTheme = () => {
+      const htmlElement = document.documentElement;
+      const currentTheme = htmlElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      
+      htmlElement.setAttribute('data-theme', newTheme);
+      // Armazenar preferência em localStorage para persistência
+      localStorage.setItem('themePreference', newTheme);
 
-<div id="chartBox" class="fade-slide"><canvas id="chart"></canvas></div>
+      // Força o navegador a recalcular estilos para elementos com data-recolor (opcional, mas bom para garantir transições)
+       document.querySelectorAll('[data-recolor]').forEach(el => {
+           el.style.transition = 'none'; // Desabilita transição temporariamente
+           el.style.color = ''; // Força reavaliação da variável CSS
+           // Força reflow (leitura de propriedade que depende do layout)
+           void el.offsetWidth; 
+           el.style.transition = ''; // Reabilita a transição
+       });
+    };
+    
+    // Inicializa o tema ao carregar a página
+    const initTheme = () => {
+      const savedTheme = localStorage.getItem('themePreference');
+      // Verifica preferência do sistema se não houver tema salvo
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+      
+      document.documentElement.setAttribute('data-theme', initialTheme);
+      
+      // Adiciona listener ao botão de toggle
+      const themeButton = $('#themeToggle');
+      if (themeButton) {
+          themeButton.addEventListener('click', toggleTheme);
+      } else {
+          console.error("Elemento #themeToggle não encontrado.");
+      }
+    };
+    
+    // Iniciar quando o DOM estiver pronto
+    document.addEventListener('DOMContentLoaded', initTheme);
+  </script>
+  <!-- ===== FIM: BLOCO 4 - JavaScript Mínimo (Toggle Tema) ===== -->
 
-<!-- Barra inferior estilo iOS -->
-<nav class="tabbar fade-slide">
-  <div class="tab active" data-tab="home"><span class="icon">🏠</span><span>Início</span></div>
-  <div class="tab" data-tab="list"><span class="icon">📄</span><span>Lançar</span></div>
-  <div class="tab" data-tab="chart"><span class="icon">📈</span><span>Gráfico</span></div>
-  <div class="tab" data-tab="settings"><span class="icon">⚙️</span><span>Ajustes</span></div>
-</nav>
-<!-- ===== FIM: BLOCO 3 – Corpo & Layout ========================================================= -->
-
-<!-- ===== INÍCIO: BLOCO 4 – JS Utilidades & Tema =============================================== -->
-<script>
-/* ---------- Splash fade‑in ---------- */
-window.addEventListener('load',()=>{document.body.style.opacity=1;document.querySelectorAll('.fade-slide').forEach(el=>el.classList.add('show'));});
-
-/* ---------- Moeda BR ---------- */
-const fmtValor = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v);
-
-/* ---------- Alternância de tema ---------- */
-document.getElementById('themeToggle').onclick=()=>{
-  const html=document.documentElement;
-  html.dataset.theme = html.dataset.theme==='light' ? 'dark' : 'light';
-};
-
-/* ---------- Aba ativa na tab bar ---------- */
-document.querySelectorAll('.tab').forEach(t=>{
-  t.addEventListener('click',()=>{
-    document.querySelector('.tab.active')?.classList.remove('active');
-    t.classList.add('active');
-    /* futura navegação de seções pode ser handle aqui */
-  });
-});
-</script>
-<!-- ===== FIM: BLOCO 4 – JS Utilidades & Tema =================================================== -->
-
-<!-- ===== INÍCIO: BLOCO 5 – JS Lançamentos & Gráfico =========================================== -->
-<script>
-const listaEl=document.getElementById('listaLancamentos');
-const receitasEl=document.getElementById('totalReceitas');
-const despesasEl=document.getElementById('totalDespesas');
-const saldoEl=document.getElementById('saldoGeral');
-
-let transacoes=[];
-
-/* ---------- Gráfico ---------- */
-const ctx=document.getElementById('chart');
-const grafico=new Chart(ctx,{
-  type:'bar',
-  data:{labels:[],datasets:[{label:'Despesas',data:[],backgroundColor:'var(--neg)'}]},
-  options:{
-    responsive:true,
-    plugins:{legend:{display:false}},
-    scales:{y:{ticks:{callback:(v)=>`R$ ${v}`}}}
-  }
-});
-
-/* ---------- Lançar transação ---------- */
-document.getElementById('formLancamento').addEventListener('submit',e=>{
-  e.preventDefault();
-  const tipo=document.getElementById('tipo').value;
-  const categoria=document.getElementById('categoria').value.trim();
-  const valor=parseFloat(document.getElementById('valor').value);
-  const data=document.getElementById('data').value;
-  if(!categoria||!valor||!data){alert('Preencha todos os campos!');return;}
-
-  transacoes.push({tipo,categoria,valor,data});
-  e.target.reset(); atualizarUI();
-});
-
-/* ---------- Atualiza UI ---------- */
-function atualizarUI(){
-  listaEl.innerHTML='';
-  let totR=0,totD=0; const despCat={};
-
-  transacoes.forEach(t=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${new Date(t.data).toLocaleDateString('pt-BR')}</td>
-                  <td>${t.categoria}</td>
-                  <td>${t.tipo==='receita'?'Receita':'Despesa'}</td>
-                  <td class="${t.tipo==='receita'?'pos':'neg'}">${fmtValor(t.valor)}</td>`;
-    listaEl.appendChild(tr);
-
-    if(t.tipo==='receita') totR+=t.valor;
-    else{totD+=t.valor; despCat[t.categoria]=(despCat[t.categoria]||0)+t.valor;}
-  });
-
-  receitasEl.textContent=fmtValor(totR);
-  despesasEl.textContent=fmtValor(totD);
-  saldoEl.textContent=fmtValor(totR-totD);
-
-  grafico.data.labels=Object.keys(despCat);
-  grafico.data.datasets[0].data=Object.values(despCat);
-  grafico.update();
-}
-
-/* inicial */
-atualizarUI();
-</script>
-<!-- ===== FIM: BLOCO 5 – JS Lançamentos & Gráfico =============================================== -->
 </body>
 </html>
-<!-- ============================================================================================= -->

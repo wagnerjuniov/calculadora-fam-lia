@@ -11,14 +11,22 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- ===== INÍCIO: BLOCO 1 - CSS Essencial (Estilo Apple) ===== -->
+  <!-- Scripts CDN: Chart.js 4 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+  <!-- Scripts CDN: Firebase v9 compat (Mantidos, mas não usados ativamente neste preview) -->
+  <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-auth-compat.js"></script>
+  
+  <!-- ===== INÍCIO: BLOCO 1 - CSS Completo (Estilo Apple) ===== -->
   <style>
     /* Design-tokens :root (Tema Claro - será sobrescrito pelo [data-theme="dark"]) */
     :root {
       /* Cores Neutras (Light Mode) */
       --color-background: #ffffff;
-      --color-surface: #f5f5f7; /* Fundo de cards */
-      --color-surface-variant: #e8e8ed; /* Fundo sutil (botão tema) */
+      --color-surface: #f5f5f7; /* Fundo de cards, modais */
+      --color-surface-variant: #e8e8ed; /* Fundo sutil (botão tema, hover tabela) */
       --color-on-surface: #1d1d1f; /* Texto principal */
       --color-on-surface-variant: #6e6e73; /* Texto secundário/ícones */
       --color-outline: #d2d2d7; /* Bordas sutis */
@@ -27,21 +35,28 @@
       --color-primary: #007aff; /* Azul Apple */
       --color-on-primary: #ffffff;
       --color-success: #34c759; /* Verde Apple */
+      --color-on-success: #ffffff;
       --color-error: #ff3b30; /* Vermelho Apple */
-      
-      /* Cores Indicadores (Exemplo KPI) */
-      --color-kpi-balance: var(--color-primary);
-      --color-kpi-income: var(--color-success);
-      --color-kpi-expense: var(--color-error);
+      --color-on-error: #ffffff;
+      --color-info: #5ac8fa; /* Azul claro info */
+      --color-on-info: #000000; /* Texto escuro para azul claro */
+      --color-warning: #ff9500; /* Laranja warning */
+      --color-on-warning: #ffffff;
+
+      /* Cores Indicadores (KPIs, Gráficos) */
+      --color-income: var(--color-success);
+      --color-expense: var(--color-error);
+      --color-balance: var(--color-primary);
+      --color-invoice: #ffcc00; /* Amarelo para fatura */
       
       /* Tipografia */
       --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       --font-size-xs: 0.75rem;  /* 12px */
       --font-size-sm: 0.875rem; /* 14px */
-      --font-size-md: 1.0625rem;/* 17px (Comum no iOS) */
+      --font-size-md: 1.0625rem;/* 17px */
       --font-size-lg: 1.25rem;  /* 20px */
       --font-size-xl: 1.75rem;  /* 28px */
-      --font-size-2xl: 2.125rem; /* 34px (Título Grande) */
+      --font-size-2xl: 2.125rem; /* 34px */
       --font-weight-regular: 400;
       --font-weight-medium: 500;
       --font-weight-semibold: 600;
@@ -56,30 +71,45 @@
       --spacing-2xl: 3rem;   /* 48px */
       
       /* Bordas e Raios */
-      --radius-md: 0.75rem; /* 12px */
-      --radius-lg: 1rem;    /* 16px */
+      --radius-sm: 0.5rem;   /* 8px */
+      --radius-md: 0.75rem;  /* 12px */
+      --radius-lg: 1rem;     /* 16px */
+      --radius-xl: 1.25rem;  /* 20px */
       --radius-full: 9999px;
       
       /* Sombras */
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04); /* Sombra bem sutil */
-      --shadow-md: 0 3px 5px rgba(0, 0, 0, 0.06); /* Sombra um pouco mais presente */
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.08);
       
       /* Animações */
+      --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
       --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     /* Tema Escuro */
     [data-theme="dark"] {
       --color-background: #000000;
-      --color-surface: #1c1c1e; /* Cinza escuro para cards */
-      --color-surface-variant: #333333; /* Cinza para botão tema */
-      --color-on-surface: #ffffff; /* Texto branco */
-      --color-on-surface-variant: #8e8e93; /* Cinza claro para texto secundário */
-      --color-outline: #38383a; /* Borda escura */
+      --color-surface: #1c1c1e;
+      --color-surface-variant: #333333;
+      --color-on-surface: #ffffff;
+      --color-on-surface-variant: #8e8e93;
+      --color-outline: #38383a;
       
-      /* Ajuste de sombras para modo escuro (podem ser mais sutis ou diferentes) */
+      /* Ajuste de cores semânticas para contraste no escuro */
+      --color-primary: #0a84ff; /* Azul mais vibrante */
+      --color-success: #30d158; /* Verde mais vibrante */
+      --color-error: #ff453a;   /* Vermelho mais vibrante */
+      --color-info: #64d2ff;    /* Azul info mais vibrante */
+      --color-on-info: #000000;
+      --color-warning: #ff9f0a; /* Laranja warning mais vibrante */
+      --color-invoice: #ffd60a; /* Amarelo fatura mais vibrante */
+
+      /* Sombras no modo escuro */
       --shadow-sm: 0 1px 1px rgba(255, 255, 255, 0.05);
-      --shadow-md: 0 3px 5px rgba(0, 0, 0, 0.1); /* Sombra pode ser mais escura */
+      --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
     
     /* Reset Básico */
@@ -87,130 +117,334 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent; /* Remove highlight azul no toque mobile */
     }
     
-    html {
-      font-size: 100%; /* Garante base consistente */
-    }
+    html { font-size: 100%; }
 
     body {
-      min-height: 100vh; /* Garante altura mínima */
+      min-height: 100vh;
       font-family: var(--font-family);
       background-color: var(--color-background);
       color: var(--color-on-surface);
       font-size: var(--font-size-md);
-      line-height: 1.45; /* Espaçamento Apple */
+      line-height: 1.45;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       transition: background-color var(--transition-normal), color var(--transition-normal);
     }
 
+    img, picture, video, canvas, svg { display: block; max-width: 100%; }
+    input, button, textarea, select { font: inherit; color: inherit; }
+    button { background: none; border: none; cursor: pointer; padding: 0; }
+    a { color: inherit; text-decoration: none; }
+    table { border-collapse: collapse; width: 100%; }
+
     /* Layout Principal */
     .container {
       width: 100%;
-      max-width: 1100px; /* Largura comum em layouts Apple */
+      max-width: 1100px;
       margin: 0 auto;
-      padding: var(--spacing-lg) var(--spacing-md); /* Mais padding vertical */
+      padding: var(--spacing-lg) var(--spacing-md);
     }
   
-    /* Header Simples */
+    /* Header */
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: var(--spacing-sm) 0; /* Padding menor no header */
+      padding: var(--spacing-sm) 0;
       margin-bottom: var(--spacing-xl);
-      /* background-color: var(--color-background); /* Pode ser fixo se necessário */
-      /* position: sticky; top: 0; z-index: 100; */ /* Desativado para preview simples */
+      /* position: sticky; top: 0; z-index: 100; background-color: var(--color-background); */ /* Sticky opcional */
     }
-
     .header h1 {
-        font-size: var(--font-size-2xl); /* Título grande */
+        font-size: var(--font-size-2xl);
         font-weight: var(--font-weight-bold);
         color: var(--color-on-surface);
-        margin: 0; /* Remove margem padrão do h1 */
+        margin: 0;
         transition: color var(--transition-normal);
     }
+    .header-actions { /* Container para botões no header */
+      display: flex;
+      gap: var(--spacing-sm);
+      align-items: center;
+    }
     
-    /* Botão de Tema (Ajustado) */
+    /* Botão de Tema */
     .theme-toggle {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 36px; /* Tamanho menor, mais discreto */
+      width: 36px;
       height: 36px;
       border-radius: var(--radius-full);
       cursor: pointer;
       background-color: var(--color-surface-variant);
-      border: none; /* Sem borda explícita */
+      border: none;
       transition: background-color var(--transition-normal);
-      flex-shrink: 0; /* Impede que encolha */
+      flex-shrink: 0;
     }
-    .theme-toggle:hover {
-        filter: brightness(0.9);
-    }
-    .theme-toggle svg {
-      width: 18px;
-      height: 18px;
-      color: var(--color-on-surface-variant);
-      transition: color var(--transition-normal);
-    }
+    .theme-toggle:hover { filter: brightness(0.9); }
+    .theme-toggle svg { width: 18px; height: 18px; color: var(--color-on-surface-variant); transition: color var(--transition-normal); }
     [data-theme="light"] .theme-toggle .icon-moon { display: none; }
     [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
 
-    /* Grid para os Cards de KPI */
+    /* Grid de KPIs */
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Ajusta tamanho mínimo */
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: var(--spacing-md);
       margin-bottom: var(--spacing-xl);
     }
     
-    /* Estilo dos Cards de KPI (Estilo Apple Wallet/App Store) */
+    /* Cards de KPI */
     .kpi-card {
       background-color: var(--color-surface);
-      border-radius: var(--radius-lg); /* Cantos mais arredondados */
-      padding: var(--spacing-md) var(--spacing-lg); /* Mais padding interno */
-      box-shadow: var(--shadow-sm); /* Sombra sutil */
-      transition: background-color var(--transition-normal), box-shadow var(--transition-normal);
-      border: 1px solid var(--color-outline); /* Borda sutil opcional */
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-md) var(--spacing-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-outline);
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-xs); /* Espaço entre elementos internos */
+      gap: var(--spacing-xs);
+      transition: background-color var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal);
+    }
+    .kpi-card::before { /* Linha colorida */
+        content: ''; display: block; height: 4px;
+        margin: calc(-1 * var(--spacing-md)) calc(-1 * var(--spacing-lg)) var(--spacing-sm);
+        border-top-left-radius: var(--radius-lg); border-top-right-radius: var(--radius-lg);
+        transition: background-color var(--transition-normal);
+    }
+    .kpi-balance::before { background-color: var(--color-balance); }
+    .kpi-income::before { background-color: var(--color-income); }
+    .kpi-expense::before { background-color: var(--color-expense); }
+    .kpi-invoice::before { background-color: var(--color-invoice); } /* Para fatura */
+
+    .kpi-title { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-on-surface-variant); transition: color var(--transition-normal); }
+    .kpi-value { font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); color: var(--color-on-surface); line-height: 1.2; transition: color var(--transition-normal); }
+    .kpi-subtitle { font-size: var(--font-size-xs); color: var(--color-on-surface-variant); transition: color var(--transition-normal); }
+
+    /* Grid de Gráficos */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Ajuste minmax */
+      gap: var(--spacing-lg); /* Espaço maior entre gráficos */
+      margin-bottom: var(--spacing-xl);
+    }
+    
+    /* Container do Gráfico */
+    .chart-container {
+      position: relative;
+      height: 300px; /* Altura fixa */
+      background-color: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-outline);
+      transition: background-color var(--transition-normal), border-color var(--transition-normal);
+    }
+    .chart-container h3 { /* Título dentro do gráfico */
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-on-surface);
+        margin-bottom: var(--spacing-md);
+        text-align: center;
+        transition: color var(--transition-normal);
     }
 
-    /* Linha colorida sutil no topo (opcional, como no App Bolsa) */
-    .kpi-card::before {
-        content: '';
-        display: block;
-        height: 4px; /* Altura da linha */
-        margin: calc(-1 * var(--spacing-md)) calc(-1 * var(--spacing-lg)) var(--spacing-sm); /* Posiciona acima do padding */
-        border-top-left-radius: var(--radius-lg); /* Acompanha o raio do card */
-        border-top-right-radius: var(--radius-lg);
+    /* Filtros (Select) */
+    .filter-controls { /* Container para filtros */
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
     }
-    .kpi-balance::before { background-color: var(--color-kpi-balance); }
-    .kpi-income::before { background-color: var(--color-kpi-income); }
-    .kpi-expense::before { background-color: var(--color-kpi-expense); }
-    
-    .kpi-title {
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-on-surface-variant); /* Cinza secundário */
-      transition: color var(--transition-normal);
+    .select-wrapper {
+      position: relative;
+      display: inline-block;
+      flex-grow: 1; /* Ocupa espaço disponível */
     }
-    
-    .kpi-value {
-      font-size: var(--font-size-xl); /* Valor destacado */
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-on-surface); /* Cor principal */
-      line-height: 1.2; /* Linha mais justa para números */
-      transition: color var(--transition-normal);
+    .select {
+      appearance: none; -webkit-appearance: none;
+      width: 100%; /* Ocupa largura do wrapper */
+      padding: var(--spacing-sm) var(--spacing-xl) var(--spacing-sm) var(--spacing-md); /* Padding interno */
+      border-radius: var(--radius-md); /* Raio menor para selects */
+      border: 1px solid var(--color-outline);
+      background-color: var(--color-surface);
+      color: var(--color-on-surface);
+      font-size: var(--font-size-sm); /* Tamanho menor para selects */
+      cursor: pointer;
+      transition: border-color var(--transition-normal), background-color var(--transition-normal);
     }
-    
-    .kpi-subtitle {
-      font-size: var(--font-size-xs);
+    .select:focus { outline: none; border-color: var(--color-primary); }
+    .select-icon {
+      position: absolute;
+      right: var(--spacing-md);
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
       color: var(--color-on-surface-variant);
       transition: color var(--transition-normal);
+    }
+
+    /* Tabela de Transações */
+    .transactions { margin-bottom: var(--spacing-xl); }
+    .transactions-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md); }
+    .transactions-header h2 { font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--color-on-surface); transition: color var(--transition-normal); }
+    
+    .transactions-table-wrapper {
+        background-color: var(--color-surface);
+        border-radius: var(--radius-lg);
+        overflow: hidden; /* Para o raio funcionar com a tabela */
+        border: 1px solid var(--color-outline);
+        box-shadow: var(--shadow-sm);
+        transition: background-color var(--transition-normal), border-color var(--transition-normal);
+    }
+    .transactions-table { width: 100%; }
+    .transactions-table th {
+      text-align: left;
+      padding: var(--spacing-sm) var(--spacing-md);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-on-surface-variant);
+      background-color: var(--color-surface); /* Fundo igual ao wrapper */
+      border-bottom: 1px solid var(--color-outline);
+      transition: color var(--transition-normal), background-color var(--transition-normal), border-color var(--transition-normal);
+      white-space: nowrap;
+    }
+    .transactions-table td {
+      padding: var(--spacing-md);
+      border-top: 1px solid var(--color-outline);
+      font-size: var(--font-size-sm);
+      color: var(--color-on-surface);
+      transition: color var(--transition-normal), border-color var(--transition-normal);
+      vertical-align: middle;
+    }
+    .transactions-table tr:hover td { /* Hover sutil na linha */
+      background-color: var(--color-surface-variant);
+      transition: background-color var(--transition-fast);
+    }
+    .transaction-icon { /* Ícone da transação */
+      display: inline-flex; justify-content: center; align-items: center;
+      width: 32px; height: 32px; /* Tamanho menor */
+      border-radius: var(--radius-sm); /* Menos redondo */
+      font-size: 1rem; /* Tamanho do emoji/ícone */
+      margin-right: var(--spacing-sm);
+    }
+    .actions-cell { display: flex; gap: var(--spacing-xs); justify-content: flex-end; }
+    .actions-cell .btn-icon { /* Botões de ação na tabela */
+        width: 32px; height: 32px; padding: 0;
+        border-radius: var(--radius-sm);
+        background-color: var(--color-surface-variant);
+        color: var(--color-on-surface-variant);
+        border: 1px solid var(--color-outline);
+    }
+    .actions-cell .btn-icon:hover { filter: brightness(0.9); }
+    .actions-cell .btn-icon svg { width: 16px; height: 16px; }
+
+    /* Botões Gerais */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: var(--spacing-xs);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--radius-md); /* Raio padrão Apple */
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+      border: none; /* Sem borda por padrão */
+    }
+    .btn svg { width: 16px; height: 16px; }
+
+    .btn-primary { background-color: var(--color-primary); color: var(--color-on-primary); }
+    .btn-primary:hover { filter: brightness(1.1); } /* Efeito de brilho no hover */
+    .btn-primary:active { filter: brightness(0.9); }
+
+    .btn-success { background-color: var(--color-success); color: var(--color-on-success); }
+    .btn-success:hover { filter: brightness(1.1); }
+    .btn-success:active { filter: brightness(0.9); }
+
+    .btn-danger { background-color: var(--color-error); color: var(--color-on-error); }
+    .btn-danger:hover { filter: brightness(1.1); }
+    .btn-danger:active { filter: brightness(0.9); }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--color-primary); /* Cor do texto é o azul */
+      border: 1px solid var(--color-primary); /* Borda azul */
+    }
+    .btn-outline:hover { background-color: rgba(0, 122, 255, 0.1); } /* Fundo azul bem claro no hover */
+    .btn-outline:active { background-color: rgba(0, 122, 255, 0.2); }
+
+    /* Modais */
+    .modal-backdrop {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.6); /* Fundo mais escuro */
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+      opacity: 0; visibility: hidden;
+      transition: opacity var(--transition-normal), visibility var(--transition-normal);
+      backdrop-filter: blur(5px); /* Blur mais intenso */
+    }
+    .modal-backdrop.active { opacity: 1; visibility: visible; }
+    
+    .modal {
+      width: 90%; max-width: 500px;
+      background-color: var(--color-surface);
+      border-radius: var(--radius-xl); /* Mais arredondado */
+      box-shadow: var(--shadow-lg);
+      opacity: 0; transform: scale(0.95) translateY(10px); /* Animação de entrada */
+      transition: opacity var(--transition-normal), transform var(--transition-normal);
+      border: 1px solid var(--color-outline);
+      overflow: hidden; /* Para conter o header/footer */
+    }
+    .modal-backdrop.active .modal { opacity: 1; transform: scale(1) translateY(0); }
+    
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-bottom: 1px solid var(--color-outline);
+      background-color: rgba(128, 128, 128, 0.05); /* Fundo sutil no header */
+    }
+    .modal-title { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--color-on-surface); }
+    .modal-close { color: var(--color-on-surface-variant); cursor: pointer; padding: var(--spacing-xs); } /* Área de clique maior */
+    .modal-close svg { width: 18px; height: 18px; }
+    
+    .modal-body { padding: var(--spacing-lg); max-height: 70vh; overflow-y: auto; }
+    
+    .modal-footer {
+      display: flex; justify-content: flex-end; gap: var(--spacing-sm);
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-top: 1px solid var(--color-outline);
+      background-color: rgba(128, 128, 128, 0.05); /* Fundo sutil no footer */
+    }
+
+    /* Formulários dentro do Modal */
+    .form-group { margin-bottom: var(--spacing-lg); } /* Mais espaço entre campos */
+    .form-label { display: block; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-on-surface-variant); margin-bottom: var(--spacing-xs); }
+    .form-control {
+      width: 100%;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-outline);
+      background-color: var(--color-background); /* Fundo do input igual ao body */
+      color: var(--color-on-surface);
+      transition: border-color var(--transition-normal), background-color var(--transition-normal);
+    }
+    .form-control:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2); } /* Foco estilo Apple */
+    textarea.form-control { min-height: 80px; line-height: 1.5; }
+
+    /* Responsividade Adicional */
+    @media (max-width: 768px) {
+      .header { flex-direction: column; align-items: flex-start; gap: var(--spacing-md); }
+      .header h1 { font-size: var(--font-size-xl); } /* Reduz título no mobile */
+      .header-actions { width: 100%; justify-content: flex-start; }
+      .kpi-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } /* Cards menores no mobile */
+      .charts-grid { grid-template-columns: 1fr; } /* Gráficos empilhados */
+      .filter-controls { flex-direction: column; align-items: stretch; }
+      .transactions-table-wrapper { border-radius: 0; border-left: none; border-right: none; margin: 0 calc(-1 * var(--spacing-md)); } /* Tabela ocupa largura total */
+      .transactions-table th, .transactions-table td { font-size: var(--font-size-xs); padding: var(--spacing-sm); } /* Texto menor na tabela mobile */
+      .modal { max-width: 95%; border-radius: var(--radius-lg); } /* Modal um pouco menor no mobile */
     }
 
     /* Classe auxiliar para forçar recálculo de cores */
@@ -218,110 +452,431 @@
       color: var(--color-on-surface);
       transition: color var(--transition-normal);
     }
+    .repaint-trigger * { transform: scale(1); } /* Para forçar repaint */
+
   </style>
-  <!-- ===== FIM: BLOCO 1 - CSS Essencial (Estilo Apple) ===== -->
+  <!-- ===== FIM: BLOCO 1 - CSS Completo (Estilo Apple) ===== -->
 
 </head>
 <body>
-  <!-- ===== INÍCIO: BLOCO 2 - SVG Sprite (Apenas Ícones de Tema) ===== -->
+  <!-- ===== INÍCIO: BLOCO 2 - SVG Sprite (Completo) ===== -->
   <svg style="display: none;">
-    <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-    </symbol>
-    <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-    </symbol>
+    <!-- Ícones de navegação -->
+    <symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></symbol>
+    <symbol id="icon-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" /></symbol>
+    <symbol id="icon-credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></symbol>
+    <!-- Ícones de ações -->
+    <symbol id="icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></symbol>
+    <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></symbol>
+    <symbol id="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></symbol>
+    <symbol id="icon-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></symbol>
+    <symbol id="icon-chevron-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" /></symbol>
+    <!-- Ícones tema claro/escuro -->
+    <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></symbol>
+    <!-- Ícones para categorias padrão -->
+    <symbol id="icon-shopping" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></symbol>
+    <symbol id="icon-food" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></symbol>
+    <symbol id="icon-home-category" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></symbol>
+    <symbol id="icon-bill" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></symbol>
+    <symbol id="icon-default" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></symbol>
+    <symbol id="icon-money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></symbol>
+    <!-- Ícones para alertas e notificações -->
+    <symbol id="icon-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></symbol>
+    <symbol id="icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></symbol>
+    <!-- Ícones para ordenação -->
+    <symbol id="icon-sort-asc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" /></symbol>
+    <symbol id="icon-sort-desc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></symbol>
   </svg>
-  <!-- ===== FIM: BLOCO 2 - SVG Sprite (Apenas Ícones de Tema) ===== -->
+  <!-- ===== FIM: BLOCO 2 - SVG Sprite (Completo) ===== -->
 
-  <!-- ===== INÍCIO: BLOCO 3 - Conteúdo do Preview ===== -->
+  <!-- ===== INÍCIO: BLOCO 3 - Conteúdo Principal ===== -->
   <div class="container">
     <!-- Header -->
     <header class="header">
       <h1 data-recolor>Visão Geral</h1>
-      <div id="themeToggle" class="theme-toggle" role="button" aria-label="Alternar tema">
-        <svg class="icon-sun"><use href="#icon-sun"></use></svg>
-        <svg class="icon-moon"><use href="#icon-moon"></use></svg>
+      <div class="header-actions">
+        <!-- Botões de ação principais (Exemplo) -->
+        <button id="newTransactionBtn" class="btn btn-primary">
+          <svg><use href="#icon-plus"></use></svg>
+          Nova Transação
+        </button>
+        <div id="themeToggle" class="theme-toggle" role="button" aria-label="Alternar tema">
+          <svg class="icon-sun"><use href="#icon-sun"></use></svg>
+          <svg class="icon-moon"><use href="#icon-moon"></use></svg>
+        </div>
       </div>
     </header>
     
-    <!-- KPIs de Exemplo -->
+    <!-- KPIs -->
     <div class="kpi-grid">
       <div class="kpi-card kpi-balance">
         <div class="kpi-title" data-recolor>Saldo Atual</div>
         <div class="kpi-value" data-recolor>R$ 1.234,56</div>
-        <div class="kpi-subtitle" data-recolor>Atualizado hoje</div>
+        <div class="kpi-subtitle" data-recolor>Disponível em conta</div>
       </div>
-      
       <div class="kpi-card kpi-income">
         <div class="kpi-title" data-recolor>Receitas (Mês)</div>
         <div class="kpi-value" data-recolor>R$ 5.800,00</div>
-        <div class="kpi-subtitle" data-recolor>Previsto: R$ 6.000,00</div>
+        <div class="kpi-subtitle" data-recolor>+5% vs Mês Anterior</div>
       </div>
-      
       <div class="kpi-card kpi-expense">
         <div class="kpi-title" data-recolor>Despesas (Mês)</div>
         <div class="kpi-value" data-recolor>R$ 3.150,75</div>
-        <div class="kpi-subtitle" data-recolor>Meta: R$ 3.500,00</div>
+        <div class="kpi-subtitle" data-recolor>-2% vs Mês Anterior</div>
       </div>
-
-      <div class="kpi-card"> <!-- Card genérico -->
-        <div class="kpi-title" data-recolor>Próxima Fatura</div>
+      <div class="kpi-card kpi-invoice">
+        <div class="kpi-title" data-recolor>Fatura Cartão</div>
         <div class="kpi-value" data-recolor>R$ 987,10</div>
-        <div class="kpi-subtitle" data-recolor>Vence em 17/06/2024</div>
+        <div class="kpi-subtitle" data-recolor>Vence em 17/06</div>
+      </div>
+    </div>
+    
+    <!-- Gráficos -->
+    <div class="charts-grid">
+      <div class="chart-container">
+        <h3 data-recolor>Despesas por Categoria</h3>
+        <canvas id="catPie"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3 data-recolor>Receitas x Despesas (Ano)</h3>
+        <canvas id="annualBars"></canvas>
       </div>
     </div>
 
-    <!-- Outras seções podem ser adicionadas aqui para testar mais componentes -->
+    <!-- Filtros e Tabela -->
+    <div class="transactions">
+      <div class="transactions-header">
+        <h2 data-recolor>Últimas Transações</h2>
+        <!-- Botão de filtros pode ir aqui -->
+      </div>
+      <div class="filter-controls">
+        <div class="select-wrapper">
+          <select id="filter-category" class="select">
+            <option value="">Todas as Categorias</option>
+            <option value="alimentacao">🍔 Alimentação</option>
+            <option value="moradia">🏠 Moradia</option>
+            <option value="salario">💰 Salário</option>
+          </select>
+          <svg class="select-icon" width="16" height="16"><use href="#icon-chevron-down"></use></svg>
+        </div>
+        <div class="select-wrapper">
+          <select id="filter-status" class="select">
+            <option value="">Todos os Status</option>
+            <option value="paid">Pago/Recebido</option>
+            <option value="pending">Pendente</option>
+          </select>
+          <svg class="select-icon" width="16" height="16"><use href="#icon-chevron-down"></use></svg>
+        </div>
+      </div>
+
+      <div class="transactions-table-wrapper">
+        <table class="transactions-table">
+          <thead>
+            <tr>
+              <th></th> <!-- Ícone -->
+              <th data-recolor>Nome</th>
+              <th data-recolor>Categoria</th>
+              <th data-recolor>Data</th>
+              <th data-recolor>Valor</th>
+              <th data-recolor>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="transactionsTableBody">
+            <!-- Linhas de Exemplo (seriam preenchidas por JS) -->
+            <tr>
+              <td><div class="transaction-icon" style="background-color: rgba(255, 59, 48, 0.1); color: var(--color-expense);">🍔</div></td>
+              <td data-recolor>Almoço Restaurante</td>
+              <td data-recolor>Alimentação</td>
+              <td data-recolor>05/06/2024</td>
+              <td data-recolor>- R$ 45,50</td>
+              <td class="actions-cell">
+                <button class="btn btn-icon"><svg><use href="#icon-edit"></use></svg></button>
+                <button class="btn btn-icon"><svg><use href="#icon-trash"></use></svg></button>
+              </td>
+            </tr>
+             <tr>
+              <td><div class="transaction-icon" style="background-color: rgba(52, 199, 89, 0.1); color: var(--color-income);">💰</div></td>
+              <td data-recolor>Salário Mensal</td>
+              <td data-recolor>Salário</td>
+              <td data-recolor>01/06/2024</td>
+              <td data-recolor>+ R$ 5.800,00</td>
+              <td class="actions-cell">
+                 <button class="btn btn-icon"><svg><use href="#icon-edit"></use></svg></button>
+                 <button class="btn btn-icon"><svg><use href="#icon-trash"></use></svg></button>
+              </td>
+            </tr>
+             <tr>
+              <td><div class="transaction-icon" style="background-color: rgba(255, 59, 48, 0.1); color: var(--color-expense);">🏠</div></td>
+              <td data-recolor>Aluguel</td>
+              <td data-recolor>Moradia</td>
+              <td data-recolor>31/05/2024</td>
+              <td data-recolor>- R$ 1.500,00</td>
+              <td class="actions-cell">
+                 <button class="btn btn-icon"><svg><use href="#icon-edit"></use></svg></button>
+                 <button class="btn btn-icon"><svg><use href="#icon-trash"></use></svg></button>
+              </td>
+            </tr>
+            <!-- Mais linhas de exemplo podem ser adicionadas -->
+          </tbody>
+        </table>
+      </div>
+    </div>
 
   </div>
-  <!-- ===== FIM: BLOCO 3 - Conteúdo do Preview ===== -->
+  <!-- ===== FIM: BLOCO 3 - Conteúdo Principal ===== -->
 
-  <!-- ===== INÍCIO: BLOCO 4 - JavaScript Mínimo (Toggle Tema) ===== -->
+  <!-- ===== INÍCIO: BLOCO 4 - Modais (Estrutura básica, sem conteúdo interno complexo) ===== -->
+  <div class="modal-backdrop" id="exampleModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" data-recolor>Exemplo de Modal</h2>
+        <span class="modal-close" id="closeExampleModal">
+          <svg><use href="#icon-x"></use></svg>
+        </span>
+      </div>
+      <div class="modal-body">
+        <p data-recolor>Conteúdo do modal aqui...</p>
+        <div class="form-group">
+            <label class="form-label" for="exampleInput" data-recolor>Campo Exemplo</label>
+            <input type="text" class="form-control" id="exampleInput" placeholder="Digite algo">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancelExampleBtn" data-recolor>Cancelar</button>
+        <button class="btn btn-primary" id="saveExampleBtn">Salvar</button>
+      </div>
+    </div>
+  </div>
+  <!-- ===== FIM: BLOCO 4 - Modais ===== -->
+
+  <!-- ===== INÍCIO: BLOCO 5 - JavaScript (Tema e Gráficos de Exemplo) ===== -->
   <script>
-    // Helper DOM Simples
+    // ===== INÍCIO: BLOCO 5.1 - Helpers e Estado Simples =====
     const $ = selector => document.querySelector(selector);
+    const $$ = selector => document.querySelectorAll(selector);
     
-    // Função de tema claro/escuro
+    const state = {
+      themePreference: 'dark' // Mantém o estado do tema
+    };
+    // ===== FIM: BLOCO 5.1 - Helpers e Estado Simples =====
+
+    // ===== INÍCIO: BLOCO 5.2 - Toggle de Tema =====
     const toggleTheme = () => {
       const htmlElement = document.documentElement;
       const currentTheme = htmlElement.getAttribute('data-theme');
       const newTheme = currentTheme === 'light' ? 'dark' : 'light';
       
       htmlElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('themePreference', newTheme); // Salva preferência
+      state.themePreference = newTheme; // Atualiza estado
+      localStorage.setItem('themePreference', newTheme); 
 
-      // Força recálculo de estilos para elementos marcados (melhora transição)
-       document.querySelectorAll('[data-recolor]').forEach(el => {
+      // Força recálculo de estilos e atualização dos gráficos
+      document.querySelectorAll('[data-recolor]').forEach(el => {
            el.style.transition = 'none'; 
            el.style.color = ''; 
            void el.offsetWidth; 
            el.style.transition = ''; 
        });
+       updateChartsAppearance(); // Chama função para atualizar cores dos gráficos
     };
     
-    // Inicializa o tema ao carregar a página
     const initTheme = () => {
       const savedTheme = localStorage.getItem('themePreference');
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      // Define o tema escuro como padrão se não houver preferência salva
-      const initialTheme = savedTheme || 'dark'; 
+      const initialTheme = savedTheme || 'dark'; // Padrão escuro
       
       document.documentElement.setAttribute('data-theme', initialTheme);
+      state.themePreference = initialTheme;
       
-      // Adiciona listener ao botão de toggle
-      const themeButton = $('#themeToggle');
-      if (themeButton) {
-          themeButton.addEventListener('click', toggleTheme);
-      } else {
-          console.error("Elemento #themeToggle não encontrado.");
+      $('#themeToggle')?.addEventListener('click', toggleTheme);
+    };
+    // ===== FIM: BLOCO 5.2 - Toggle de Tema =====
+
+    // ===== INÍCIO: BLOCO 5.3 - Gráficos de Exemplo (Chart.js) =====
+    let pieChart = null;
+    let barChart = null;
+
+    // Função para obter cores do tema atual para os gráficos
+    const getChartColors = () => {
+        const isDark = state.themePreference === 'dark';
+        return {
+            textColor: isDark ? '#ffffff' : '#1d1d1f',
+            gridColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+            tooltipBg: isDark ? 'rgba(40, 40, 40, 0.85)' : 'rgba(255, 255, 255, 0.85)',
+            tooltipColor: isDark ? '#ffffff' : '#1d1d1f',
+            pieBorder: isDark ? '#000000' : '#ffffff',
+            // Cores dos datasets (usando as variáveis CSS para consistência)
+            incomeColor: getComputedStyle(document.documentElement).getPropertyValue('--color-income').trim(),
+            expenseColor: getComputedStyle(document.documentElement).getPropertyValue('--color-expense').trim(),
+            categoryColors: [
+                getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim(),
+                getComputedStyle(document.documentElement).getPropertyValue('--color-success').trim(),
+                getComputedStyle(document.documentElement).getPropertyValue('--color-warning').trim(),
+                getComputedStyle(document.documentElement).getPropertyValue('--color-error').trim(),
+                '#af52de', // Roxo (exemplo)
+                '#5ac8fa'  // Azul Info (exemplo)
+            ]
+        };
+    };
+
+    const createCharts = () => {
+      const pieCtx = $('#catPie')?.getContext('2d');
+      const barCtx = $('#annualBars')?.getContext('2d');
+      const colors = getChartColors(); // Pega cores iniciais
+
+      // Configurações globais do Chart.js
+      Chart.defaults.font.family = "'Inter', sans-serif";
+      Chart.defaults.plugins.legend.display = false; // Remove legenda padrão
+      Chart.defaults.plugins.tooltip.backgroundColor = colors.tooltipBg;
+      Chart.defaults.plugins.tooltip.titleColor = colors.tooltipColor;
+      Chart.defaults.plugins.tooltip.bodyColor = colors.tooltipColor;
+      Chart.defaults.plugins.tooltip.borderColor = colors.gridColor;
+      Chart.defaults.plugins.tooltip.borderWidth = 1;
+      Chart.defaults.plugins.tooltip.padding = 10;
+      Chart.defaults.plugins.tooltip.usePointStyle = true;
+      Chart.defaults.plugins.tooltip.boxPadding = 3;
+
+      if (pieCtx && !pieChart) {
+        pieChart = new Chart(pieCtx, {
+          type: 'doughnut',
+          data: { 
+            labels: ['Alimentação', 'Moradia', 'Transporte', 'Lazer', 'Compras', 'Outros'], 
+            datasets: [{ 
+                data: [450, 1500, 300, 250, 500, 150], // Dados fictícios
+                backgroundColor: colors.categoryColors, 
+                borderColor: colors.pieBorder, 
+                borderWidth: 2,
+                hoverOffset: 8 // Efeito ao passar o mouse
+            }] 
+          },
+          options: { 
+            responsive: true, maintainAspectRatio: false, cutout: '65%', // Rosca mais fina
+            plugins: { 
+                tooltip: { 
+                    callbacks: { label: c => `${c.label}: ${formatCurrency(c.parsed)}` } 
+                },
+                legend: { // Legenda personalizada (se desejado)
+                    display: true, // Habilita legenda
+                    position: 'bottom',
+                    labels: {
+                        color: colors.textColor,
+                        padding: 15,
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        font: { size: 12 }
+                    }
+                }
+            } 
+          }
+        });
+      }
+      if (barCtx && !barChart) {
+        barChart = new Chart(barCtx, {
+          type: 'bar',
+          data: { 
+            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'], // Meses fictícios
+            datasets: [ 
+                { label: 'Receitas', data: [5000, 5200, 5500, 5300, 5800, 6000], backgroundColor: colors.incomeColor, borderRadius: 4 }, 
+                { label: 'Despesas', data: [3000, 3100, 3300, 3200, 3150, 3400], backgroundColor: colors.expenseColor, borderRadius: 4 } 
+            ] 
+          },
+          options: { 
+            responsive: true, maintainAspectRatio: false, 
+            scales: { 
+                x: { grid: { display: false }, ticks: { color: colors.textColor } }, 
+                y: { beginAtZero: true, grid: { color: colors.gridColor }, ticks: { color: colors.textColor, callback: v => formatCurrency(v).replace(/\s/g, '') } } // Formato curto
+            }, 
+            plugins: { 
+                tooltip: { 
+                    callbacks: { label: c => `${c.dataset.label}: ${formatCurrency(c.parsed.y)}` } 
+                },
+                legend: { // Legenda no topo
+                    display: true,
+                    position: 'top',
+                    align: 'end',
+                    labels: {
+                        color: colors.textColor,
+                        usePointStyle: true,
+                        pointStyle: 'rectRounded',
+                        boxWidth: 10,
+                        boxHeight: 10,
+                        padding: 10,
+                        font: { size: 12 }
+                    }
+                }
+            } 
+          }
+        });
       }
     };
-    
-    // Iniciar quando o DOM estiver pronto
-    document.addEventListener('DOMContentLoaded', initTheme);
+
+    // Função para atualizar APENAS a aparência dos gráficos (cores, etc.) ao trocar tema
+    const updateChartsAppearance = () => {
+        if (!pieChart && !barChart) return; // Sai se não houver gráficos
+
+        const colors = getChartColors();
+
+        // Atualiza cores globais
+        Chart.defaults.color = colors.textColor;
+        Chart.defaults.borderColor = colors.gridColor;
+        Chart.defaults.plugins.tooltip.backgroundColor = colors.tooltipBg;
+        Chart.defaults.plugins.tooltip.titleColor = colors.tooltipColor;
+        Chart.defaults.plugins.tooltip.bodyColor = colors.tooltipColor;
+        Chart.defaults.plugins.tooltip.borderColor = colors.gridColor;
+
+        // Atualiza gráfico de pizza
+        if (pieChart) {
+            pieChart.data.datasets[0].borderColor = colors.pieBorder;
+            pieChart.options.plugins.legend.labels.color = colors.textColor;
+            pieChart.update();
+        }
+
+        // Atualiza gráfico de barras
+        if (barChart) {
+            barChart.options.scales.x.ticks.color = colors.textColor;
+            barChart.options.scales.y.ticks.color = colors.textColor;
+            barChart.options.scales.y.grid.color = colors.gridColor;
+            barChart.options.plugins.legend.labels.color = colors.textColor;
+            // Atualiza cores dos datasets se necessário (se elas mudam com o tema)
+            barChart.data.datasets[0].backgroundColor = colors.incomeColor;
+            barChart.data.datasets[1].backgroundColor = colors.expenseColor;
+            barChart.update();
+        }
+    };
+
+    // Formatador de moeda (simples, para exemplos)
+    const formatCurrency = value => {
+      return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
+    };
+    // ===== FIM: BLOCO 5.3 - Gráficos de Exemplo (Chart.js) =====
+
+    // ===== INÍCIO: BLOCO 5.4 - Inicialização =====
+    const init = () => {
+      console.log('Inicializando Preview Estilo Apple...');
+      initTheme();
+      createCharts(); // Cria os gráficos com dados fictícios
+      
+      // Listener para abrir modal de exemplo (se o botão existir)
+      $('#newTransactionBtn')?.addEventListener('click', () => openModal('exampleModal'));
+      $('#closeExampleModal')?.addEventListener('click', () => closeModal('exampleModal'));
+      $('#cancelExampleBtn')?.addEventListener('click', () => closeModal('exampleModal'));
+      // Adicionar listener para fechar modal no backdrop
+       $$('.modal-backdrop').forEach(backdrop => {
+          backdrop.addEventListener('click', (e) => {
+              if (e.target === backdrop) { closeModal(backdrop.id); }
+          });
+      });
+    };
+
+    document.addEventListener('DOMContentLoaded', init);
+    // ===== FIM: BLOCO 5.4 - Inicialização =====
   </script>
-  <!-- ===== FIM: BLOCO 4 - JavaScript Mínimo (Toggle Tema) ===== -->
+  <!-- ===== FIM: BLOCO 5 - JavaScript (Tema e Gráficos de Exemplo) ===== -->
 
 </body>
 </html>

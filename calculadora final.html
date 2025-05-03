@@ -1290,6 +1290,52 @@
       transition: background-color var(--transition-normal);
     }
     
+/* --- INÍCIO CSS PARA CORREÇÃO DEFINITIVA DA TABELA DE TRANSAÇÕES --- */
+/* Força a linha do cabeçalho a se comportar como linha */
+.card-transacoes .transactions-table thead tr {
+  display: table-row !important; /* Essencial */
+  vertical-align: middle;
+}
+/* Força TODAS as células de cabeçalho (th) a se comportarem como células */
+.card-transacoes .transactions-table th {
+  display: table-cell !important; /* Essencial - Sobrescreve display:flex */
+  text-align: left;
+  vertical-align: middle; /* Alinha texto e ícone */
+  padding: var(--spacing-md);
+  white-space: nowrap; /* Evita quebra de linha */
+  border-bottom: 1px solid var(--color-outline);
+  background-color: var(--color-surface); /* Mantém o fundo */
+  position: relative; /* Resetar sticky se causar problemas, mas pode ser útil */
+}
+/* Estilo específico para th ordenável (sem display:flex) */
+.card-transacoes .transactions-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  /* display: flex; FOI REMOVIDO/SOBRESCRITO ACIMA */
+}
+/* Garante alinhamento do ícone de ordenação */
+.card-transacoes .transactions-table .transaction-sort-icon {
+  display: inline-block; /* Ícone ao lado do texto */
+  vertical-align: middle; /* Alinha com o texto */
+  margin-left: var(--spacing-xs);
+  width: 16px;
+  height: 16px;
+  color: var(--color-primary);
+}
+/* Garante que o corpo da tabela funcione corretamente */
+.card-transacoes .transactions-table tbody {
+  display: table-row-group; /* Comportamento padrão do tbody */
+}
+.card-transacoes .transactions-table tbody tr {
+  display: table-row; /* Comportamento padrão do tr */
+}
+.card-transacoes .transactions-table tbody td {
+  display: table-cell; /* Comportamento padrão do td */
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--color-outline);
+  vertical-align: middle; /* Alinhar conteúdo da célula */
+}
+
     th.sortable:hover {
       background-color: var(--color-surface-variant);
     }
@@ -1653,42 +1699,62 @@
       </div>
     </div>
     
-    <!-- SOLUÇÃO PROBLEMA 2: Tabela de Transações (Novo Layout) -->
-    <section class="card-transacoes">
-      <div class="card-header">
-        <h3 class="card-title">Transações</h3>
-        
-        <div class="filters" id="transaction-filters">
-          <!-- Filtros serão inseridos aqui dinamicamente -->
-        </div>
+<!-- SOLUÇÃO PROBLEMA 2: Tabela de Transações (Novo Layout) -->
+<section class="card-transacoes">
+  <div class="card-header">
+    <h3 class="card-title">Transações</h3>
+    <div class="filters transaction-filters" id="transaction-filters">
+      <div class="select-wrapper">
+        <select id="filter-category" class="select">
+          <option value="">🔽 Todas as categorias</option>
+        </select>
+        <svg class="select-icon" width="16" height="16">
+          <use href="#icon-chevron-down"></use>
+        </svg>
       </div>
-      
-      <div class="card-body">
-        <table class="transactions-table" id="transactionsTable">
-          <thead>
-            <tr>
-             <th></th>
-             <th class="sortable" data-sort="name">Nome <span class="transaction-sort-icon"></span></th>
-             <th class="sortable" data-sort="category">Categoria <span class="transaction-sort-icon"></span></th>
-             <th class="sortable" data-sort="date">Data <span class="transaction-sort-icon"></span></th>
-             <th class="sortable" data-sort="dueDate">Vencimento <span class="transaction-sort-icon"></span></th>
-             <th class="sortable" data-sort="amount">Valor <span class="transaction-sort-icon"></span></th>
-             <th class="sortable" data-sort="status">Status <span class="transaction-sort-icon"></span></th>
-             <th class="sortable" data-sort="paymentMethod">Pagamento <span class="transaction-sort-icon"></span></th>
-             <th>Pago?</th>
-             <th>Ações</th>
-           </tr>
-         </thead>
-         <tbody id="transactionsTableBody">
-           <!-- Transações serão inseridas aqui dinamicamente -->
-         </tbody>
-       </table>
-     </div>
-   </section>
- </div>
-
+      <div class="select-wrapper">
+        <select id="filter-status" class="select">
+          <option value="">🔽 Todos os status</option>
+        </select>
+        <svg class="select-icon" width="16" height="16">
+          <use href="#icon-chevron-down"></use>
+        </svg>
+      </div>
+      <div class="select-wrapper">
+        <select id="filter-payment-method" class="select">
+          <option value="">🔽 Todas as formas de pagamento</option>
+        </select>
+        <svg class="select-icon" width="16" height="16">
+          <use href="#icon-chevron-down"></use>
+        </svg>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card-body">
+    <table class="transactions-table" id="transactionsTable">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="sortable" data-sort="name">Nome</th>
+          <th class="sortable" data-sort="category">Categoria</th>
+          <th class="sortable" data-sort="date">Data <span class="transaction-sort-icon">⬍</span></th>
+          <th class="sortable" data-sort="dueDate">Vencimento</th>
+          <th class="sortable" data-sort="amount">Valor</th>
+          <th class="sortable" data-sort="status">Status</th>
+          <th class="sortable" data-sort="paymentMethod">Pagamento</th>
+          <th>Pago?</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="transactionsTableBody">
+        <!-- Transações serão inseridas aqui dinamicamente -->
+      </tbody>
+    </table>
+  </div>
+</section>
 <!-- Modais -->
- <!-- Modal de Nova Receita -->
+<!-- Modal de Nova Receita -->
  <div class="modal-backdrop" id="incomeModal">
    <div class="modal">
      <div class="modal-header">

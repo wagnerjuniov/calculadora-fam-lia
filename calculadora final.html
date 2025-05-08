@@ -23,24 +23,24 @@
   <style>
     /* Design-tokens em :root */
     :root {
-      /* Cores base */
-      --color-background: #ffffff;
-      --color-surface: #f8f9fa; /* Um cinza muito claro */
-      --color-surface-variant: #e9ecef; /* Um pouco mais escuro */
-      --color-on-surface: #212529; /* Preto suave */
-      --color-on-surface-variant: #495057; /* Cinza escuro */
-      --color-outline: #ced4da; /* Cinza para bordas */
+      /* Cores base - Proposta Clean & Elegante */
+      --color-background: #F4F6F8; /* Cinza muito claro, quase off-white */
+      --color-surface: #FFFFFF;    /* Branco puro para cards */
+      --color-surface-variant: #E9ECEF; /* Cinza um pouco mais escuro que o fundo */
+      --color-on-surface: #343A40;    /* Cinza bem escuro, quase preto, para texto principal */
+      --color-on-surface-variant: #6C757D; /* Cinza médio para texto secundário */
+      --color-outline: #DEE2E6;       /* Cinza claro para bordas e divisórias */
       
-      /* Cores semânticas */
-      --color-primary: #007bff; /* Azul Bootstrap */
-      --color-on-primary: #ffffff;
-      --color-success: #28a745; /* Verde Bootstrap */
+      /* Cores semânticas - Primária mais elegante */
+      --color-primary: #0D47A1; /* Azul escuro e sóbrio (ex: Material Design Blue 900) */
+      --color-on-primary: #FFFFFF;
+      --color-success: #28a745; /* Verde Bootstrap - Mantido vibrante */
       --color-on-success: #ffffff;
-      --color-warning: #ffc107; /* Amarelo Bootstrap */
+      --color-warning: #ffc107; /* Amarelo Bootstrap - Mantido vibrante */
       --color-on-warning: #212529;
-      --color-error: #dc3545; /* Vermelho Bootstrap */
+      --color-error: #dc3545; /* Vermelho Bootstrap - Mantido vibrante */
       --color-on-error: #ffffff;
-      --color-info: #17a2b8; /* Azul info Bootstrap */
+      --color-info: #17a2b8; /* Azul info Bootstrap - Mantido vibrante */
       --color-on-info: #ffffff;
       
       /* Cores para receitas e despesas */
@@ -71,9 +71,9 @@
       
       /* Bordas e raios */
       --radius-sm: 0.2rem;
-      --radius-md: 0.25rem; /* Raio padrão para elementos mais quadrados */
-      --radius-lg: 0.3rem;
-      --radius-full: 50px; /* Para botões arredondados (ícones) */
+      --radius-md: 0.25rem; 
+      --radius-lg: 0.3rem; /* Mantido do código original, o mockup usava 0.5rem ou 1rem para .chart-container */
+      --radius-full: 50px; 
       
       /* Transições */
       --transition-fast: 0.15s ease-in-out;
@@ -82,12 +82,12 @@
     
     /* Tema escuro */
     [data-theme="dark"] {
-      --color-background: #121212;
-      --color-surface: #1e1e1e;
-      --color-surface-variant: #2c2c2e;
-      --color-on-surface: #e0e0e0;
-      --color-on-surface-variant: #adb5bd;
-      --color-outline: #495057;
+      --color-background: #1A1A1A; 
+      --color-surface: #2C2C2C;    
+      --color-surface-variant: #3E3E3E; 
+      --color-on-surface: #E0E0E0;    
+      --color-on-surface-variant: #B0B0B0; 
+      --color-outline: #4A4A4A;       
       color: var(--color-on-surface);
     }
     
@@ -119,7 +119,7 @@
       font: inherit;
       color: inherit;
       border: 1px solid var(--color-outline);
-      background-color: var(--color-background);
+      background-color: var(--color-background); 
       padding: var(--spacing-sm) var(--spacing-md);
       border-radius: var(--radius-md);
     }
@@ -129,7 +129,7 @@
         border-color: var(--color-primary);
     }
     input[type="date"] {
-        padding-right: var(--spacing-sm); /* Ajuste para o ícone do date picker */
+        padding-right: var(--spacing-sm); 
     }
     input[disabled] {
         background-color: var(--color-surface-variant);
@@ -167,7 +167,7 @@
     /* Header */
     .header {
       display: flex;
-      flex-wrap: wrap; /* Permite quebra de linha em telas menores */
+      flex-wrap: wrap; 
       justify-content: space-between;
       align-items: center;
       padding: var(--spacing-md) 0;
@@ -186,7 +186,6 @@
       align-items: center;
     }
     
-    /* Título principal do app */
     .app-title {
       font-size: 1.8rem;
       font-weight: var(--font-weight-semibold);
@@ -211,7 +210,6 @@
       max-width: 600px;
     }
     
-    /* Área de KPIs */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -247,8 +245,7 @@
     .kpi-balance { border-left: 4px solid var(--color-primary); }
     .kpi-card-invoice { border-left: 4px solid var(--color-card-invoice); }
     
-    /* Insights banner */
-    .insights-banner-container { /* Renomeado para evitar conflito com classe interna */
+    .insights-banner-container {
       margin-bottom: var(--spacing-lg);
     }
     .insight-banner {
@@ -268,7 +265,6 @@
     .insight-info { background-color: rgba(23, 162, 184, 0.1); border-left: 4px solid var(--color-info); }
     .insight-success { background-color: rgba(40, 167, 69, 0.1); border-left: 4px solid var(--color-success); }
     
-    /* Gráficos */
     .charts-container { margin-bottom: var(--spacing-lg); }
     .charts-title { font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); margin-bottom: var(--spacing-md); }
     .charts-grid {
@@ -278,16 +274,27 @@
       margin-bottom: var(--spacing-md);
     }
     .chart-container {
-      height: 380px; /* Aumentado para acomodar legendas */
-      border-radius: var(--radius-lg);
+      height: 380px; 
+      /* O mockup usa --radius-xl (1rem), mas seu código original usa --radius-lg (0.3rem) para .card e outros.
+         Para manter consistência, mantive o --radius-lg. Se quiser o raio maior do mockup, mude para var(--radius-xl). */
+      border-radius: var(--radius-lg); 
       background-color: var(--color-surface);
-      padding: var(--spacing-md);
+      padding: var(--spacing-md); /* O mockup usava var(--spacing-lg) */
       border: 1px solid var(--color-outline);
-      overflow: visible; /* Alterado para visible para tentar mostrar legendas, mas controlado pelo padding do Chart.js */
+      display: flex; 
+      flex-direction: column; 
+      /* Removido justify-content e align-items: center; do original, pois o .chart-wrapper cuidará disso se necessário */
+      /* O mockup tinha box-shadow: 0 4px 20px rgba(0,0,0,0.05); e overflow: hidden; que podem ser adicionados se desejar */
     }
-    .chart-container h3 { font-weight: var(--font-weight-semibold); font-size: var(--font-size-lg); margin-bottom: var(--spacing-md); }
+    /* Removido .chart-container canvas e .chart-container h3 do original, pois o novo CSS e HTML têm estrutura diferente */
+    .chart-container h3 { 
+        font-weight: var(--font-weight-semibold); 
+        font-size: var(--font-size-lg); 
+        margin-bottom: var(--spacing-md); 
+        text-align: center; 
+        width: 100%; 
+    }
     
-    /* Compromissos longos */
     .commitments {
       margin-bottom: var(--spacing-lg);
       background-color: var(--color-surface);
@@ -319,7 +326,6 @@
     .commitment-progress { width: 100%; height: 8px; background-color: var(--color-outline); border-radius: var(--radius-full); overflow: hidden; }
     .commitment-progress-bar { height: 100%; border-radius: var(--radius-full); transition: width var(--transition-normal); }
     
-    /* Tabela de transações */
     .transactions-container { margin-bottom: var(--spacing-lg); }
     .card-transacoes {
       background-color: var(--color-surface);
@@ -339,7 +345,7 @@
     .filters { display: flex; gap: var(--spacing-sm); flex-wrap: wrap; }
     
     .transactions-table-container {
-      overflow-x: auto; /* Permite rolagem horizontal em telas pequenas */
+      overflow-x: auto; 
       border: 1px solid var(--color-outline);
       border-radius: var(--radius-lg);
       background-color: var(--color-surface);
@@ -347,23 +353,24 @@
     .transactions-table { width: 100%; }
     .transactions-table th, .transactions-table td {
       padding: var(--spacing-sm);
-      text-align: left;
+      text-align: left; 
       border-bottom: 1px solid var(--color-outline);
-      white-space: nowrap; /* Evita quebra de linha nos cabeçalhos */
+      white-space: nowrap; 
     }
     .transactions-table th {
       font-weight: var(--font-weight-medium);
       color: var(--color-on-surface-variant);
       background-color: var(--color-surface-variant);
       cursor: pointer;
+      text-align: center; 
     }
     .transactions-table th.sortable:hover { background-color: var(--color-outline); }
     .transactions-table tr:hover { background-color: var(--color-surface-variant); }
-    .transactions-table td .transaction-name-cell { /* Para nome e ícone */
+    .transactions-table td .transaction-name-cell { 
         display: flex;
         align-items: center;
         gap: var(--spacing-sm);
-        white-space: normal; /* Permite quebra de linha para nomes longos */
+        white-space: normal; 
         word-break: break-word;
     }
     .transaction-icon {
@@ -374,35 +381,30 @@
       height: 2rem;
       border-radius: var(--radius-full);
       background-color: var(--color-surface-variant);
-      font-size: 1rem; /* Ajuste para ícones emoji */
-      flex-shrink: 0; /* Evita que o ícone encolha */
+      font-size: 1rem; 
+      flex-shrink: 0; 
     }
     .actions-cell { display: flex; gap: var(--spacing-xs); justify-content: flex-end; }
     
-    /* Componentes */
-    /* Botões */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: var(--spacing-xs);
       padding: var(--spacing-sm) var(--spacing-md);
-      /* border-radius: var(--radius-full); */ /* Removido para aplicar condicionalmente */
-      border-radius: var(--radius-md); /* Padrão mais quadrado */
+      border-radius: var(--radius-md); 
       font-weight: var(--font-weight-medium);
       white-space: nowrap;
       min-height: 36px;
-      border: 1px solid transparent; /* Borda padrão */
+      border: 1px solid transparent; 
     }
     .btn:hover { opacity: 0.85; }
-    /* Botões no header */
     .header-actions .btn {
-      border-radius: var(--radius-md); /* Mais quadrado, como os selects */
+      border-radius: var(--radius-md); 
     }
-    .header-actions .btn.btn-icon { /* Para botões só de ícone no header, como o theme-toggle se fosse .btn */
-      border-radius: var(--radius-full); /* Mantém redondo se for apenas ícone */
+    .header-actions .btn.btn-icon { 
+      border-radius: var(--radius-full); 
     }
-
 
     .btn-primary { background-color: var(--color-primary); color: var(--color-on-primary); border-color: var(--color-primary); }
     .btn-success { background-color: var(--color-success); color: var(--color-on-success); border-color: var(--color-success); }
@@ -413,19 +415,18 @@
       color: var(--color-primary);
     }
     .btn-outline:hover { background-color: var(--color-surface-variant); border-color: var(--color-primary); }
-    .btn-icon { width: 36px; height: 36px; padding: 0; border-radius: var(--radius-full); /* Ícones sempre redondos */ }
+    .btn-icon { width: 36px; height: 36px; padding: 0; border-radius: var(--radius-full); }
     
-    /* Select personalizado */
     .select-wrapper { position: relative; display: inline-block; }
     .select {
       appearance: none;
       -webkit-appearance: none;
-      padding-right: var(--spacing-xl); /* Espaço para o ícone */
+      padding-right: var(--spacing-xl); 
       cursor: pointer;
-      background-color: var(--color-background); /* Garante que o select tenha fundo */
-      width: 100%; /* Para ocupar espaço no flex container */
-      min-width: 150px; /* Largura mínima */
-      border-radius: var(--radius-md); /* Igual aos inputs e botões */
+      background-color: var(--color-background); 
+      width: 100%; 
+      min-width: 150px; 
+      border-radius: var(--radius-md); 
     }
     .select-icon {
       position: absolute;
@@ -436,7 +437,6 @@
       color: var(--color-on-surface-variant);
     }
     
-    /* Cards (genérico, se necessário) */
     .card {
       background-color: var(--color-surface);
       border-radius: var(--radius-lg);
@@ -444,7 +444,6 @@
       border: 1px solid var(--color-outline);
     }
     
-    /* Badge */
     .badge {
       display: inline-block;
       padding: var(--spacing-xs) var(--spacing-sm);
@@ -458,7 +457,6 @@
     .badge-danger { background-color: rgba(220, 53, 69, 0.15); color: var(--color-error); }
     .badge-info { background-color: rgba(23, 162, 184, 0.15); color: var(--color-info); }
     
-    /* Modais */
     .modal-backdrop {
       position: fixed;
       top: 0;
@@ -466,7 +464,7 @@
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
-      display: none; /* Alterado para none, será 'flex' quando ativo */
+      display: none; 
       align-items: center;
       justify-content: center;
       z-index: 1000;
@@ -481,7 +479,7 @@
       border: 1px solid var(--color-outline);
       display: flex;
       flex-direction: column;
-      max-height: 90vh; /* Para evitar modais muito altos */
+      max-height: 90vh; 
     }
     .modal-header {
       display: flex;
@@ -508,12 +506,11 @@
       gap: var(--spacing-sm);
       padding: var(--spacing-md);
       border-top: 1px solid var(--color-outline);
-      background-color: var(--color-surface); /* Fundo para o rodapé */
+      background-color: var(--color-surface); 
       border-bottom-left-radius: var(--radius-lg);
       border-bottom-right-radius: var(--radius-lg);
     }
     
-    /* Toast */
     .toast-container {
       position: fixed;
       top: var(--spacing-md);
@@ -531,6 +528,7 @@
       padding: var(--spacing-md);
       margin-bottom: var(--spacing-sm);
       border: 1px solid var(--color-outline);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
       opacity: 0;
       transform: translateX(100%);
       transition: opacity var(--transition-normal), transform var(--transition-normal);
@@ -544,7 +542,6 @@
     .toast-warning { border-left: 4px solid var(--color-warning); }
     .toast-info { border-left: 4px solid var(--color-info); }
     
-    /* Inputs e Forms */
     .form-group { margin-bottom: var(--spacing-md); }
     .form-label {
       display: block;
@@ -553,9 +550,8 @@
       margin-bottom: var(--spacing-xs);
       font-weight: var(--font-weight-medium);
     }
-    .form-control { width: 100%; } /* Inputs ocupam toda a largura do form-group */
+    .form-control { width: 100%; } 
     
-    /* Radio buttons e Checkbox */
     .radio-group, .checkbox-group {
       display: flex;
       gap: var(--spacing-md);
@@ -564,13 +560,12 @@
     }
     .radio-wrapper, .checkbox-wrapper { display: flex; align-items: center; gap: var(--spacing-xs); }
     .radio, .checkbox { width: auto; height: auto; margin-right: var(--spacing-xs); accent-color: var(--color-primary); }
-    .radio-label, .checkbox-label { /* Simplificado para usar o label nativo */
+    .radio-label, .checkbox-label { 
       cursor: pointer;
       font-weight: normal;
       color: var(--color-on-surface);
     }
     
-    /* Tema Toggle */
     .theme-toggle {
       display: flex;
       align-items: center;
@@ -579,29 +574,28 @@
       height: 36px; 
       border-radius: var(--radius-full); 
       cursor: pointer;
-      background-color: transparent; /* Sem fundo */
-      border: none; /* Sem borda */
+      background-color: transparent; 
+      border: none; 
       padding: var(--spacing-xs); 
     }
     .theme-toggle:hover { 
-      background-color: var(--color-surface-variant); /* Leve feedback ao passar o mouse */
+      background-color: var(--color-surface-variant); 
     }
     .theme-toggle .icon-sun, .theme-toggle .icon-moon { 
-      width: 24px; /* Tamanho ajustado do ícone */
-      height: 24px; /* Tamanho ajustado do ícone */
+      width: 24px; 
+      height: 24px; 
       color: var(--color-on-surface-variant); 
     }
     [data-theme="light"] .theme-toggle .icon-moon { display: none; }
     [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
     
-    /* Investimentos */
     .investment-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: var(--spacing-md);
       margin-bottom: var(--spacing-lg);
     }
-    .investment-card { /* Reutiliza .card */
+    .investment-card { 
       display: flex;
       flex-direction: column;
     }
@@ -625,7 +619,6 @@
     .investment-history-table th, .investment-history-table td { padding: var(--spacing-sm); border-bottom: 1px solid var(--color-outline); }
     .investment-history-table th { background-color: var(--color-surface-variant); }
 
-    /* Gerenciamento de categorias */
     .categories-container { padding: var(--spacing-md); }
     .nav-tabs {
       display: flex;
@@ -633,7 +626,7 @@
       padding: 0;
       margin: 0 0 var(--spacing-md) 0;
       border-bottom: 1px solid var(--color-outline);
-      flex-wrap: wrap; /* Para responsividade */
+      flex-wrap: wrap; 
     }
     .nav-item { margin-right: var(--spacing-sm); margin-bottom: var(--spacing-xs); }
     .nav-link {
@@ -680,12 +673,12 @@
     
     .add-category-form {
       display: flex;
-      align-items: flex-end; /* Alinha o botão com a base dos inputs */
+      align-items: flex-end; 
       gap: var(--spacing-sm);
-      flex-wrap: wrap; /* Para responsividade */
+      flex-wrap: wrap; 
     }
-    .add-category-form .form-control { flex-grow: 1; } /* Inputs ocupam espaço disponível */
-    .add-category-form .btn { flex-shrink: 0; } /* Botão não encolhe */
+    .add-category-form .form-control { flex-grow: 1; } 
+    .add-category-form .btn { flex-shrink: 0; } 
 
     .custom-icon-input { display: flex; align-items: center; gap: var(--spacing-xs); }
     .custom-icon-preview {
@@ -696,14 +689,149 @@
       border: 1px solid var(--color-outline);
       font-size: 1.2rem;
     }
+
+    /* Estilos avançados para gráficos - INSERIDO DO AJUSTE.TXT */
+    .chart-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chart-tooltip {
+      position: fixed;
+      opacity: 0;
+      visibility: hidden; 
+      background: rgba(30, 30, 30, 0.85);
+      color: white;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      pointer-events: none;
+      z-index: 9999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      max-width: 220px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: opacity 0.2s, transform 0.2s;
+      transform: translateY(10px);
+    }
+    [data-theme="dark"] .chart-tooltip { /* Adicionado para tema escuro do tooltip, conforme mockup */
+        background: rgba(50, 50, 50, 0.95);
+        border: 1px solid rgba(255,255,255,0.15);
+    }
+
+
+    .chart-tooltip.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .annual-chart-container {
+      position: relative;
+    }
+
+    .limit-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .limit-display {
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    [data-theme="dark"] .limit-display {
+      background-color: rgba(40, 40, 40, 0.85);
+    }
+
+    .limit-value {
+      font-size: 24px;
+      font-weight: var(--font-weight-bold);
+      color: var(--color-on-surface);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .limit-label {
+      font-size: 12px;
+      color: var(--color-on-surface-variant);
+    }
+
+    .chart-legend-custom {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: var(--spacing-md);
+      gap: var(--spacing-md);
+      padding: var(--spacing-sm);
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: var(--radius-lg); /* Usando --radius-lg do seu sistema, mockup tinha --radius-lg (0.5rem) */
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    [data-theme="dark"] .chart-legend-custom {
+      background-color: rgba(40, 40, 40, 0.7);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: opacity 0.3s;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background-color: rgba(255, 255, 255, 0.9);
+      min-width: 100px;
+      justify-content: center;
+    }
+
+    [data-theme="dark"] .legend-item {
+      background-color: rgba(60, 60, 60, 0.9);
+    }
+
+    .legend-item.faded {
+      opacity: 0.5;
+    }
+
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px; /* Mockup usava 4px, mantido */
+      margin-right: 6px;
+      flex-shrink: 0;
+    }
+    /* FIM DOS ESTILOS AVANÇADOS PARA GRÁFICOS */
     
-    /* Responsividade */
     @media (max-width: 768px) {
       .header { flex-direction: column; align-items: stretch; }
       .header-filters { width: 100%; justify-content: space-around; margin-bottom: var(--spacing-sm); }
       .header-actions { width: 100%; justify-content: space-around; }
       .hero-title { font-size: 1.8rem; }
-      .charts-grid { grid-template-columns: 1fr; } /* Gráficos um abaixo do outro */
+      .charts-grid { grid-template-columns: 1fr; } 
       .add-category-form { flex-direction: column; align-items: stretch; }
       .add-category-form .form-control, .add-category-form .btn { width: 100%; }
     }
@@ -713,16 +841,16 @@
       .header-filters { flex-direction: column; align-items: stretch; }
       .header-filters .select-wrapper { width: 100%; }
       .header-actions { 
-        flex-direction: row; /* Mantém botões em linha se possível */
-        flex-wrap: wrap; /* Permite quebra de linha */
-        justify-content: center; /* Centraliza se quebrar */
+        flex-direction: row; 
+        flex-wrap: wrap; 
+        justify-content: center; 
       }
       .header-actions .btn, .header-actions .theme-toggle { 
-        flex-grow: 1; /* Botões tentam ocupar espaço */
-        min-width: calc(50% - var(--spacing-sm)); /* Aproximadamente 2 por linha */
+        flex-grow: 1; 
+        min-width: calc(50% - var(--spacing-sm)); 
       }
       .modal { width: 95%; }
-      .filters .select-wrapper { width: 100%; } /* Filtros da tabela ocupam largura total */
+      .filters .select-wrapper { width: 100%; } 
     }
 
   </style>
@@ -886,7 +1014,7 @@
         </button>
 
         <div id="themeToggle" class="theme-toggle" role="button" aria-label="Alternar tema">
-          <svg class="icon-sun" width="20" height="20"> <!-- Tamanho do ícone pode ser ajustado aqui e no CSS -->
+          <svg class="icon-sun" width="20" height="20"> 
             <use href="#icon-sun"></use>
           </svg>
           <svg class="icon-moon" width="20" height="20">
@@ -947,34 +1075,55 @@
       <!-- Insights serão inseridos aqui dinamicamente -->
     </div>
     
+    <!-- INÍCIO DO BLOCO DE GRÁFICOS SUBSTITUÍDO -->
     <section class="charts-container">
       <h2 class="charts-title">Resumo Financeiro</h2>
       <div class="charts-grid">
         <div class="chart-container">
           <h3>Despesas por Categoria</h3>
-          <canvas id="catPie"></canvas>
+          <div class="chart-wrapper">
+            <canvas id="categoryExpensesChart"></canvas>
+          </div>
         </div>
         <div class="chart-container">
           <h3>Uso do Limite (Cartões)</h3>
-          <canvas id="cardArea"></canvas> <!-- Será o gráfico de rosca -->
+          <div class="chart-wrapper">
+            <canvas id="cardUsageDonutChart"></canvas>
+            <div class="limit-container">
+              <div class="limit-display">
+                <div class="limit-value">0%</div>
+                <div class="limit-label">utilizado</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="charts-grid">
         <div class="chart-container">
           <h3>Despesas Fixas vs Variáveis</h3>
-          <canvas id="fixedVsVariableChart"></canvas>
+          <div class="chart-wrapper">
+            <canvas id="fixedVsVariableChart"></canvas>
+          </div>
         </div>
         <div class="chart-container">
           <h3>Despesas por Pessoa</h3>
-          <canvas id="personAnalysisChart"></canvas>
+          <div class="chart-wrapper">
+            <canvas id="personAnalysisChart"></canvas>
+          </div>
         </div>
       </div>
     </section>
-    
-    <div class="chart-container" style="margin-bottom: var(--spacing-lg); height: 400px;"> <!-- Este pode precisar de altura maior -->
+
+    <div class="chart-container annual-chart-container" style="margin-bottom: var(--spacing-lg); height: 400px;"> 
       <h3>Receitas x Despesas (12 meses)</h3>
-      <canvas id="annualBars"></canvas>
+      <div class="chart-wrapper">
+        <canvas id="annualBars"></canvas>
+      </div>
     </div>
+
+    <!-- Tooltip global para os gráficos -->
+    <div class="chart-tooltip" id="tooltip"></div>
+    <!-- FIM DO BLOCO DE GRÁFICOS SUBSTITUÍDO -->
     
     <div class="commitments">
       <div class="commitments-header active" id="commitmentsHeader">
@@ -983,7 +1132,7 @@
             <use href="#icon-chevron-up"></use>
         </svg>
       </div>
-      <div class="commitments-content" id="commitmentsContent" style="max-height: 500px;"> <!-- Inicialmente aberto -->
+      <div class="commitments-content" id="commitmentsContent" style="max-height: 500px;"> 
         <!-- Compromissos serão inseridos aqui dinamicamente -->
       </div>
     </div>
@@ -1283,7 +1432,7 @@
           <label class="form-label" for="editInstallments">Quantidade de Parcelas</label>
           <input type="number" class="form-control" id="editInstallments" min="2" value="2">
         </div>
-        <div class="form-group" id="editStatusOuterGroup"> <!-- Renomeado para evitar conflito -->
+        <div class="form-group" id="editStatusOuterGroup"> 
           <label class="form-label">Status</label>
           <div class="radio-group" id="editStatusGroup">
             <!-- Opções de status serão inseridas dinamicamente -->
@@ -1656,7 +1805,7 @@
         <div class="form-group">
           <label class="form-label" for="investmentCategory">Tipo/Categoria</label>
           <div class="select-wrapper">
-            <select class="select" id="investmentCategorySelect"></select> <!-- Renomeado para evitar conflito -->
+            <select class="select" id="investmentCategorySelect"></select> 
             <svg class="select-icon" width="16" height="16"><use href="#icon-chevron-down"></use></svg>
           </div>
         </div>
@@ -1744,8 +1893,8 @@
     cards: [],
     filteredTransactions: [],
     insights: [],
-    sortColumn: 'date',
-    sortDirection: 'desc',
+    sortColumn: 'dueDate', 
+    sortDirection: 'asc', 
     filters: {
       category: '',
       status: '',
@@ -1812,10 +1961,10 @@
   };
 
   const parseLocalDateString = (dateInput) => {
-    if (dateInput instanceof Date && !isNaN(dateInput)) return dateInput;
+    if (dateInput instanceof Date && !isNaN(dateInput)) return new Date(Date.UTC(dateInput.getFullYear(), dateInput.getMonth(), dateInput.getDate()));
     if (typeof dateInput === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
       const [year, month, day] = dateInput.split('-').map(Number);
-      return new Date(year, month - 1, day);
+      return new Date(Date.UTC(year, month - 1, day)); 
     }
     return null;
   };
@@ -1823,68 +1972,252 @@
   const formatDate = (date, options = {}) => {
     const dateObj = parseLocalDateString(date);
     if (!dateObj) return '--/--/----';
-    return dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', ...options });
+    return dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC', ...options });
   };
 
   const localDateToISOString = (date) => {
     if (!date) return null;
     const d = date instanceof Date ? date : parseLocalDateString(date);
     if (!d) return null;
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const year = d.getUTCFullYear();
+    const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(d.getUTCDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
+  // Funções auxiliares para gráficos modernos - INSERIDO DO AJUSTE.TXT
+  const showTooltip = (chart, content, event) => {
+    const tooltip = $('#tooltip');
+    if (!tooltip) return; // Adicionado para segurança
+    tooltip.innerHTML = content;
+    tooltip.classList.add('visible');
+    
+    const x = event.clientX;
+    const y = event.clientY;
+    
+    const tooltipWidth = tooltip.offsetWidth;
+    const tooltipHeight = tooltip.offsetHeight;
+    
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    let left = x + 10;
+    let top = y + 10;
+    
+    if (left + tooltipWidth > viewportWidth) {
+      left = x - tooltipWidth - 10;
+    }
+    
+    if (top + tooltipHeight > viewportHeight) {
+      top = y - tooltipHeight - 10;
+    }
+    
+    left = Math.max(10, left);
+    top = Math.max(10, top);
+    
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+  };
+
+  const hideTooltip = () => {
+    const tooltip = $('#tooltip');
+    if (!tooltip) return; // Adicionado para segurança
+    tooltip.classList.remove('visible');
+  };
+
+  // FUNÇÃO updateChartColors SUBSTITUÍDA PELO CÓDIGO DO AJUSTE.TXT
   const updateChartColors = () => {
     const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
-    const textColor = getComputedStyle(document.documentElement).getPropertyValue('--color-on-surface').trim();
-    const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--color-outline').trim();
-    const surfaceColor = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
-    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
+    const textColor = getComputedStyle(document.documentElement).getPropertyValue('--color-on-surface-variant').trim();
+    const gridColor = isDarkTheme ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
+    
+    // Paleta de cores profissional moderna
+    const chartColorsVibrant = [
+      '#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', 
+      '#1abc9c', '#e67e22', '#34495e', '#d35400', '#16a085', 
+      '#c0392b', '#27ae60'
+    ];
+    
+    // Cores com gradientes
+    const createGradient = (ctx, colorStart, colorEnd) => {
+      if (!ctx || !ctx.canvas) return colorStart; // Fallback se o contexto não estiver pronto
+      const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+      gradient.addColorStop(0, colorStart);
+      gradient.addColorStop(1, colorEnd);
+      return gradient;
+    };
+    
     const incomeColor = getComputedStyle(document.documentElement).getPropertyValue('--color-income').trim();
     const expenseColor = getComputedStyle(document.documentElement).getPropertyValue('--color-expense').trim();
-    const warningColor = getComputedStyle(document.documentElement).getPropertyValue('--color-warning').trim();
-
-    const chartColors = [primaryColor, incomeColor, warningColor, expenseColor, '#6f42c1', '#fd7e14', '#20c997', '#6610f2'];
-
+    
+    // Configurações globais
+    Chart.defaults.font.family = getComputedStyle(document.documentElement).getPropertyValue('--font-family').trim();
     Chart.defaults.color = textColor;
-    Chart.defaults.borderColor = gridColor;
-    Chart.defaults.plugins.tooltip.backgroundColor = isDarkTheme ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)';
-    Chart.defaults.plugins.tooltip.titleColor = textColor;
-    Chart.defaults.plugins.tooltip.bodyColor = textColor;
-    Chart.defaults.plugins.tooltip.borderColor = gridColor;
-    Chart.defaults.layout.padding = { top: 5, bottom: 25, left: 5, right: 5 }; // Default padding for legends
-
-    const charts = [pieChart, barChart, areaChart, fixedVsVariableChart, personAnalysisChart];
-    charts.forEach(chart => {
-      if (chart) {
-        chart.options.plugins.legend.labels.color = textColor;
-        if (chart.options.scales && chart.options.scales.x) {
-          chart.options.scales.x.ticks.color = textColor;
-          chart.options.scales.x.grid.color = gridColor;
+    Chart.defaults.borderColor = isDarkTheme ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+    Chart.defaults.plugins.tooltip.enabled = false; 
+    Chart.defaults.elements.bar.borderRadius = 6;
+    Chart.defaults.elements.line.tension = 0.4; 
+    Chart.defaults.plugins.legend.display = false; 
+    Chart.defaults.layout.padding = { top: 25, bottom: 35, left: 25, right: 25 };
+    
+    const getCtx = (chartInstance) => chartInstance.ctx;
+    
+    if (categoryExpensesChart) {
+      const ctx = getCtx(categoryExpensesChart);
+      categoryExpensesChart.data.datasets[0].backgroundColor = categoryExpensesChart.data.labels.map((_, i) => {
+        const color = chartColorsVibrant[i % chartColorsVibrant.length];
+        const lighterColor = isDarkTheme 
+          ? color.replace(')', ', 0.6)').replace('rgb', 'rgba')
+          : color.replace(')', ', 0.8)').replace('rgb', 'rgba');
+        return createGradient(ctx, color, lighterColor);
+      });
+      categoryExpensesChart.data.datasets[0].borderColor = 'transparent';
+      categoryExpensesChart.data.datasets[0].borderWidth = 0;
+      categoryExpensesChart.data.datasets[0].borderRadius = 8;
+      
+      categoryExpensesChart.options.scales.y.ticks.color = textColor;
+      categoryExpensesChart.options.scales.y.grid.color = gridColor;
+      categoryExpensesChart.options.scales.y.ticks.padding = 10;
+      categoryExpensesChart.options.scales.y.ticks.callback = function(value) {
+        return formatCurrency(value);
+      };
+      
+      categoryExpensesChart.options.scales.x.ticks.color = textColor;
+      categoryExpensesChart.options.scales.x.grid.color = 'transparent';
+      categoryExpensesChart.options.scales.x.ticks.padding = 10;
+      
+      categoryExpensesChart.update();
+    }
+    
+    if (cardUsageDonutChart) {
+      const usedColor = '#e74c3c'; 
+      const availableColor = '#2ecc71'; 
+      const baseColor = isDarkTheme ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.07)';
+      
+      cardUsageDonutChart.data.datasets[0].backgroundColor = [usedColor, availableColor, baseColor];
+      cardUsageDonutChart.data.datasets[0].borderColor = isDarkTheme ? '#2C2C2C' : '#FFFFFF';
+      cardUsageDonutChart.data.datasets[0].borderWidth = 3;
+      cardUsageDonutChart.data.datasets[0].borderRadius = 5;
+      cardUsageDonutChart.options.cutout = '65%';
+      
+      if (cardUsageDonutChart.data.datasets[0].data[0] !== undefined) {
+        const used = cardUsageDonutChart.data.datasets[0].data[0];
+        const totalForPercentage = cardUsageDonutChart.data.datasets[0].data.slice(0, 2).reduce((acc, val) => acc + val, 0); // Considera apenas usado + disponível para %
+        
+        if (totalForPercentage > 0) {
+          const usedPercentage = Math.round((used / totalForPercentage) * 100);
+          if ($('.limit-value')) $('.limit-value').textContent = `${usedPercentage}%`;
+          
+          if ($('.limit-value')) {
+              if (usedPercentage > 80) {
+                $('.limit-value').style.color = '#e74c3c';
+              } else if (usedPercentage > 60) {
+                $('.limit-value').style.color = '#f39c12';
+              } else {
+                $('.limit-value').style.color = getComputedStyle(document.documentElement).getPropertyValue('--color-on-surface').trim();
+              }
+          }
+        } else {
+             if ($('.limit-value')) {
+                $('.limit-value').textContent = `0%`;
+                $('.limit-value').style.color = getComputedStyle(document.documentElement).getPropertyValue('--color-on-surface').trim();
+             }
         }
-        if (chart.options.scales && chart.options.scales.y) {
-          chart.options.scales.y.ticks.color = textColor;
-          chart.options.scales.y.grid.color = gridColor;
-        }
-        if (chart.data.datasets[0]) {
-            if (chart === areaChart && chart.config.type === 'doughnut') { // Specific for the new card limit doughnut
-                if (chart.data.datasets[0].data.length === 2) { // Utilizado/Disponível
-                    chart.data.datasets[0].backgroundColor = [expenseColor, incomeColor];
-                } else { // Nenhum limite
-                    chart.data.datasets[0].backgroundColor = [gridColor];
-                }
-                chart.data.datasets[0].borderColor = surfaceColor;
-            } else if (chart.config.type === 'doughnut' || chart.config.type === 'pie') {
-                chart.data.datasets[0].backgroundColor = chartColors;
-                chart.data.datasets[0].borderColor = surfaceColor;
-            } else if (chart.config.type === 'bar') {
-                if (chart.data.datasets[0]) chart.data.datasets[0].backgroundColor = incomeColor;
-                if (chart.data.datasets[1]) chart.data.datasets[1].backgroundColor = expenseColor;
-            }
-        }
-        chart.update();
+      }
+      cardUsageDonutChart.update();
+    }
+    
+    if (fixedVsVariableChart) {
+      const fixedColor = '#3498db'; 
+      const variableColor = '#9b59b6'; 
+      
+      fixedVsVariableChart.data.datasets[0].backgroundColor = [fixedColor, variableColor];
+      fixedVsVariableChart.data.datasets[0].borderColor = isDarkTheme ? '#2C2C2C' : '#FFFFFF';
+      fixedVsVariableChart.data.datasets[0].borderWidth = 3;
+      
+      fixedVsVariableChart.update();
+    }
+    
+    if (personAnalysisChart) {
+      const ctx = getCtx(personAnalysisChart);
+      personAnalysisChart.data.datasets[0].backgroundColor = personAnalysisChart.data.labels.map((_, i) => {
+        const baseColor = chartColorsVibrant[i % chartColorsVibrant.length];
+        return createGradient(ctx, baseColor, baseColor.replace(')', ', 0.7)').replace('rgb', 'rgba'));
+      });
+      personAnalysisChart.data.datasets[0].borderColor = 'transparent';
+      personAnalysisChart.data.datasets[0].borderWidth = 0;
+      personAnalysisChart.data.datasets[0].borderRadius = 8;
+      
+      personAnalysisChart.options.scales.x.ticks.color = textColor;
+      personAnalysisChart.options.scales.x.grid.color = gridColor;
+      personAnalysisChart.options.scales.x.ticks.padding = 10;
+      personAnalysisChart.options.scales.x.ticks.callback = function(value) {
+        return formatCurrency(value);
+      };
+      
+      personAnalysisChart.options.scales.y.ticks.color = textColor;
+      personAnalysisChart.options.scales.y.grid.color = 'transparent';
+      personAnalysisChart.options.scales.y.ticks.padding = 10;
+      
+      personAnalysisChart.update();
+    }
+    
+    if (annualBarsChart) {
+      const ctx = getCtx(annualBarsChart);
+      
+      const incomeGradient = createGradient(ctx, 
+        incomeColor, 
+        incomeColor.replace(')', ', 0.6)').replace('rgb', 'rgba')
+      );
+      
+      const expenseGradient = createGradient(ctx, 
+        expenseColor, 
+        expenseColor.replace(')', ', 0.6)').replace('rgb', 'rgba')
+      );
+      
+      annualBarsChart.data.datasets[0].backgroundColor = incomeGradient;
+      annualBarsChart.data.datasets[0].borderColor = 'transparent';
+      annualBarsChart.data.datasets[0].borderWidth = 0;
+      annualBarsChart.data.datasets[0].borderRadius = 6;
+      
+      annualBarsChart.data.datasets[1].backgroundColor = expenseGradient;
+      annualBarsChart.data.datasets[1].borderColor = 'transparent';
+      annualBarsChart.data.datasets[1].borderWidth = 0;
+      annualBarsChart.data.datasets[1].borderRadius = 6;
+      
+      annualBarsChart.options.scales.y.ticks.color = textColor;
+      annualBarsChart.options.scales.y.grid.color = gridColor;
+      annualBarsChart.options.scales.y.ticks.padding = 10;
+      annualBarsChart.options.scales.y.ticks.callback = function(value) {
+        return formatCurrency(value);
+      };
+      
+      annualBarsChart.options.scales.x.ticks.color = textColor;
+      annualBarsChart.options.scales.x.grid.color = 'transparent';
+      annualBarsChart.options.scales.x.ticks.padding = 10;
+      
+      annualBarsChart.update();
+    }
+    
+    const legendItems = $$('.legend-item');
+    legendItems.forEach(item => {
+      if (isDarkTheme) {
+        item.style.backgroundColor = 'rgba(60, 60, 60, 0.9)';
+      } else {
+        item.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+      }
+      // Atualizar a cor do span.legend-color também se necessário
+      const colorSpan = item.querySelector('.legend-color');
+      if (colorSpan) {
+          if (item.textContent.includes('Receitas')) {
+              colorSpan.style.backgroundColor = 'var(--color-income)';
+          } else if (item.textContent.includes('Despesas')) {
+              colorSpan.style.backgroundColor = 'var(--color-expense)';
+          }
       }
     });
   };
+
 
   const toggleTheme = () => {
     const newTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
@@ -1990,34 +2323,43 @@
     }
   };
 
-  const calcularVencimentoReal = (dataLancamento, cartao) => {
-    if (!dataLancamento || !cartao || !cartao.closingDay || !cartao.dueDay) return null;
+  const calcularVencimentoReal = (dataCompraInput, cartao) => {
+    if (!dataCompraInput || !cartao || !cartao.closingDay || !cartao.dueDay) return null;
     
-    const lancamento = parseLocalDateString(dataLancamento);
-    let anoVencimento = lancamento.getFullYear();
-    let mesVencimento = lancamento.getMonth(); // 0-indexed
+    const compraDate = parseLocalDateString(dataCompraInput);
+    if (!compraDate) return null;
 
-    if (lancamento.getDate() > cartao.closingDay) {
-        mesVencimento++; // Compra vai para a fatura do próximo mês
+    const compraDay = compraDate.getUTCDate();
+    let mesFechamentoFatura = compraDate.getUTCMonth(); 
+    let anoFechamentoFatura = compraDate.getUTCFullYear();
+
+    if (compraDay > cartao.closingDay) {
+        mesFechamentoFatura++;
+        if (mesFechamentoFatura > 11) {
+            mesFechamentoFatura = 0;
+            anoFechamentoFatura++;
+        }
     }
-    // Agora, o mesVencimento é o mês da fatura (pode ser o mesmo da compra ou o próximo)
-    // O dia de vencimento é no `mesVencimento` (se dueDay >= closingDay)
-    // ou no `mesVencimento + 1` (se dueDay < closingDay, indicando vencimento "virado")
+
+    let mesVencimentoFinal = mesFechamentoFatura;
+    let anoVencimentoFinal = anoFechamentoFatura;
+
     if (cartao.dueDay < cartao.closingDay) {
-        mesVencimento++; // Vencimento é no mês seguinte ao mês da fatura
+        mesVencimentoFinal++;
+        if (mesVencimentoFinal > 11) {
+            mesVencimentoFinal = 0;
+            anoVencimentoFinal++;
+        }
     }
-
-    if (mesVencimento > 11) {
-        anoVencimento += Math.floor(mesVencimento / 12);
-        mesVencimento %= 12;
-    }
-    return new Date(anoVencimento, mesVencimento, cartao.dueDay);
+    return new Date(Date.UTC(anoVencimentoFinal, mesVencimentoFinal, cartao.dueDay));
   };
   
   const calcularMelhorDiaCompras = (cartao) => {
     if (!cartao || !cartao.closingDay) return null;
-    let melhorDia = cartao.closingDay + 1;
-    return melhorDia > 31 ? 1 : melhorDia; 
+    const dataFechamentoNoMesAtual = new Date(Date.UTC(state.year, state.month, cartao.closingDay));
+    const dataMelhorDia = new Date(dataFechamentoNoMesAtual);
+    dataMelhorDia.setUTCDate(dataFechamentoNoMesAtual.getUTCDate() + 1);
+    return dataMelhorDia.getUTCDate();
   };
 
   const handleStatusField = (formPrefix) => {
@@ -2061,7 +2403,7 @@
 
     try {
         await db.collection('cards').doc(card.id).update({
-            currentInvoice: card.currentInvoice,
+            currentInvoice: card.currentInvoice, 
             availableLimit: card.availableLimit
         });
     } catch (error) {
@@ -2218,7 +2560,7 @@
       const snapshot = await db.collection('cards').get();
       state.cards = snapshot.docs.map(doc => {
           const card = { id: doc.id, ...doc.data() };
-          card.currentInvoice = card.currentInvoice || 0;
+          card.currentInvoice = card.currentInvoice || 0; 
           card.availableLimit = card.limit - card.currentInvoice;
           return card;
       });
@@ -2270,10 +2612,21 @@
 
   const deleteCard = async (cardId) => {
     try {
-      if (!confirm('Tem certeza que deseja excluir este cartão? Transações associadas não serão alteradas.')) return;
+      if (!confirm('Tem certeza que deseja excluir este cartão? Transações associadas não serão alteradas, mas perderão o vínculo com este cartão.')) return;
 
       await db.collection('cards').doc(cardId).delete();
       state.cards = state.cards.filter(c => c.id !== cardId);
+      const batch = db.batch();
+      let changed = false;
+      state.transactions.forEach(t => {
+        if (t.creditCardId === cardId) {
+            batch.update(db.collection('transactions').doc(t.id), { creditCardId: null, creditCardName: null });
+            t.creditCardId = null; t.creditCardName = null;
+            changed = true;
+        }
+      });
+      if (changed) await batch.commit();
+
       await fullUIRefresh(); 
       showToast('Cartão excluído!', 'success');
     } catch (error) {
@@ -2287,31 +2640,33 @@
       const card = state.cards.find(c => c.id === cardId);
       if (!card) return;
 
-      const today = new Date(state.year, state.month, 15); // Usar a data do mês selecionado como referência
-      const { previousClosing, currentClosingDate } = getInvoicePeriod(card, today);
+      const faturaVencimentoRef = new Date(Date.UTC(state.year, state.month, card.dueDay));
+      const { previousClosing, currentClosingDate } = getInvoicePeriod(card, faturaVencimentoRef);
 
       const batch = db.batch();
-      let invoiceTotalPaid = 0;
+      let totalFaturaPagaEsteMes = 0;
 
       state.transactions.forEach(t => {
         if (t.type === 'expense' && t.paymentMethod === 'credito' && t.creditCardId === cardId) {
-          const transactionDate = parseLocalDateString(t.date);
-          // Considerar apenas transações DENTRO do período da fatura que está sendo paga
-          if (transactionDate >= previousClosing && transactionDate < currentClosingDate && t.status !== 'paid') {
+          const dataCompra = parseLocalDateString(t.date);
+          if (dataCompra >= previousClosing && dataCompra < currentClosingDate && t.status !== 'paid') {
             const docRef = db.collection('transactions').doc(t.id);
             batch.update(docRef, { status: 'paid' });
             t.status = 'paid'; 
-            invoiceTotalPaid += parseFloat(t.amount);
+            totalFaturaPagaEsteMes += parseFloat(t.amount);
           }
         }
       });
       
-      // A lógica de currentInvoice e availableLimit é complexa e atualizada por updateCardLimits.
-      // Após pagar a fatura, o currentInvoice do cartão idealmente refletiria as compras do *próximo* período.
-      // Para simplificar, a atualização do cartão (currentInvoice) é feita dinamicamente
-      // com base nas transações não pagas de cartão do *período atual do cartão*.
-      // Pagar a fatura apenas muda o status das transações. O fullUIRefresh irá recalcular os limites.
-
+      if (totalFaturaPagaEsteMes > 0) {
+        card.currentInvoice = Math.max(0, (card.currentInvoice || 0) - totalFaturaPagaEsteMes);
+        card.availableLimit = card.limit - card.currentInvoice;
+        batch.update(db.collection('cards').doc(card.id), {
+            currentInvoice: card.currentInvoice,
+            availableLimit: card.availableLimit
+        });
+      }
+      
       await batch.commit();
       await fullUIRefresh(); 
       closeModal('payInvoiceConfirmModal');
@@ -2614,19 +2969,24 @@
     }
   };
 
-  const getInvoicePeriod = (card, referenceDate) => {
-    const refDate = parseLocalDateString(referenceDate) || new Date();
-    let currentClosingMonth = refDate.getMonth();
-    let currentClosingYear = refDate.getFullYear();
+  const getInvoicePeriod = (card, invoiceDueDateRef) => {
+    const refDate = parseLocalDateString(invoiceDueDateRef);
+    if (!refDate || !card) return { previousClosing: null, currentClosingDate: null };
 
-    if (refDate.getDate() > card.closingDay) {
-        currentClosingMonth++;
-        if (currentClosingMonth > 11) {
-            currentClosingMonth = 0;
-            currentClosingYear++;
+    let closingDay = card.closingDay;
+    let dueDay = card.dueDay;
+
+    let currentClosingYear = refDate.getUTCFullYear();
+    let currentClosingMonth = refDate.getUTCMonth(); 
+
+    if (dueDay >= closingDay) {
+        currentClosingMonth--;
+        if (currentClosingMonth < 0) {
+            currentClosingMonth = 11;
+            currentClosingYear--;
         }
     }
-    const currentClosingDate = new Date(currentClosingYear, currentClosingMonth, card.closingDay);
+    const currentClosingDate = new Date(Date.UTC(currentClosingYear, currentClosingMonth, closingDay));
     
     let previousClosingMonth = currentClosingMonth - 1;
     let previousClosingYear = currentClosingYear;
@@ -2634,34 +2994,34 @@
         previousClosingMonth = 11;
         previousClosingYear--;
     }
-    const previousClosing = new Date(previousClosingYear, previousClosingMonth, card.closingDay);
+    const previousClosing = new Date(Date.UTC(previousClosingYear, previousClosingMonth, closingDay));
     
-    return { previousClosing, currentClosingDate };
+    return { previousClosing, currentClosingDate }; 
   };
+
 
   const filterTransactionsByMonth = () => {
     state.filteredTransactions = state.transactions.filter(transaction => {
-        const transactionDate = parseLocalDateString(transaction.date); // Data de lançamento
-        if (!transactionDate) return false;
+        const transactionLaunchDate = parseLocalDateString(transaction.date); 
+        if (!transactionLaunchDate) return false;
 
-        if (transaction.paymentMethod === 'credito' && transaction.creditCardId) {
-            const card = state.cards.find(c => c.id === transaction.creditCardId);
-            if (card) {
-                const realDueDate = calcularVencimentoReal(transactionDate, card); // Vencimento da fatura que contém esta compra
-                if (realDueDate) {
-                    return realDueDate.getMonth() === state.month && realDueDate.getFullYear() === state.year;
+        let effectiveDateForFilter = transactionLaunchDate;
+
+        if (transaction.type === 'expense') { 
+            if (transaction.paymentMethod === 'credito' && transaction.creditCardId) {
+                const card = state.cards.find(c => c.id === transaction.creditCardId);
+                if (card) {
+                    const realDueDate = calcularVencimentoReal(transactionLaunchDate, card);
+                    if (realDueDate) effectiveDateForFilter = realDueDate;
                 }
+            } else if (transaction.dueDate) { 
+                const explicitDueDate = parseLocalDateString(transaction.dueDate);
+                if (explicitDueDate) effectiveDateForFilter = explicitDueDate;
             }
-            return false; // Se não encontrar cartão ou não puder calcular, não exibe
-        } else if (transaction.dueDate) { // Para boletos e outras despesas com vencimento explícito
-            const dueDate = parseLocalDateString(transaction.dueDate);
-            if (dueDate) {
-                return dueDate.getMonth() === state.month && dueDate.getFullYear() === state.year;
-            }
-            // Se não tiver dueDate válido, cai para a lógica da data de lançamento (abaixo)
         }
-        // Para receitas e despesas sem vencimento explícito (ou cartão), usa o mês/ano de lançamento
-        return transactionDate.getMonth() === state.month && transactionDate.getFullYear() === state.year;
+        
+        return effectiveDateForFilter.getUTCMonth() === state.month && 
+               effectiveDateForFilter.getUTCFullYear() === state.year;
     });
   };
 
@@ -2671,7 +3031,8 @@
   };
 
   const updateKPIs = () => {
-    const currentMonthTransactions = state.filteredTransactions; 
+    filterTransactionsByMonth(); 
+    const currentMonthTransactions = state.filteredTransactions;
 
     const totalIncome = currentMonthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + parseFloat(t.amount), 0);
     const totalExpense = currentMonthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + parseFloat(t.amount), 0);
@@ -2679,82 +3040,37 @@
     const incomePending = totalIncome - incomeReceived;
     const expensePaid = currentMonthTransactions.filter(t => t.type === 'expense' && t.status === 'paid').reduce((sum, t) => sum + parseFloat(t.amount), 0);
     const expensePending = totalExpense - expensePaid;
-    
+
     const saldoReal = incomeReceived - expensePaid;
-    const saldoComprometido = totalIncome - totalExpense; 
+    const saldoComprometido = totalIncome - totalExpense;
 
     $('#incomeValue').textContent = formatCurrency(totalIncome);
-    $('#expenseValue').textContent = formatCurrency(totalExpense);
+    $('#expenseValue').textContent = formatCurrency(totalExpense); 
     $('#balanceValue').textContent = formatCurrency(saldoReal);
-    $('.kpi-balance .kpi-subtitle span').textContent = `Saldo comprometido: ${formatCurrency(saldoComprometido)}`;
+    if($('.kpi-balance .kpi-subtitle span')) $('.kpi-balance .kpi-subtitle span').textContent = `Saldo comprometido: ${formatCurrency(saldoComprometido)}`;
     $('#incomeReceivedValue').textContent = `${formatCurrency(incomeReceived)} recebidos`;
     $('#incomePendingValue').textContent = `${formatCurrency(incomePending)} pendentes`;
     $('#expensePaidValue').textContent = `${formatCurrency(expensePaid)} pagos`;
     $('#expensePendingValue').textContent = `${formatCurrency(expensePending)} pendentes`;
 
-    let monthlyInvoiceTotal = 0;
-    let nextOverallDueDate = null; // Para armazenar a próxima data de vencimento da fatura (considerando todos os cartões)
-    
-    if (state.cards.length > 0) {
-        const refDateForInvoiceKPI = new Date(state.year, state.month, 15); // Data de referência no meio do mês selecionado
-    
-        state.cards.forEach(card => {
-            // Calcular o período da fatura que VENCE no mês/ano selecionado
-            // Para isso, a referência para getInvoicePeriod deve ser a data de vencimento no mês atual.
-            let potentialDueDateInCurrentMonth = new Date(state.year, state.month, card.dueDay);
-            
-            // Se o dia de vencimento do cartão for menor que o dia de fechamento,
-            // e a data de referência (meio do mês) for após o fechamento,
-            // significa que a fatura que vence neste mês já fechou no mês anterior.
-            // Ex: Fecha dia 20, vence dia 05. Se estamos em 15/Maio, a fatura de Maio (venc. 05/Maio) fechou em Abril.
-            // Para pegar as compras da fatura que VENCE em Maio, a referência de `getInvoicePeriod` deve ser ajustada.
-            
-            let referenceForPeriodCalculation = new Date(state.year, state.month, card.dueDay);
-            
-            // Se o vencimento é "virado" (dueDay < closingDay), a fatura que vence em `state.month`
-            // refere-se a compras que fecharam no `state.month - 1`.
-            // `getInvoicePeriod` espera uma data DENTRO do período de compras da fatura.
-            // Assim, se a fatura vence em `state.month` (dia `card.dueDay`),
-            // o período de compras dela geralmente termina no `state.month -1` (dia `card.closingDay`).
-            // Então, uma data de referência segura para `getInvoicePeriod` seria `state.month - 1`, `card.closingDay`.
-            let monthForPeriod = state.month;
-            let yearForPeriod = state.year;
+    let totalCardDueThisMonth = 0; 
+    let earliestCardDueDateThisMonth = null; 
 
-            if (card.dueDay < card.closingDay) { // Vencimento "virado"
-                monthForPeriod -=1;
-                if (monthForPeriod < 0) {
-                    monthForPeriod = 11;
-                    yearForPeriod -=1;
+    state.transactions.forEach(t => {
+        if (t.type === 'expense' && t.paymentMethod === 'credito') {
+            const effectiveDueDate = getEffectiveDueDateForSort(t); 
+            if (effectiveDueDate &&
+                effectiveDueDate.getUTCMonth() === state.month &&
+                effectiveDueDate.getUTCFullYear() === state.year) {
+                totalCardDueThisMonth += parseFloat(t.amount);
+                if (!earliestCardDueDateThisMonth || effectiveDueDate < earliestCardDueDateThisMonth) {
+                    earliestCardDueDateThisMonth = effectiveDueDate;
                 }
             }
-            // E se a data de compra for depois do fechamento, já cai no próximo ciclo
-            // A data de referência para getInvoicePeriod deve ser uma data que esteja *dentro* do ciclo de compras da fatura
-            // que vence em state.month / state.year.
-
-            // Simplificação: Usar a data de vencimento do cartão no mês atual como referência para calcular o período da fatura
-            // que está vencendo *neste* mês.
-            const invoiceEffectiveDueDate = new Date(state.year, state.month, card.dueDay);
-
-            const { previousClosing, currentClosingDate } = getInvoicePeriod(card, invoiceEffectiveDueDate);
-
-            const invoiceTransactionsForCard = state.transactions.filter(t => {
-                const tDate = parseLocalDateString(t.date);
-                return t.type === 'expense' &&
-                       t.paymentMethod === 'credito' &&
-                       t.creditCardId === card.id &&
-                       tDate >= previousClosing &&
-                       tDate < currentClosingDate; // Compras até (não incluso) o dia de fechamento
-            });
-            
-            monthlyInvoiceTotal += invoiceTransactionsForCard.reduce((sum, t) => sum + parseFloat(t.amount), 0);
-            
-            if (!nextOverallDueDate || invoiceEffectiveDueDate < nextOverallDueDate) {
-                nextOverallDueDate = invoiceEffectiveDueDate;
-            }
-        });
-    }
-    $('#invoiceValue').textContent = formatCurrency(monthlyInvoiceTotal);
-    $('#invoiceDueDate').textContent = nextOverallDueDate ? formatDate(nextOverallDueDate) : '--/--/----';
+        }
+    });
+    $('#invoiceValue').textContent = formatCurrency(totalCardDueThisMonth); 
+    $('#invoiceDueDate').textContent = earliestCardDueDateThisMonth ? formatDate(earliestCardDueDateThisMonth) : '--/--/----';
   };
 
   const updateCardsList = () => {
@@ -2770,25 +3086,26 @@
         cardEl.className = 'card'; 
         cardEl.style.marginBottom = 'var(--spacing-md)';
         
-        // Para exibir a fatura referente ao mês/ano selecionado nos filtros
-        const refDateForInvoiceList = new Date(state.year, state.month, card.dueDay); 
-        const { previousClosing, currentClosingDate } = getInvoicePeriod(card, refDateForInvoiceList);
-        const dueDateForThisInvoice = new Date(state.year, state.month, card.dueDay); // Vencimento da fatura no mês selecionado
+        const faturaVencimentoNoMesSelecionado = new Date(Date.UTC(state.year, state.month, card.dueDay));
+        const { previousClosing, currentClosingDate } = getInvoicePeriod(card, faturaVencimentoNoMesSelecionado);
 
-        const currentInvoiceTransactions = state.transactions.filter(t =>
-            t.type === 'expense' &&
-            t.paymentMethod === 'credito' &&
-            t.creditCardId === card.id &&
-            parseLocalDateString(t.date) >= previousClosing &&
-            parseLocalDateString(t.date) < currentClosingDate
-        );
-        const currentInvoiceAmount = currentInvoiceTransactions.reduce((sum, t) => sum + parseFloat(t.amount), 0);
+        let currentInvoiceAmountForMonth = 0;
+        if (previousClosing && currentClosingDate) {
+            const currentInvoiceTransactions = state.transactions.filter(t => {
+                const tLaunchDate = parseLocalDateString(t.date);
+                return t.type === 'expense' &&
+                       t.paymentMethod === 'credito' &&
+                       t.creditCardId === card.id &&
+                       tLaunchDate >= previousClosing &&
+                       tLaunchDate < currentClosingDate;
+            });
+            currentInvoiceAmountForMonth = currentInvoiceTransactions.reduce((sum, t) => sum + parseFloat(t.amount), 0);
+        }
 
-        // AvailableLimit e currentInvoice do 'card' no state são globais, não específico do mês.
-        // Para o card na lista, vamos mostrar o limite total e o disponível global.
-        // E a fatura APROXIMADA do mês selecionado.
         const limitPercentage = card.limit > 0 ? ((card.limit - card.availableLimit) / card.limit) * 100 : 0;
         const melhorDia = calcularMelhorDiaCompras(card);
+        const nomeMesFatura = new Date(state.year, state.month).toLocaleDateString('pt-BR', {month: 'long'});
+
 
         cardEl.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm);">
@@ -2798,13 +3115,13 @@
                     <button class="btn btn-icon btn-outline delete-card-btn" data-id="${card.id}" aria-label="Excluir"><svg width="16" height="16"><use href="#icon-trash"></use></svg></button>
                 </div>
             </div>
-            <div>Limite: ${formatCurrency(card.limit)} | Disp. (Global): ${formatCurrency(card.availableLimit)}</div>
+            <div>Limite: ${formatCurrency(card.limit)} | Disponível: ${formatCurrency(card.availableLimit)}</div>
             <div class="commitment-progress" style="margin: var(--spacing-xs) 0;">
                 <div class="commitment-progress-bar" style="width: ${limitPercentage.toFixed(0)}%; background-color: ${limitPercentage > 80 ? 'var(--color-error)' : 'var(--color-primary)'};"></div>
             </div>
-            <div><small>Fechamento global: dia ${card.closingDay} | Vencimento global: dia ${card.dueDay}</small></div>
-            <div><small>Fatura de ${new Date(state.year, state.month).toLocaleDateString('pt-BR', {month: 'long'})} (Venc. ${formatDate(dueDateForThisInvoice)}): ${formatCurrency(currentInvoiceAmount)}</small></div>
-            ${melhorDia ? `<div><small style="color: var(--color-info);">Melhor dia p/ compra (próx. ciclo): ${melhorDia}</small></div>` : ''}
+            <div><small>Sua Fatura fecha: dia ${card.closingDay} | Vencimento: dia ${card.dueDay}</small></div>
+            <div><small>Fatura de ${nomeMesFatura}: ${formatCurrency(currentInvoiceAmountForMonth)}</small></div>
+            ${melhorDia ? `<div><small style="color: var(--color-info);">Melhor dia p/ compra: dia ${melhorDia}</small></div>` : ''}
             <button class="btn btn-primary view-invoice-btn" data-id="${card.id}" style="margin-top: var(--spacing-sm);">Ver Fatura de ${new Date(state.year, state.month).toLocaleDateString('pt-BR', {month: 'short'})}</button>
         `;
         listEl.appendChild(cardEl);
@@ -2820,36 +3137,46 @@
   const openCardInvoice = (cardId) => {
     const card = state.cards.find(c => c.id === cardId);
     if (!card) return;
-    state.currentCard = card;
+    state.currentCard = card; 
 
-    const refDateForInvoiceModal = new Date(state.year, state.month, card.dueDay);
-    const { previousClosing, currentClosingDate } = getInvoicePeriod(card, refDateForInvoiceModal);
-    const dueDateForThisInvoice = new Date(state.year, state.month, card.dueDay);
-    
-    $('#cardInvoiceTitle').textContent = `Fatura ${card.name} - Venc. ${formatDate(dueDateForThisInvoice)}`;
+    const faturaVencimentoNoMesSelecionado = new Date(Date.UTC(state.year, state.month, card.dueDay));
+
+    $('#cardInvoiceTitle').textContent = `Fatura ${card.name} - Venc. ${formatDate(faturaVencimentoNoMesSelecionado)}`;
+
+    let currentInvoiceSum = 0;
+    const invoiceTransactions = state.transactions.filter(t => {
+        if (t.type === 'expense' && t.paymentMethod === 'credito' && t.creditCardId === cardId) {
+            const effectiveDueDate = getEffectiveDueDateForSort(t); 
+            return effectiveDueDate &&
+                   effectiveDueDate.getUTCMonth() === state.month &&
+                   effectiveDueDate.getUTCFullYear() === state.year;
+        }
+        return false; 
+    }).sort((a,b) => parseLocalDateString(a.date) - parseLocalDateString(b.date)); 
+
+    currentInvoiceSum = invoiceTransactions.reduce((sum, t) => sum + parseFloat(t.amount), 0);
+
+    const { previousClosing, currentClosingDate } = getInvoicePeriod(card, faturaVencimentoNoMesSelecionado);
+    let endOfPurchasePeriod = null;
+    if (currentClosingDate) {
+        endOfPurchasePeriod = new Date(currentClosingDate.getTime());
+        endOfPurchasePeriod.setUTCDate(currentClosingDate.getUTCDate() - 1);
+    }
+
     $('#cardInvoiceDetails').innerHTML = `
-        <p><strong>Período de Compras:</strong> ${formatDate(previousClosing)} - ${formatDate(new Date(currentClosingDate.getTime() - 1))}</p> <!-- Subtrai 1 dia do currentClosingDate para mostrar o dia anterior -->
-        <p><strong>Vencimento desta Fatura:</strong> ${formatDate(dueDateForThisInvoice)}</p>
-        <p><strong>Limite Total do Cartão:</strong> ${formatCurrency(card.limit)} | <strong>Disponível (Global):</strong> ${formatCurrency(card.availableLimit)}</p>
-        <p><strong>Valor desta Fatura:</strong> <span id="currentInvoiceValueDisplay">Calculando...</span></p>
+        <p><strong>Período de Compras (Referência):</strong> ${previousClosing ? formatDate(previousClosing) : 'N/A'} - ${endOfPurchasePeriod ? formatDate(endOfPurchasePeriod) : 'N/A'}</p>
+        <p><strong>Vencimento desta Fatura:</strong> ${formatDate(faturaVencimentoNoMesSelecionado)}</p>
+        <p><strong>Limite Total:</strong> ${formatCurrency(card.limit)} | <strong>Disponível:</strong> ${formatCurrency(card.availableLimit)}</p>
+        <p><strong>Valor desta Fatura:</strong> <span id="currentInvoiceValueDisplay">${formatCurrency(currentInvoiceSum)}</span></p>
     `;
 
     const tableBody = $('#cardInvoiceTableBody');
     tableBody.innerHTML = '';
-    const invoiceTransactions = state.transactions.filter(t => 
-        t.type === 'expense' && 
-        t.paymentMethod === 'credito' && 
-        t.creditCardId === cardId &&
-        parseLocalDateString(t.date) >= previousClosing && 
-        parseLocalDateString(t.date) < currentClosingDate 
-    ).sort((a,b) => parseLocalDateString(a.date) - parseLocalDateString(b.date));
 
-    let currentInvoiceSum = 0;
     if (invoiceTransactions.length === 0) {
       tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Nenhuma despesa nesta fatura.</td></tr>';
     } else {
       invoiceTransactions.forEach(t => {
-        currentInvoiceSum += parseFloat(t.amount);
         const row = tableBody.insertRow();
         row.innerHTML = `
           <td>${t.name} ${t.isRecurrent && t.installments > 1 ? `(${t.installmentNumber}/${t.installments})` : ''}</td>
@@ -2857,7 +3184,7 @@
           <td>${formatCurrency(t.amount)}</td>
           <td>
             <div class="checkbox-wrapper">
-              <input type="checkbox" class="checkbox invoice-paid-checkbox" id="invoice-paid-${t.id}" 
+              <input type="checkbox" class="checkbox invoice-paid-checkbox" id="invoice-paid-${t.id}"
                      data-id="${t.id}" ${t.status === 'paid' ? 'checked' : ''}>
               <label class="checkbox-label" for="invoice-paid-${t.id}"></label>
             </div>
@@ -2865,158 +3192,512 @@
       });
       $$('.invoice-paid-checkbox').forEach(cb => cb.addEventListener('change', async (e) => {
           await updateTransactionStatus(e.target.dataset.id, e.target.checked ? 'paid' : 'pending');
-          openCardInvoice(cardId); 
+          openCardInvoice(cardId);
       }));
     }
-    $('#currentInvoiceValueDisplay').textContent = formatCurrency(currentInvoiceSum);
-    $('#invoiceConfirmAmount').textContent = formatCurrency(currentInvoiceSum); 
-
-    closeModal('cardsListModal');
+    $('#invoiceConfirmAmount').textContent = formatCurrency(currentInvoiceSum);
+    closeModal('cardsListModal'); 
     openModal('cardInvoiceModal');
   };
 
-  let pieChart, barChart, areaChart, fixedVsVariableChart, personAnalysisChart;
+  let categoryExpensesChart, cardUsageDonutChart, annualBarsChart, fixedVsVariableChart, personAnalysisChart;
+  
+  // FUNÇÃO createCharts SUBSTITUÍDA PELO CÓDIGO DO AJUSTE.TXT
   const createCharts = () => {
-    const commonOptions = (titleText) => ({
+    const configCategoryExpenses = {
+      type: 'bar',
+      data: { 
+        labels: [],
+        datasets: [{
+          data: [],
+          label: 'Valor',
+          borderRadius: 8,
+          maxBarThickness: 50
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animations: {
+          tension: {
+            duration: 1000,
+            easing: 'easeOutQuad',
+            from: 0.8,
+            to: 0.2,
+            loop: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              drawBorder: false,
+              color: 'rgba(200, 200, 200, 0.08)'
+            },
+            ticks: {
+              padding: 10,
+              callback: function(value) {
+                return formatCurrency(value);
+              }
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              padding: 10
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        onHover: (event, elements) => {
+          event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+        }
+      }
+    };
+    
+    const configCardUsage = {
+      type: 'doughnut',
+      data: {
+        labels: ['Utilizado', 'Disponível', 'Total'], // 'Total' é para a seção base no mockup
+        datasets: [{
+          data: [0, 0, 0], 
+          borderWidth: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '65%',
+        rotation: -90,
+        circumference: 360,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        animation: {
+          animateScale: true,
+          animateRotate: true,
+          duration: 1200
+        },
+        onHover: (event, elements) => {
+          event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+        }
+      }
+    };
+    
+    const configFixedVsVariable = {
+      type: 'pie',
+      data: {
+        labels: ['Fixas', 'Variáveis'],
+        datasets: [{
+          data: [],
+          borderWidth: 3
+        }]
+      },
+      options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-            title: { display: true, text: titleText, font: { size: 14, weight: '600' }, padding: { top: 10, bottom: 10 } },
-            legend: { position: 'bottom', labels: { padding: 15, usePointStyle: true, pointStyle: 'circle', boxWidth: 8, font: {size: 11} } },
-            tooltip: { 
-                callbacks: { 
-                    label: ctx => `${ctx.label}: ${formatCurrency(ctx.parsed.y || ctx.parsed)}` 
-                } 
-            }
+          legend: {
+            display: false
+          }
         },
-        layout: { padding: { top: 5, bottom: 5, left: 5, right: 5 } } 
-    });
-    const pieDoughnutOptions = (titleText, isDoughnut = true) => ({ 
-        ...commonOptions(titleText), 
-        cutout: isDoughnut ? '60%' : '0%',
-    });
-
-    if ($('#catPie')) pieChart = new Chart($('#catPie').getContext('2d'), { type: 'doughnut', data: { labels:[], datasets:[{ data:[] }] }, options: pieDoughnutOptions('Despesas por Categoria') });
+        animation: {
+          animateScale: true,
+          animateRotate: true,
+          duration: 1200
+        },
+        onHover: (event, elements) => {
+          event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+        }
+      }
+    };
     
-    // Gráfico de Limite do Cartão (agora doughnut)
-    if ($('#cardArea')) {
-        areaChart = new Chart($('#cardArea').getContext('2d'), { 
-            type: 'doughnut', 
-            data: { labels:['Utilizado', 'Disponível'], datasets:[{ data:[0,0] }] }, 
-            options: {
-                ...pieDoughnutOptions('Uso do Limite (Cartões)', true),
-                plugins: {
-                    ...pieDoughnutOptions('Uso do Limite (Cartões)', true).plugins, // Herda plugins comuns
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.label || '';
-                                if (context.parsed !== null) {
-                                    const value = context.parsed;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = total > 0 ? (value / total * 100).toFixed(1) + '%' : '0%';
-                                    return `${label}: ${formatCurrency(value)} (${percentage})`;
-                                }
-                                return `${label}: ${formatCurrency(0)}`;
-                            }
-                        }
-                    }
-                }
+    const configPersonAnalysis = {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [{
+          data: [],
+          label: 'Valor',
+          borderRadius: 8,
+          maxBarThickness: 40
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            beginAtZero: true,
+            grid: {
+              drawBorder: false,
+              color: 'rgba(200, 200, 200, 0.08)'
+            },
+            ticks: {
+              padding: 10,
+              callback: function(value) {
+                return formatCurrency(value);
+              }
             }
-        });
+          },
+          y: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              padding: 10
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        animation: {
+          delay: (context) => context.dataIndex * 100,
+          duration: 800,
+          easing: 'easeOutQuad'
+        },
+        onHover: (event, elements) => {
+          event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+        }
+      }
+    };
+    
+    const configAnnualBars = {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Receitas',
+            data: [],
+            borderRadius: 6,
+            maxBarThickness: 20
+          },
+          {
+            label: 'Despesas',
+            data: [],
+            borderRadius: 6,
+            maxBarThickness: 20
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            stacked: false,
+            grid: {
+              drawBorder: false,
+              color: 'rgba(200, 200, 200, 0.1)'
+            },
+            ticks: {
+              padding: 10,
+              callback: function(value) {
+                return formatCurrency(value);
+              }
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            },
+            stacked: false,
+            ticks: {
+              padding: 10
+            }
+          }
+        },
+        interaction: {
+          mode: 'index',
+          intersect: false,
+        },
+        plugins: {
+          legend: {
+            display: false 
+          }
+        },
+        animation: {
+          delay: (context) => context.dataIndex * 80,
+          duration: 1000,
+          easing: 'easeOutQuad'
+        },
+        onHover: (event, elements) => {
+          event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+        }
+      }
+    };
+    
+    if ($('#categoryExpensesChart')) categoryExpensesChart = new Chart($('#categoryExpensesChart').getContext('2d'), configCategoryExpenses);
+    if ($('#cardUsageDonutChart')) cardUsageDonutChart = new Chart($('#cardUsageDonutChart').getContext('2d'), configCardUsage);
+    if ($('#fixedVsVariableChart')) fixedVsVariableChart = new Chart($('#fixedVsVariableChart').getContext('2d'), configFixedVsVariable);
+    if ($('#personAnalysisChart')) personAnalysisChart = new Chart($('#personAnalysisChart').getContext('2d'), configPersonAnalysis);
+    if ($('#annualBars')) annualBarsChart = new Chart($('#annualBars').getContext('2d'), configAnnualBars);
+    
+    if ($('#categoryExpensesChart')) {
+      $('#categoryExpensesChart').addEventListener('mousemove', (e) => {
+        const points = categoryExpensesChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+        if (points.length) {
+          const index = points[0].index;
+          const value = categoryExpensesChart.data.datasets[0].data[index];
+          const label = categoryExpensesChart.data.labels[index];
+          showTooltip(categoryExpensesChart, `<strong>${label}</strong><br>${formatCurrency(value)}`, e);
+        } else {
+          hideTooltip();
+        }
+      });
+      $('#categoryExpensesChart').addEventListener('mouseout', hideTooltip);
     }
-
-    if ($('#fixedVsVariableChart')) fixedVsVariableChart = new Chart($('#fixedVsVariableChart').getContext('2d'), { type: 'pie', data: { labels:['Fixas', 'Variáveis'], datasets:[{ data:[] }] }, options: pieDoughnutOptions('Despesas Fixas vs Variáveis', false) }); // Pie normal
-    if ($('#personAnalysisChart')) personAnalysisChart = new Chart($('#personAnalysisChart').getContext('2d'), { type: 'pie', data: { labels:[], datasets:[{ data:[] }] }, options: pieDoughnutOptions('Despesas por Pessoa', false) }); // Pie normal
-    if ($('#annualBars')) barChart = new Chart($('#annualBars').getContext('2d'), { type: 'bar', data: { labels:[], datasets:[{label:'Receitas', data:[]}, {label:'Despesas', data:[]}] }, options: {...commonOptions('Receitas x Despesas (12 meses)'), scales: {y:{beginAtZero:true, ticks:{callback:v=>formatCurrency(v)}}}, layout: { padding: { top: 5, bottom: 25, left: 5, right: 5 }}} });
-    updateChartColors(); 
+    
+    if ($('#cardUsageDonutChart')) {
+      $('#cardUsageDonutChart').addEventListener('mousemove', (e) => {
+        const points = cardUsageDonutChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+        if (points.length) {
+          const index = points[0].index;
+          const value = cardUsageDonutChart.data.datasets[0].data[index];
+          const label = cardUsageDonutChart.data.labels[index];
+          
+          const totalForPercentage = cardUsageDonutChart.data.datasets[0].data.slice(0, 2).reduce((a, b) => a + b, 0); // Usado + Disponível
+          const percentage = totalForPercentage > 0 ? ((value / totalForPercentage) * 100).toFixed(1) : 0;
+          
+          let content = `<strong>${label}</strong><br>${formatCurrency(value)}`;
+          
+          if (index < 2) { 
+            content += `<br>${percentage}% do limite`;
+          }
+          
+          showTooltip(cardUsageDonutChart, content, e);
+        } else {
+          hideTooltip();
+        }
+      });
+      $('#cardUsageDonutChart').addEventListener('mouseout', hideTooltip);
+    }
+    
+    if ($('#fixedVsVariableChart')) {
+      $('#fixedVsVariableChart').addEventListener('mousemove', (e) => {
+        const points = fixedVsVariableChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+        if (points.length) {
+          const index = points[0].index;
+          const value = fixedVsVariableChart.data.datasets[0].data[index];
+          const label = fixedVsVariableChart.data.labels[index];
+          
+          const total = fixedVsVariableChart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+          const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+          
+          showTooltip(fixedVsVariableChart, `<strong>${label}</strong><br>${formatCurrency(value)}<br>${percentage}% do total`, e);
+        } else {
+          hideTooltip();
+        }
+      });
+      $('#fixedVsVariableChart').addEventListener('mouseout', hideTooltip);
+    }
+    
+    if ($('#personAnalysisChart')) {
+      $('#personAnalysisChart').addEventListener('mousemove', (e) => {
+        const points = personAnalysisChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+        if (points.length) {
+          const index = points[0].index;
+          const value = personAnalysisChart.data.datasets[0].data[index];
+          const label = personAnalysisChart.data.labels[index];
+          showTooltip(personAnalysisChart, `<strong>${label}</strong><br>${formatCurrency(value)}`, e);
+        } else {
+          hideTooltip();
+        }
+      });
+      $('#personAnalysisChart').addEventListener('mouseout', hideTooltip);
+    }
+    
+    if ($('#annualBars')) {
+      $('#annualBars').addEventListener('mousemove', (e) => {
+        const points = annualBarsChart.getElementsAtEventForMode(e, 'index', { intersect: false }, false);
+        if (points.length) {
+          const index = points[0].index;
+          const income = annualBarsChart.data.datasets[0].data[index] || 0;
+          const expense = annualBarsChart.data.datasets[1].data[index] || 0;
+          const month = annualBarsChart.data.labels[index];
+          const balance = income - expense;
+          
+          let content = `<strong>${month}</strong><br>` +
+                       `Receitas: ${formatCurrency(income)}<br>` +
+                       `Despesas: ${formatCurrency(expense)}<br>` +
+                       `<span style="color:${balance >= 0 ? 'var(--color-income)' : 'var(--color-error)'}">` + // Usando vars
+                       `Saldo: ${formatCurrency(balance)}</span>`;
+          
+          showTooltip(annualBarsChart, content, e);
+        } else {
+          hideTooltip();
+        }
+      });
+      $('#annualBars').addEventListener('mouseout', hideTooltip);
+      
+    }
+    updateChartColors();
   };
 
+  // FUNÇÃO updateCharts SUBSTITUÍDA PELO CÓDIGO DO AJUSTE.TXT
   const updateCharts = () => {
-    if (!pieChart) createCharts(); 
+    if (!categoryExpensesChart) createCharts(); // Garante que os gráficos sejam criados na primeira chamada
     const currentMonthTransactions = state.filteredTransactions;
 
-    const expenseCategories = currentMonthTransactions.filter(t => t.type === 'expense').reduce((acc, t) => {
-      const catName = state.categories.expense.find(c => c.id === t.category)?.name || t.categoryName || 'Outros';
-      acc[catName] = (acc[catName] || 0) + parseFloat(t.amount);
-      return acc;
-    }, {});
-    pieChart.data.labels = Object.keys(expenseCategories);
-    pieChart.data.datasets[0].data = Object.values(expenseCategories);
-    pieChart.update();
-
-    // Limite do Cartão (Doughnut)
+    // 1. Atualiza o gráfico de despesas por categoria
+    const expenseCategories = currentMonthTransactions
+      .filter(t => t.type === 'expense')
+      .reduce((acc, t) => {
+        const catName = state.categories.expense.find(c => c.id === t.category)?.name || t.categoryName || 'Outros';
+        const catIcon = state.categories.expense.find(c => c.id === t.category)?.icon || '';
+        const displayName = catIcon ? `${catIcon} ${catName}` : catName;
+        acc[displayName] = (acc[displayName] || 0) + parseFloat(t.amount);
+        return acc;
+      }, {});
+      
+    const sortedCategories = Object.entries(expenseCategories)
+      .sort((a, b) => b[1] - a[1])
+      .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+      
+    categoryExpensesChart.data.labels = Object.keys(sortedCategories);
+    categoryExpensesChart.data.datasets[0].data = Object.values(sortedCategories);
+    
+    categoryExpensesChart.options.animation = {
+      y: { duration: 1000, from: 0 },
+      x: { delay: (context) => context.dataIndex * 100 }
+    };
+    categoryExpensesChart.update();
+    
+    // 2. Atualiza o gráfico de uso do cartão de crédito
     const totalLimitAllCards = state.cards.reduce((sum, c) => sum + parseFloat(c.limit || 0), 0);
     const totalAvailableAllCards = state.cards.reduce((sum, c) => sum + parseFloat(c.availableLimit || 0), 0);
     const totalUsedAllCards = totalLimitAllCards - totalAvailableAllCards;
-
-    if (areaChart) { // Verifica se o gráfico de limite existe
-        if (totalLimitAllCards > 0) {
-            areaChart.data.labels = ['Utilizado', 'Disponível'];
-            areaChart.data.datasets[0].data = [totalUsedAllCards, totalAvailableAllCards];
-        } else {
-            areaChart.data.labels = ['Nenhum Limite Configurado'];
-            areaChart.data.datasets[0].data = [1]; // Para mostrar algo, mesmo que sem valor
-        }
-        areaChart.update();
-    }
-
-
-    const fixed = currentMonthTransactions.filter(t=>t.type==='expense' && t.isFixed==='fixed').reduce((s,t)=>s+parseFloat(t.amount),0);
-    const variable = currentMonthTransactions.filter(t=>t.type==='expense' && t.isFixed==='variable').reduce((s,t)=>s+parseFloat(t.amount),0);
-    fixedVsVariableChart.data.datasets[0].data = [fixed, variable];
-    fixedVsVariableChart.update();
-
-    const personExpenses = currentMonthTransactions.filter(t => t.type === 'expense').reduce((acc, t) => {
-      const personName = state.people.find(p => p.id === t.person)?.name || 'Não atribuído';
-      acc[personName] = (acc[personName] || 0) + parseFloat(t.amount);
-      return acc;
-    }, {});
-    personAnalysisChart.data.labels = Object.keys(personExpenses);
-    personAnalysisChart.data.datasets[0].data = Object.values(personExpenses);
-    personAnalysisChart.update();
     
-    const annualData = Array(12).fill(null).map(() => ({ income: 0, expense: 0 }));
-    const todayForAnnual = new Date(state.year, state.month, 1); // Usar o state.year/month como referência
-    state.transactions.forEach(t => {
-        const tDate = parseLocalDateString(t.date);
-        if (!tDate) return;
-
-        let effectiveDateForAnnualChart = tDate; // Por padrão, data de lançamento
-
-        if (t.type === 'expense') {
-            if (t.paymentMethod === 'credito' && t.creditCardId) {
-                const card = state.cards.find(c => c.id === t.creditCardId);
-                if (card) {
-                    const realDueDate = calcularVencimentoReal(tDate, card);
-                    if (realDueDate) effectiveDateForAnnualChart = realDueDate;
-                }
-            } else if (t.dueDate) {
-                const explicitDueDate = parseLocalDateString(t.dueDate);
-                if (explicitDueDate) effectiveDateForAnnualChart = explicitDueDate;
+    if (cardUsageDonutChart) {
+      if (totalLimitAllCards > 0) {
+        cardUsageDonutChart.data.labels = ['Utilizado', 'Disponível', 'Fundo']; // Label 'Fundo' para a seção base
+        cardUsageDonutChart.data.datasets[0].data = [
+          totalUsedAllCards, 
+          totalAvailableAllCards,
+          Math.max(0.01, totalLimitAllCards * 0.05) // Pequeno valor para a seção base, nunca zero para evitar problemas
+        ];
+        
+        const percentUsed = totalLimitAllCards > 0 ? Math.round((totalUsedAllCards / totalLimitAllCards) * 100) : 0;
+        if($('.limit-value')) $('.limit-value').textContent = `${percentUsed}%`;
+        
+        if($('.limit-value')) {
+            if (percentUsed > 80) {
+            $('.limit-value').style.color = '#e74c3c';
+            } else if (percentUsed > 60) {
+            $('.limit-value').style.color = '#f39c12';
+            } else {
+            $('.limit-value').style.color = getComputedStyle(document.documentElement).getPropertyValue('--color-on-surface').trim();
             }
         }
-        // Se for receita, usa a data de lançamento mesmo.
-
-        // Verifica se a data efetiva está nos últimos 12 meses em relação ao mês/ano selecionado
-        const monthDiff = (todayForAnnual.getFullYear() - effectiveDateForAnnualChart.getFullYear()) * 12 + (todayForAnnual.getMonth() - effectiveDateForAnnualChart.getMonth());
-        
-        if (monthDiff >= 0 && monthDiff < 12) { // Nos últimos 12 meses (inclusive o atual)
-            const indexInAnnualArray = 11 - monthDiff; // 11 é o mês atual, 0 é 11 meses atrás
-            if (t.type === 'income') annualData[indexInAnnualArray].income += parseFloat(t.amount);
-            else if (t.type === 'expense') annualData[indexInAnnualArray].expense += parseFloat(t.amount);
+      } else {
+        cardUsageDonutChart.data.labels = ['Nenhum Limite'];
+        cardUsageDonutChart.data.datasets[0].data = [1]; // Dado placeholder
+        if ($('.limit-value')) {
+          $('.limit-value').textContent = `0%`;
+          $('.limit-value').style.color = getComputedStyle(document.documentElement).getPropertyValue('--color-on-surface').trim();
         }
+      }
+      cardUsageDonutChart.options.animation = { animateRotate: true, animateScale: true, duration: 1000 };
+      cardUsageDonutChart.update();
+    }
+    
+    // 3. Atualiza o gráfico de despesas fixas vs variáveis
+    const fixed = currentMonthTransactions
+      .filter(t => t.type === 'expense' && t.isFixed === 'fixed')
+      .reduce((s, t) => s + parseFloat(t.amount), 0);
+      
+    const variable = currentMonthTransactions
+      .filter(t => t.type === 'expense' && t.isFixed === 'variable')
+      .reduce((s, t) => s + parseFloat(t.amount), 0);
+      
+    fixedVsVariableChart.data.datasets[0].data = [fixed, variable];
+    fixedVsVariableChart.options.animation = { animateRotate: true, animateScale: true, duration: 1000 };
+    fixedVsVariableChart.update();
+    
+    // 4. Atualiza o gráfico de despesas por pessoa
+    const personExpenses = currentMonthTransactions
+      .filter(t => t.type === 'expense' && t.person)
+      .reduce((acc, t) => {
+        const person = state.people.find(p => p.id === t.person);
+        const personName = person ? `${person.icon || ''} ${person.name}` : 'Não atribuído';
+        acc[personName] = (acc[personName] || 0) + parseFloat(t.amount);
+        return acc;
+      }, {});
+      
+    const sortedPersons = Object.entries(personExpenses)
+      .sort((a, b) => b[1] - a[1])
+      .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+      
+    personAnalysisChart.data.labels = Object.keys(sortedPersons);
+    personAnalysisChart.data.datasets[0].data = Object.values(sortedPersons);
+    personAnalysisChart.options.animation = {
+      x: { duration: 1000, from: 0 },
+      y: { delay: (context) => context.dataIndex * 100 }
+    };
+    personAnalysisChart.update();
+    
+    // 5. Atualiza o gráfico anual de receitas x despesas
+    const annualData = Array(12).fill(null).map(() => ({ income: 0, expense: 0 }));
+    const todayForAnnual = new Date(Date.UTC(state.year, state.month, 1));
+    
+    state.transactions.forEach(t => {
+      const tLaunchDate = parseLocalDateString(t.date);
+      if (!tLaunchDate) return;
+      
+      let effectiveDateForAnnualChart = tLaunchDate;
+      
+      if (t.type === 'expense') {
+        if (t.paymentMethod === 'credito' && t.creditCardId) {
+          const card = state.cards.find(c => c.id === t.creditCardId);
+          if (card) {
+            const realDueDate = calcularVencimentoReal(tLaunchDate, card);
+            if (realDueDate) effectiveDateForAnnualChart = realDueDate;
+          }
+        } else if (t.dueDate) {
+          const explicitDueDate = parseLocalDateString(t.dueDate);
+          if (explicitDueDate) effectiveDateForAnnualChart = explicitDueDate;
+        }
+      }
+      
+      const monthDiff = (todayForAnnual.getUTCFullYear() - effectiveDateForAnnualChart.getUTCFullYear()) * 12 + 
+                      (todayForAnnual.getUTCMonth() - effectiveDateForAnnualChart.getUTCMonth());
+      
+      if (monthDiff >= 0 && monthDiff < 12) {
+        const indexInAnnualArray = 11 - monthDiff;
+        if (t.type === 'income') annualData[indexInAnnualArray].income += parseFloat(t.amount);
+        else if (t.type === 'expense') annualData[indexInAnnualArray].expense += parseFloat(t.amount);
+      }
     });
-
-    barChart.data.labels = Array(12).fill(null).map((_, i) => {
-        const d = new Date(todayForAnnual);
-        d.setMonth(todayForAnnual.getMonth() - (11 - i)); // Subtrai para pegar os meses anteriores
-        return d.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' });
+    
+    annualBarsChart.data.labels = Array(12).fill(null).map((_, i) => {
+      const d = new Date(todayForAnnual);
+      d.setUTCMonth(todayForAnnual.getUTCMonth() - (11 - i));
+      return d.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit', timeZone: 'UTC' });
     });
-    barChart.data.datasets[0].data = annualData.map(d => d.income);
-    barChart.data.datasets[1].data = annualData.map(d => d.expense);
-    barChart.update();
-    updateChartColors(); 
+    
+    annualBarsChart.data.datasets[0].data = annualData.map(d => d.income);
+    annualBarsChart.data.datasets[1].data = annualData.map(d => d.expense);
+    annualBarsChart.options.animation = {
+      y: { duration: 1000, easing: 'easeOutQuad', from: 0 },
+      delay: (context) => context.dataIndex * 100
+    };
+    annualBarsChart.update();
+    
+    updateChartColors(); // ESSENCIAL: Chama para aplicar cores/gradientes aos gráficos atualizados 
   };
 
   const toggleCommitments = () => {
@@ -3037,45 +3718,51 @@
     if (!container) return;
     container.innerHTML = '';
     state.insights = [];
-    const today = new Date(); today.setHours(0,0,0,0);
+    const today = new Date(); today.setUTCHours(0,0,0,0); 
 
     const overdue = state.transactions.filter(t => {
-        if (t.type !== 'expense' || t.status === 'paid' || !t.dueDate) return false;
-        let effectiveDueDate = parseLocalDateString(t.dueDate);
+        if (t.type !== 'expense' || t.status === 'paid') return false;
+        
+        let effectiveDueDate = null;
         if (t.paymentMethod === 'credito' && t.creditCardId) {
             const card = state.cards.find(c => c.id === t.creditCardId);
             const launchDate = parseLocalDateString(t.date);
-            if (card && launchDate) {
-                const realCardDueDate = calcularVencimentoReal(launchDate, card);
-                if (realCardDueDate) effectiveDueDate = realCardDueDate;
-            }
+            if (card && launchDate) effectiveDueDate = calcularVencimentoReal(launchDate, card);
+        } else if (t.dueDate) {
+            effectiveDueDate = parseLocalDateString(t.dueDate);
         }
-        return effectiveDueDate && effectiveDueDate < today;
+        
+        if (!effectiveDueDate) return false;
+        
+        return effectiveDueDate < today;
     });
+
     if (overdue.length > 0) {
       state.insights.push({ id: 'overdue', level: 'danger', icon: 'icon-alert', message: `Você tem ${overdue.length} conta(s) vencida(s).`, actionText: 'Ver Detalhes', action: () => openDueTransactionsModal(overdue, 'Contas Vencidas', 'danger') });
     }
 
-    const upcomingDate = new Date(today); upcomingDate.setDate(today.getDate() + 5);
+    const upcomingDateLimit = new Date(today); upcomingDateLimit.setUTCDate(today.getUTCDate() + 5);
     const upcoming = state.transactions.filter(t => {
-        if (t.type !== 'expense' || t.status === 'paid' || !t.dueDate) return false;
-        let effectiveDueDate = parseLocalDateString(t.dueDate);
-         if (t.paymentMethod === 'credito' && t.creditCardId) {
+        if (t.type !== 'expense' || t.status === 'paid') return false;
+        
+        let effectiveDueDate = null;
+        if (t.paymentMethod === 'credito' && t.creditCardId) {
             const card = state.cards.find(c => c.id === t.creditCardId);
             const launchDate = parseLocalDateString(t.date);
-            if (card && launchDate) {
-                const realCardDueDate = calcularVencimentoReal(launchDate, card);
-                if (realCardDueDate) effectiveDueDate = realCardDueDate;
-            }
+            if (card && launchDate) effectiveDueDate = calcularVencimentoReal(launchDate, card);
+        } else if (t.dueDate) {
+            effectiveDueDate = parseLocalDateString(t.dueDate);
         }
-        return effectiveDueDate && effectiveDueDate >= today && effectiveDueDate <= upcomingDate;
+        if (!effectiveDueDate) return false;
+
+        return effectiveDueDate >= today && effectiveDueDate <= upcomingDateLimit;
     });
     if (upcoming.length > 0) {
       state.insights.push({ id: 'upcoming', level: 'warning', icon: 'icon-calendar', message: `Você tem ${upcoming.length} conta(s) a vencer nos próximos 5 dias.`, actionText: 'Ver Detalhes', action: () => openDueTransactionsModal(upcoming, 'Contas a Vencer', 'warning') }); 
     }
     
     state.cards.filter(c => c.availableLimit < (c.limit * 0.2)).forEach(c => {
-        state.insights.push({ id: `low-limit-${c.id}`, level: 'warning', icon: 'icon-credit-card', message: `Limite baixo no cartão ${c.name}.`, actionText: 'Ver Cartão', action: () => openCardInvoice(c.id) });
+        state.insights.push({ id: `low-limit-${c.id}`, level: 'warning', icon: 'icon-credit-card', message: `Limite baixo no cartão ${c.name}.`, actionText: 'Ver Cartão', action: () => { closeModal('insightsBannerContainer'); openModal('cardsListModal'); openCardInvoice(c.id); } });
     });
 
     state.insights.forEach(insight => {
@@ -3101,31 +3788,43 @@
       tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhuma conta encontrada.</td></tr>`;
     } else {
       transactions.sort((a,b) => {
-        let dueDateA = parseLocalDateString(a.dueDate);
-        let dueDateB = parseLocalDateString(b.dueDate);
+        let dueDateA_effective = null;
         if (a.paymentMethod === 'credito' && a.creditCardId) {
             const cardA = state.cards.find(c=>c.id===a.creditCardId);
-            if(cardA) dueDateA = calcularVencimentoReal(parseLocalDateString(a.date), cardA);
+            if(cardA) dueDateA_effective = calcularVencimentoReal(parseLocalDateString(a.date), cardA);
+        } else if (a.dueDate) {
+            dueDateA_effective = parseLocalDateString(a.dueDate);
         }
+
+        let dueDateB_effective = null;
         if (b.paymentMethod === 'credito' && b.creditCardId) {
             const cardB = state.cards.find(c=>c.id===b.creditCardId);
-            if(cardB) dueDateB = calcularVencimentoReal(parseLocalDateString(b.date), cardB);
+            if(cardB) dueDateB_effective = calcularVencimentoReal(parseLocalDateString(b.date), cardB);
+        } else if (b.dueDate) {
+            dueDateB_effective = parseLocalDateString(b.dueDate);
         }
-        return dueDateA - dueDateB;
+        
+        if (!dueDateA_effective && !dueDateB_effective) return 0;
+        if (!dueDateA_effective) return 1;
+        if (!dueDateB_effective) return -1;
+        return dueDateA_effective - dueDateB_effective;
+
       }).forEach(t => {
         const cat = state.categories.expense.find(c => c.id === t.category);
-        let effectiveDueDate = parseLocalDateString(t.dueDate);
+        let effectiveDueDateForDisplay = null;
         if (t.paymentMethod === 'credito' && t.creditCardId) {
             const card = state.cards.find(c=>c.id===t.creditCardId);
             const launchDate = parseLocalDateString(t.date);
-            if(card && launchDate) effectiveDueDate = calcularVencimentoReal(launchDate, card);
+            if(card && launchDate) effectiveDueDateForDisplay = calcularVencimentoReal(launchDate, card);
+        } else if (t.dueDate) {
+            effectiveDueDateForDisplay = parseLocalDateString(t.dueDate);
         }
 
         const row = tableBody.insertRow();
         row.innerHTML = `
           <td>${t.name}</td>
           <td>${cat ? `${cat.icon} ${cat.name}` : (t.categoryName || t.category)}</td>
-          <td>${formatDate(effectiveDueDate)}</td>
+          <td>${effectiveDueDateForDisplay ? formatDate(effectiveDueDateForDisplay) : formatDate(t.date)}</td>
           <td>${formatCurrency(t.amount)}</td>
           <td class="actions-cell">
             <button class="btn btn-success btn-sm mark-paid-due-btn" data-id="${t.id}">Pagar</button>
@@ -3134,7 +3833,7 @@
       });
       $$('.mark-paid-due-btn').forEach(btn => btn.addEventListener('click', async e => {
           await updateTransactionStatus(e.target.dataset.id, 'paid');
-          const remaining = transactions.filter(tr => tr.id !== e.target.dataset.id);
+          const remaining = transactions.filter(tr => tr.id !== e.target.dataset.id && tr.status !== 'paid'); 
           if (remaining.length > 0) openDueTransactionsModal(remaining, title, type);
           else closeModal('dueTransactionsModal');
           generateInsights(); 
@@ -3235,7 +3934,13 @@
           state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc';
         } else {
           state.sortColumn = column;
-          state.sortDirection = (column === 'date' || column === 'dueDate') ? 'desc' : 'asc'; 
+          if (column === 'date' || column === 'dueDate') {
+            state.sortDirection = 'asc'; 
+          } else if (column === 'amount') {
+            state.sortDirection = 'desc'; 
+          } else {
+            state.sortDirection = 'asc'; 
+          }
         }
         $$('#transactionsTable th.sortable').forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
         header.classList.add(`sorted-${state.sortDirection}`);
@@ -3244,13 +3949,33 @@
     });
   };
 
+  const getEffectiveDueDateForSort = (transaction) => {
+    let effectiveDate = parseLocalDateString(transaction.date); 
+
+    if (transaction.type === 'expense') {
+        if (transaction.paymentMethod === 'credito' && transaction.creditCardId) {
+            const card = state.cards.find(c => c.id === transaction.creditCardId);
+            if (card) {
+                const realCardDueDate = calcularVencimentoReal(parseLocalDateString(transaction.date), card);
+                if (realCardDueDate) effectiveDate = realCardDueDate;
+            }
+        } else if (transaction.dueDate) {
+            const explicitDueDate = parseLocalDateString(transaction.dueDate);
+            if (explicitDueDate) effectiveDate = explicitDueDate;
+        }
+    }
+    return effectiveDate;
+  };
+
+
   const updateTransactionsTable = () => {
     const tableBody = $('#transactionsTableBody');
     if (!tableBody) return;
     if (!$('#filter-transaction-type')) createTransactionFilters(); 
-    if (!$('#transactionsTable th.sortable').classList.contains('has-listener')) { 
+    const sortableHeaders = $$('#transactionsTable th.sortable');
+    if (sortableHeaders.length > 0 && !sortableHeaders[0].classList.contains('has-listener')) { 
         setupSortableColumns();
-        $$('#transactionsTable th.sortable').forEach(h => h.classList.add('has-listener'));
+        sortableHeaders.forEach(h => h.classList.add('has-listener'));
     }
 
     let transactionsToDisplay = [...state.filteredTransactions]; 
@@ -3262,45 +3987,33 @@
 
     transactionsToDisplay.sort((a, b) => {
       let valA, valB;
-      let dateA_effective = parseLocalDateString(a.date);
-      let dateB_effective = parseLocalDateString(b.date);
-
-      if (a.paymentMethod === 'credito' && a.creditCardId) {
-          const cardA = state.cards.find(c => c.id === a.creditCardId);
-          if (cardA) dateA_effective = calcularVencimentoReal(parseLocalDateString(a.date), cardA) || dateA_effective;
-      } else if (a.dueDate) {
-          dateA_effective = parseLocalDateString(a.dueDate) || dateA_effective;
-      }
-
-      if (b.paymentMethod === 'credito' && b.creditCardId) {
-          const cardB = state.cards.find(c => c.id === b.creditCardId);
-          if (cardB) dateB_effective = calcularVencimentoReal(parseLocalDateString(b.date), cardB) || dateB_effective;
-      } else if (b.dueDate) {
-          dateB_effective = parseLocalDateString(b.dueDate) || dateB_effective;
-      }
-
-
+      
       switch(state.sortColumn) {
         case 'name': valA = a.name.toLowerCase(); valB = b.name.toLowerCase(); break;
         case 'person': 
-            valA = state.people.find(p=>p.id===a.person)?.name || ''; 
-            valB = state.people.find(p=>p.id===b.person)?.name || ''; 
+            valA = (state.people.find(p=>p.id===a.person)?.name || '').toLowerCase(); 
+            valB = (state.people.find(p=>p.id===b.person)?.name || '').toLowerCase(); 
             break;
-        case 'date': valA = parseLocalDateString(a.date); valB = parseLocalDateString(b.date); break; // Data de lançamento original
-        case 'dueDate': // Vencimento efetivo
-            valA = dateA_effective;
-            valB = dateB_effective;
-            if (valA === null && valB !== null) return state.sortDirection === 'asc' ? 1 : -1;
-            if (valA !== null && valB === null) return state.sortDirection === 'asc' ? -1 : 1;
+        case 'date': 
+            valA = parseLocalDateString(a.date); 
+            valB = parseLocalDateString(b.date); 
+            break; 
+        case 'dueDate': 
+            valA = getEffectiveDueDateForSort(a);
+            valB = getEffectiveDueDateForSort(b);
+            if (valA === null && valB !== null) return state.sortDirection === 'asc' ? 1 : -1; 
+            if (valA !== null && valB === null) return state.sortDirection === 'asc' ? -1 : 1; 
             if (valA === null && valB === null) return 0;
             break;
         case 'amount': valA = parseFloat(a.amount); valB = parseFloat(b.amount); break;
         case 'status': valA = a.status; valB = b.status; break;
         case 'paymentMethod': 
-            valA = state.paymentMethods.find(p=>p.id===a.paymentMethod)?.name || ''; 
-            valB = state.paymentMethods.find(p=>p.id===b.paymentMethod)?.name || ''; 
+            valA = (state.paymentMethods.find(p=>p.id===a.paymentMethod)?.name || '').toLowerCase(); 
+            valB = (state.paymentMethods.find(p=>p.id===b.paymentMethod)?.name || '').toLowerCase(); 
             break;
-        default: valA = dateA_effective; valB = dateB_effective; // Default sort by effective due date
+        default: 
+            valA = getEffectiveDueDateForSort(a); 
+            valB = getEffectiveDueDateForSort(b);
       }
       const comparison = valA < valB ? -1 : (valA > valB ? 1 : 0);
       return state.sortDirection === 'desc' ? -comparison : comparison;
@@ -3328,17 +4041,7 @@
           else { statusText = 'Pendente'; statusClass = 'badge-warning'; }
       }
       
-      let displayDueDate = t.dueDate ? formatDate(t.dueDate) : '-';
-      if (t.paymentMethod === 'credito' && t.creditCardId) {
-          const card = state.cards.find(c => c.id === t.creditCardId);
-          const launchDate = parseLocalDateString(t.date);
-          if (card && launchDate) {
-              const realDueDate = calcularVencimentoReal(launchDate, card);
-              displayDueDate = realDueDate ? formatDate(realDueDate) : '-';
-          }
-      } else if (t.dueDate) { // Para garantir que boletos etc usem seu dueDate
-          displayDueDate = formatDate(t.dueDate);
-      }
+      const effectiveDueDateForDisplay = getEffectiveDueDateForSort(t);
       
       row.innerHTML = `
         <td class="transaction-name-cell">
@@ -3348,8 +4051,8 @@
             ${t.name} ${t.isRecurrent && t.installments > 1 ? `(${t.installmentNumber}/${t.installments})` : ''}
         </td>
         <td>${person ? `${person.icon||''} ${person.name}` : '-'}</td>
-        <td>${formatDate(t.date)}</td> <!-- Data de lançamento -->
-        <td>${displayDueDate}</td> <!-- Vencimento efetivo -->
+        <td>${formatDate(t.date)}</td> 
+        <td>${effectiveDueDateForDisplay ? formatDate(effectiveDueDateForDisplay) : '-'}</td> 
         <td>${formatCurrency(t.amount)}</td>
         <td><span class="badge ${statusClass}">${statusText}</span></td>
         <td>${payment ? `${payment.icon||''} ${payment.name}` : (t.paymentMethodName || t.paymentMethod || '-')}</td>
@@ -3380,6 +4083,27 @@
       transaction.status = status; 
       
       await db.collection('transactions').doc(id).update({ status });
+
+      if (transaction.type === 'expense' && transaction.paymentMethod === 'credito' && transaction.creditCardId) {
+        const card = state.cards.find(c => c.id === transaction.creditCardId);
+        if (card) {
+            let amountChange = 0;
+            if (status === 'paid' && oldStatus !== 'paid') { 
+                amountChange = -parseFloat(transaction.amount);
+            } else if (status !== 'paid' && oldStatus === 'paid') { 
+                amountChange = parseFloat(transaction.amount);
+            }
+
+            if (amountChange !== 0) {
+                card.currentInvoice = Math.max(0, (card.currentInvoice || 0) + amountChange);
+                card.availableLimit = card.limit - card.currentInvoice;
+                await db.collection('cards').doc(card.id).update({
+                    currentInvoice: card.currentInvoice,
+                    availableLimit: card.availableLimit
+                });
+            }
+        }
+      }
       await fullUIRefresh(); 
       showToast('Status da transação atualizado!', 'success');
     } catch (error) {
@@ -3403,7 +4127,7 @@
           if (personObj) { transaction.personName = personObj.name; transaction.personIcon = personObj.icon; }
       }
 
-      if (transaction.paymentMethod === 'credito' && transaction.creditCardId) {
+      if (transaction.type === 'expense' && transaction.paymentMethod === 'credito' && transaction.creditCardId && !transaction.isRecurrent) {
         await updateCardLimits(transaction.creditCardId, parseFloat(transaction.amount), 'add');
         const card = state.cards.find(c => c.id === transaction.creditCardId);
         if (card) transaction.creditCardName = card.name;
@@ -3423,32 +4147,31 @@
       const recurrenceId = generateId();
       const batch = db.batch();
       const transactionsToAdd = [];
-      const installmentAmount = parseFloat(baseTransaction.amount) / installments;
+      const installmentAmount = parseFloat(baseTransaction.amount) / installments; 
+      const totalPurchaseAmount = parseFloat(baseTransaction.amount);
+
 
       for (let i = 0; i < installments; i++) {
-        const currentInstallmentDate = parseLocalDateString(baseTransaction.date);
-        currentInstallmentDate.setMonth(currentInstallmentDate.getMonth() + i);
+        const currentInstallmentLaunchDate = parseLocalDateString(baseTransaction.date);
+        currentInstallmentLaunchDate.setUTCMonth(currentInstallmentLaunchDate.getUTCMonth() + i);
         
-        let currentDueDate = null;
-        if (baseTransaction.dueDate) {
-            currentDueDate = parseLocalDateString(baseTransaction.dueDate);
-            currentDueDate.setMonth(currentDueDate.getMonth() + i);
-        }
-        // Para cartão, o vencimento de cada parcela segue o cartão
+        let currentEffectiveDueDate = null;
         if (baseTransaction.paymentMethod === 'credito' && baseTransaction.creditCardId) {
             const card = state.cards.find(c => c.id === baseTransaction.creditCardId);
             if (card) {
-                const realParcelDueDate = calcularVencimentoReal(currentInstallmentDate, card);
-                if (realParcelDueDate) currentDueDate = realParcelDueDate;
+                currentEffectiveDueDate = calcularVencimentoReal(currentInstallmentLaunchDate, card);
             }
+        } else if (baseTransaction.dueDate) { 
+            currentEffectiveDueDate = parseLocalDateString(baseTransaction.dueDate);
+            currentEffectiveDueDate.setUTCMonth(currentEffectiveDueDate.getUTCMonth() + i);
         }
 
 
         const installment = { 
           ...baseTransaction, 
           amount: installmentAmount, 
-          date: localDateToISOString(currentInstallmentDate),
-          dueDate: currentDueDate ? localDateToISOString(currentDueDate) : null,
+          date: localDateToISOString(currentInstallmentLaunchDate), 
+          dueDate: currentEffectiveDueDate ? localDateToISOString(currentEffectiveDueDate) : null, 
           recurrenceId, 
           installmentNumber: i + 1, 
           installments,
@@ -3462,8 +4185,8 @@
         transactionsToAdd.push(installment);
       }
       
-      if (baseTransaction.paymentMethod === 'credito' && baseTransaction.creditCardId) {
-          await updateCardLimits(baseTransaction.creditCardId, parseFloat(baseTransaction.amount), 'add');
+      if (baseTransaction.type === 'expense' && baseTransaction.paymentMethod === 'credito' && baseTransaction.creditCardId) {
+          await updateCardLimits(baseTransaction.creditCardId, totalPurchaseAmount, 'add'); 
       }
 
       await batch.commit();
@@ -3482,6 +4205,7 @@
       const oldAmount = parseFloat(transaction.amount);
       const oldPaymentMethod = transaction.paymentMethod;
       const oldCardId = transaction.creditCardId;
+      const oldIsRecurrent = transaction.isRecurrent;
 
       if (updates.category) {
         const catList = updates.type === 'income' ? state.categories.income : state.categories.expense;
@@ -3506,27 +4230,29 @@
       const newPaymentMethod = updates.paymentMethod || oldPaymentMethod;
       const newCardId = updates.creditCardId || oldCardId;
 
-      if (oldPaymentMethod === 'credito' && newPaymentMethod === 'credito') {
-        if (oldCardId === newCardId) { 
-          if (newAmount !== oldAmount) {
-            await updateCardLimits(oldCardId, newAmount, 'update', oldAmount);
+      if (!oldIsRecurrent) { 
+        if (oldPaymentMethod === 'credito' && newPaymentMethod === 'credito') { 
+          if (oldCardId === newCardId) { 
+            if (newAmount !== oldAmount) {
+              await updateCardLimits(oldCardId, newAmount, 'update', oldAmount);
+            }
+          } else { 
+            if (oldCardId) await updateCardLimits(oldCardId, oldAmount, 'subtract');
+            if (newCardId) await updateCardLimits(newCardId, newAmount, 'add');
           }
-        } else { 
-          if (oldCardId) await updateCardLimits(oldCardId, oldAmount, 'subtract');
+        }
+        else if (oldPaymentMethod !== 'credito' && newPaymentMethod === 'credito') { 
           if (newCardId) await updateCardLimits(newCardId, newAmount, 'add');
         }
-      }
-      else if (oldPaymentMethod !== 'credito' && newPaymentMethod === 'credito') {
-        if (newCardId) await updateCardLimits(newCardId, newAmount, 'add');
-      }
-      else if (oldPaymentMethod === 'credito' && newPaymentMethod !== 'credito') {
-        if (oldCardId) await updateCardLimits(oldCardId, oldAmount, 'subtract');
-        updates.creditCardId = null; updates.creditCardName = null; 
+        else if (oldPaymentMethod === 'credito' && newPaymentMethod !== 'credito') { 
+          if (oldCardId) await updateCardLimits(oldCardId, oldAmount, 'subtract');
+          updates.creditCardId = null; updates.creditCardName = null; 
+        }
       }
       
-      if (updates.date instanceof Date) updates.date = localDateToISOString(updates.date);
-      if (updates.dueDate instanceof Date) updates.dueDate = localDateToISOString(updates.dueDate);
-      if (updates.scheduledDate instanceof Date) updates.scheduledDate = localDateToISOString(updates.scheduledDate);
+      if (updates.date && updates.date instanceof Date) updates.date = localDateToISOString(updates.date);
+      if (updates.dueDate && updates.dueDate instanceof Date) updates.dueDate = localDateToISOString(updates.dueDate);
+      if (updates.scheduledDate && updates.scheduledDate instanceof Date) updates.scheduledDate = localDateToISOString(updates.scheduledDate);
 
 
       await db.collection('transactions').doc(id).update(updates);
@@ -3542,23 +4268,21 @@
       const transaction = state.transactions.find(t => t.id === id);
       if (!transaction) return;
 
-      const isRecurrentMaster = transaction.isRecurrent && transaction.recurrenceId;
+      const isRecurrentSeries = transaction.isRecurrent && transaction.recurrenceId;
       
-      if (isRecurrentMaster && options.deleteOption === 'future') {
+      if (isRecurrentSeries && options.deleteOption === 'future') {
         const futureParcels = state.transactions.filter(t => t.recurrenceId === transaction.recurrenceId && t.installmentNumber >= transaction.installmentNumber);
         const batch = db.batch();
         
-        // Se a transação original (valor total) foi no cartão, e estamos excluindo *todas* as parcelas futuras
-        // (incluindo a atual), o valor total da compra original deve ser removido do cartão.
-        // Isso assume que a compra original (com valor cheio) impactou o cartão.
-        if (transaction.paymentMethod === 'credito' && transaction.creditCardId) {
-            const firstParcelInSeries = state.transactions.find(t => t.recurrenceId === transaction.recurrenceId && t.installmentNumber === 1);
-            if (firstParcelInSeries && transaction.installmentNumber === firstParcelInSeries.installmentNumber) { // Se está excluindo a partir da primeira
-                const totalPurchaseAmount = parseFloat(firstParcelInSeries.amount) * firstParcelInSeries.installments; // amount aqui é o da parcela
+        if (transaction.type === 'expense' && transaction.paymentMethod === 'credito' && transaction.creditCardId) {
+            const firstParcelInSeries = state.transactions.find(t_series => 
+                t_series.recurrenceId === transaction.recurrenceId && t_series.installmentNumber === 1
+            );
+            if (firstParcelInSeries) { 
+                const totalPurchaseAmount = parseFloat(firstParcelInSeries.amount) * firstParcelInSeries.installments;
                 await updateCardLimits(transaction.creditCardId, totalPurchaseAmount, 'subtract');
             }
         }
-
 
         futureParcels.forEach(parcel => {
           batch.delete(db.collection('transactions').doc(parcel.id));
@@ -3566,18 +4290,10 @@
         await batch.commit();
         state.transactions = state.transactions.filter(t => !(t.recurrenceId === transaction.recurrenceId && t.installmentNumber >= transaction.installmentNumber));
       } else { 
-        if (transaction.paymentMethod === 'credito' && transaction.creditCardId) {
-            if (transaction.isRecurrent && transaction.recurrenceId && options.deleteOption === 'single') {
-                // Se está excluindo uma ÚNICA parcela de uma compra recorrente no cartão,
-                // E a compra original (valor cheio) impactou o limite, a exclusão de uma parcela
-                // NÃO deveria reverter o valor do currentInvoice do cartão, pois ele reflete a compra total.
-                // No entanto, se o objetivo é que o *valor da parcela específica* não conte mais como despesa futura
-                // para fins de previsão de fatura, então o 'currentInvoice' do cartão, que é dinâmico,
-                // será recalculado naturalmente quando essa transação for removida.
-                // A chamada a `updateCardLimits` com `subtract` só faz sentido se a compra original não tivesse impactado o total.
-                // Como a lógica de `addRecurrentTransactions` já impacta pelo valor total,
-                // não fazemos `updateCardLimits` aqui para exclusão de parcela única.
-            } else if (!transaction.isRecurrent) { // Compra única no cartão
+        if (transaction.type === 'expense' && transaction.paymentMethod === 'credito' && transaction.creditCardId) {
+            if (transaction.isRecurrent && transaction.recurrenceId) {
+                await updateCardLimits(transaction.creditCardId, parseFloat(transaction.amount), 'subtract');
+            } else { 
                  await updateCardLimits(transaction.creditCardId, parseFloat(transaction.amount), 'subtract');
             }
         }
@@ -3614,28 +4330,29 @@
         expenseTypeGroup.style.display = 'none';
     }
 
-    setDateInputValue('editDate', transaction.date);
+    setDateInputValue('editDate', transaction.date); 
     
     const dueDateGroup = $('#editDueDateGroup');
     const dueDateInput = $('#editDueDate');
 
-    // Mostrar dueDate se explícito ou se for cartão (será calculado)
-    if (transaction.dueDate || transaction.paymentMethod === 'credito') {
-        dueDateGroup.style.display = 'block';
-        let effectiveDueDate = transaction.dueDate;
-        if (transaction.paymentMethod === 'credito' && transaction.creditCardId) {
-            const card = state.cards.find(c => c.id === transaction.creditCardId);
-            const launchDate = parseLocalDateString(transaction.date);
-            if (card && launchDate) {
-                const realCardDueDate = calcularVencimentoReal(launchDate, card);
-                if (realCardDueDate) effectiveDueDate = localDateToISOString(realCardDueDate);
-            }
+    let effectiveDueDateForEdit = transaction.dueDate ? parseLocalDateString(transaction.dueDate) : null; 
+    if (transaction.type === 'expense' && transaction.paymentMethod === 'credito' && transaction.creditCardId) {
+        const card = state.cards.find(c => c.id === transaction.creditCardId);
+        const launchDate = parseLocalDateString(transaction.date);
+        if (card && launchDate) {
+            const realCardDueDate = calcularVencimentoReal(launchDate, card);
+            if (realCardDueDate) effectiveDueDateForEdit = realCardDueDate;
         }
-        setDateInputValue('editDueDate', effectiveDueDate || transaction.date);
-    } else {
-        dueDateGroup.style.display = 'none';
     }
-    dueDateInput.disabled = transaction.paymentMethod === 'credito'; 
+    
+    if (effectiveDueDateForEdit) {
+        dueDateGroup.style.display = 'block';
+        setDateInputValue('editDueDate', effectiveDueDateForEdit);
+    } else { 
+        dueDateGroup.style.display = 'block'; 
+        setDateInputValue('editDueDate', transaction.date); 
+    }
+    dueDateInput.disabled = (transaction.type === 'expense' && transaction.paymentMethod === 'credito');
 
 
     $('#editPaymentMethod').value = transaction.paymentMethod;
@@ -3646,14 +4363,16 @@
     }
     
     $('#editIsRecurrent').checked = transaction.isRecurrent || false;
-    $('#editInstallments').disabled = !transaction.isRecurrent; // Desabilita se não for recorrente
+    const isParcelOfSeries = !!transaction.recurrenceId;
+    $('#editIsRecurrent').disabled = isParcelOfSeries;
+    $('#editInstallments').disabled = !transaction.isRecurrent || isParcelOfSeries; 
+    
     handleEditRecurrenceGroupVisibility();
     if (transaction.isRecurrent) {
       $('#editInstallments').value = transaction.installments || 2;
     }
 
     const statusGroup = $('#editStatusGroup');
-    const statusOuterGroup = $('#editStatusOuterGroup'); 
     statusGroup.innerHTML = ''; 
     if (transaction.type === 'income') {
       statusGroup.innerHTML = `
@@ -3685,9 +4404,9 @@
     if (!transaction) return;
     state.currentTransaction = transaction;
     const reccOptions = $('#recurrenceDeleteOptions');
-    const isTrulyRecurrent = transaction.isRecurrent && transaction.recurrenceId && transaction.installments > transaction.installmentNumber;
-    reccOptions.style.display = isTrulyRecurrent ? 'block' : 'none';
-    if (isTrulyRecurrent) $('#deleteSingle').checked = true;
+    const isPartOfRecurrentSeries = transaction.isRecurrent && transaction.recurrenceId && transaction.installments > 1;
+    reccOptions.style.display = isPartOfRecurrentSeries ? 'block' : 'none';
+    if (isPartOfRecurrentSeries) $('#deleteSingle').checked = true;
     openModal('deleteConfirmModal');
   };
 
@@ -3888,7 +4607,7 @@
     filterTransactionsByMonth(); 
     updateTransactionsTable(); 
     updateKPIs();             
-    updateCharts();           
+    updateCharts(); // Esta chamada irá criar os gráficos se não existirem e depois atualizá-los          
     updateCardsList();             
     updateCreditCardSelects();     
     renderCommitments();           
@@ -3907,30 +4626,34 @@
   function handleDueDateForCard(formPrefix) {
     const paymentMethodEl = $(`#${formPrefix}PaymentMethod`);
     const creditCardEl = $(`#${formPrefix}CreditCard`);
-    const dateEl = $(`#${formPrefix}Date`);
-    const dueDateEl = $(`#${formPrefix}DueDate`);
+    const dateEl = $(`#${formPrefix}Date`); 
+    const dueDateEl = $(`#${formPrefix}DueDate`); 
     const dueDateGroupEl = $(`#${formPrefix}DueDateGroup`);
 
     if (!paymentMethodEl || !dueDateEl || !dueDateGroupEl) return;
 
     if (paymentMethodEl.value === 'credito') {
         dueDateGroupEl.style.display = 'block'; 
-        dueDateEl.disabled = true;
+        dueDateEl.disabled = true; 
         if (creditCardEl && creditCardEl.value && dateEl && dateEl.value) {
             const card = state.cards.find(c => c.id === creditCardEl.value);
             const launchDate = getDateInputValue(`${formPrefix}Date`);
             if (card && launchDate) {
                 const realDueDate = calcularVencimentoReal(launchDate, card);
                 if (realDueDate) setDateInputValue(`${formPrefix}DueDate`, realDueDate);
+            } else {
+                 setDateInputValue(`${formPrefix}DueDate`, null); 
             }
-        }
-    } else {
-        dueDateEl.disabled = false;
-        const statusEl = $(`input[name="${formPrefix}Status"]:checked`);
-        if (!statusEl || statusEl.value !== 'scheduled') {
-             dueDateGroupEl.style.display = 'block';
         } else {
-             dueDateGroupEl.style.display = 'block';
+            setDateInputValue(`${formPrefix}DueDate`, null); 
+        }
+    } else { 
+        dueDateEl.disabled = false;
+        dueDateGroupEl.style.display = 'block';
+        if (!dueDateEl.value && formPrefix !== 'edit') { 
+            if (dateEl && dateEl.value) {
+                setDateInputValue(`${formPrefix}DueDate`, getDateInputValue(`${formPrefix}Date`));
+            }
         }
     }
   }
@@ -3969,7 +4692,7 @@
   function handleRecurrenceGroupVisibility(formPrefix) {
     const isRecurrentEl = $(`#${formPrefix}IsRecurrent`);
     const recurrenceGroupEl = $(`#${formPrefix}RecurrenceGroup`);
-    const installmentsInput = $(`#${formPrefix}Installments`); // Para habilitar/desabilitar
+    const installmentsInput = $(`#${formPrefix}Installments`); 
     if (isRecurrentEl && recurrenceGroupEl) {
         recurrenceGroupEl.style.display = isRecurrentEl.checked ? 'block' : 'none';
         if(installmentsInput) installmentsInput.disabled = !isRecurrentEl.checked;
@@ -4007,10 +4730,10 @@
     $('#newExpenseBtn').addEventListener('click', () => {
       $('#expenseForm').reset();
       const today = new Date();
-      setDateInputValue('expenseDate', today);
+      setDateInputValue('expenseDate', today); 
       setDateInputValue('expenseDueDate', today); 
-      $('#expenseTypeVariable').checked = true; // Default para variável
-      $('#expenseStatusPending').checked = true; // Default para pendente
+      $('#expenseTypeVariable').checked = true; 
+      $('#expenseStatusPending').checked = true; 
       handleCreditCardGroupVisibility('expense'); 
       handleDueDateForCard('expense'); 
       handleStatusFieldVisibility('expense'); 
@@ -4069,15 +4792,16 @@
       const formData = {
         type: 'income', name, amount,
         category: $('#incomeCategory').value,
-        date: localDateToISOString(getDateInputValue('incomeDate')),
+        date: localDateToISOString(getDateInputValue('incomeDate')), 
         paymentMethod: $('#incomePaymentMethod').value,
         status: $('input[name="incomeStatus"]:checked') ? $('input[name="incomeStatus"]:checked').value : 'pending', 
         notes: $('#incomeNotes').value.trim(),
-        isRecurrent: $('#incomeIsRecurrent').checked
+        isRecurrent: $('#incomeIsRecurrent').checked,
+        dueDate: localDateToISOString(getDateInputValue('incomeDate')) 
       };
 
       if (formData.isRecurrent) {
-          formData.status = 'pending';
+          formData.status = 'pending'; 
       }
 
       if (formData.isRecurrent) {
@@ -4106,21 +4830,14 @@
         category: $('#expenseCategory').value,
         person: $('#expensePerson').value || null, 
         isFixed: isFixedChecked.value,
-        date: localDateToISOString(getDateInputValue('expenseDate')),
-        dueDate: localDateToISOString(getDateInputValue('expenseDueDate')),
+        date: localDateToISOString(getDateInputValue('expenseDate')), 
+        dueDate: null, 
         status: $('input[name="expenseStatus"]:checked') ? $('input[name="expenseStatus"]:checked').value : 'pending', 
         notes: $('#expenseNotes').value.trim(),
         isRecurrent: $('#expenseIsRecurrent').checked,
         creditCardId: paymentMethod === 'credito' ? creditCardId : null,
         scheduledDate: null
       };
-
-      if (paymentMethod === 'credito' || formData.isRecurrent) {
-          formData.status = 'pending';
-      } else if (formData.status === 'scheduled') {
-          formData.scheduledDate = localDateToISOString(getDateInputValue('expenseScheduledDate'));
-          if (!formData.scheduledDate) { showToast('Informe a data de agendamento.', 'error'); return; }
-      }
 
       if (paymentMethod === 'credito' && creditCardId && formData.date) {
           const card = state.cards.find(c => c.id === creditCardId);
@@ -4129,6 +4846,18 @@
               const realDueDate = calcularVencimentoReal(launchDate, card);
               if (realDueDate) formData.dueDate = localDateToISOString(realDueDate);
           }
+      } else if (getDateInputValue('expenseDueDate')) { 
+          formData.dueDate = localDateToISOString(getDateInputValue('expenseDueDate'));
+      } else { 
+          formData.dueDate = formData.date;
+      }
+
+
+      if (paymentMethod === 'credito' || formData.isRecurrent) {
+          formData.status = 'pending';
+      } else if (formData.status === 'scheduled') {
+          formData.scheduledDate = localDateToISOString(getDateInputValue('expenseScheduledDate'));
+          if (!formData.scheduledDate) { showToast('Informe a data de agendamento.', 'error'); return; }
       }
 
 
@@ -4159,30 +4888,12 @@
         name, amount, paymentMethod,
         category: $('#editCategory').value,
         person: $('#editPerson').value || null,
-        date: localDateToISOString(getDateInputValue('editDate')),
+        date: localDateToISOString(getDateInputValue('editDate')), 
         notes: $('#editNotes').value.trim(),
         isRecurrent: $('#editIsRecurrent').checked, 
         creditCardId: paymentMethod === 'credito' ? creditCardId : null,
+        dueDate: null 
       };
-
-      if (type === 'expense') {
-        updates.isFixed = isFixedChecked.value;
-        updates.dueDate = localDateToISOString(getDateInputValue('editDueDate'));
-        updates.status = $('input[name="editStatus"]:checked') ? $('input[name="editStatus"]:checked').value : 'pending';
-        if (updates.status === 'scheduled') {
-            updates.scheduledDate = localDateToISOString(getDateInputValue('editScheduledDate'));
-            if (!updates.scheduledDate) { showToast('Informe a data de agendamento.', 'error'); return; }
-        } else {
-            updates.scheduledDate = null; 
-        }
-      } else { 
-        updates.status = $('input[name="editStatus"]:checked') ? $('input[name="editStatus"]:checked').value : 'pending';
-      }
-
-      const currentTransaction = state.transactions.find(t => t.id === id);
-      if ((paymentMethod === 'credito' || updates.isRecurrent) && currentTransaction?.status !== 'paid' && currentTransaction?.status !== 'received') {
-          updates.status = 'pending';
-      }
 
       if (paymentMethod === 'credito' && creditCardId && updates.date) {
           const card = state.cards.find(c => c.id === creditCardId);
@@ -4191,11 +4902,36 @@
               const realDueDate = calcularVencimentoReal(launchDate, card);
               if (realDueDate) updates.dueDate = localDateToISOString(realDueDate);
           }
+      } else if (getDateInputValue('editDueDate')) { 
+          updates.dueDate = localDateToISOString(getDateInputValue('editDueDate'));
+      } else { 
+          updates.dueDate = updates.date;
+      }
+
+
+      if (type === 'expense') {
+        updates.isFixed = isFixedChecked.value;
+        updates.status = $('input[name="editStatus"]:checked') ? $('input[name="editStatus"]:checked').value : 'pending';
+        if (updates.status === 'scheduled') {
+            updates.scheduledDate = localDateToISOString(getDateInputValue('editScheduledDate'));
+            if (!updates.scheduledDate) { showToast('Informe a data de agendamento.', 'error'); return; }
+        } else {
+            updates.scheduledDate = null;
+        }
+      } else { 
+        updates.status = $('input[name="editStatus"]:checked') ? $('input[name="editStatus"]:checked').value : 'pending';
+      }
+
+      const currentTransaction = state.transactions.find(t => t.id === id);
+      if ((paymentMethod === 'credito' || updates.isRecurrent) &&
+          currentTransaction?.status !== 'paid' && currentTransaction?.status !== 'received' &&
+          updates.status !== 'paid' && updates.status !== 'received') { 
+          updates.status = 'pending';
       }
 
       await updateTransaction(id, updates);
       closeModal('editModal');
-    });
+    }); 
 
     $('#confirmDeleteBtn').addEventListener('click', async () => {
       const id = state.currentTransaction?.id;
@@ -4281,21 +5017,38 @@
       if (success) closeModal('editCategoryModal');
     });
 
-    $('#expensePaymentMethod').addEventListener('change', () => { handleCreditCardGroupVisibility('expense'); handleDueDateForCard('expense'); handleStatusFieldVisibility('expense'); });
+    $('#expensePaymentMethod').addEventListener('change', () => {
+        handleCreditCardGroupVisibility('expense');
+        handleDueDateForCard('expense');
+        handleStatusFieldVisibility('expense');
+    });
     $('#expenseCreditCard').addEventListener('change', () => handleDueDateForCard('expense'));
-    $('#expenseDate').addEventListener('change', () => handleDueDateForCard('expense'));
-    $('#expenseIsRecurrent').addEventListener('change', () => { handleRecurrenceGroupVisibility('expense'); handleStatusFieldVisibility('expense'); });
+    $('#expenseDate').addEventListener('change', () => handleDueDateForCard('expense')); 
+    $('#expenseDueDate').addEventListener('change', () => { /* Apenas para o usuário mudar manualmente se não for cartão */ });
+    $('#expenseIsRecurrent').addEventListener('change', () => {
+        handleRecurrenceGroupVisibility('expense');
+        handleStatusFieldVisibility('expense');
+    });
     $$('input[name="expenseStatus"]').forEach(r => r.addEventListener('change', () => handleScheduledDateVisibility('expense')));
 
-    $('#incomeIsRecurrent').addEventListener('change', () => { handleRecurrenceGroupVisibility('income'); handleStatusFieldVisibility('income'); });
+    $('#incomeIsRecurrent').addEventListener('change', () => {
+        handleRecurrenceGroupVisibility('income');
+        handleStatusFieldVisibility('income');
+    });
 
-    $('#editPaymentMethod').addEventListener('change', () => { handleEditCreditCardVisibility(); handleEditDueDateForCard(); handleEditStatusFieldVisibility(); });
+    $('#editPaymentMethod').addEventListener('change', () => {
+        handleEditCreditCardVisibility();
+        handleEditDueDateForCard();
+        handleEditStatusFieldVisibility();
+    });
     $('#editCreditCard').addEventListener('change', () => handleEditDueDateForCard());
-    $('#editDate').addEventListener('change', () => handleEditDueDateForCard());
-    $('#editIsRecurrent').addEventListener('change', () => { handleEditRecurrenceGroupVisibility(); handleEditStatusFieldVisibility(); $('#editInstallments').disabled = !$('#editIsRecurrent').checked; });
-    // Para o modal de edição, o status radio group é dinamicamente populado, então precisamos delegar ou re-adicionar listeners
-    // A forma mais simples é re-adicionar após popular em openEditModal, mas já está coberto pela chamada a handleEditScheduledDateVisibility() dentro do saveEditBtn
-    // Para garantir, podemos adicionar aqui também, caso o status mude sem salvar
+    $('#editDate').addEventListener('change', () => handleEditDueDateForCard()); 
+    $('#editDueDate').addEventListener('change', () => { /* Apenas para o usuário mudar manualmente se não for cartão */ });
+    $('#editIsRecurrent').addEventListener('change', () => {
+        handleEditRecurrenceGroupVisibility();
+        handleEditStatusFieldVisibility();
+        $('#editInstallments').disabled = !$('#editIsRecurrent').checked || !!state.currentTransaction?.recurrenceId; 
+    });
     $('#editModal').addEventListener('change', e => {
         if (e.target.matches('input[name="editStatus"]')) {
             handleEditScheduledDateVisibility();
@@ -4329,7 +5082,7 @@
       const name = $('#investmentName').value.trim();
       const amount = parseFloat($('#investmentAmount').value);
       const goal = parseFloat($('#investmentGoal').value) || null;
-      const category = $('#investmentCategorySelect').value; 
+      const category = $('#investmentCategorySelect').value;
       const targetDate = getDateInputValue('investmentTargetDate');
       const notes = $('#investmentNotes').value.trim();
       const action = $('#saveInvestmentBtn').dataset.action;
@@ -4338,7 +5091,7 @@
       if (!name || amount === undefined || amount < 0) { showToast('Nome e valor inicial válido são obrigatórios.', 'error'); return; }
       if (!category) { showToast('Selecione uma categoria.', 'error'); return; }
 
-      const formData = { name, amount, goal, category, targetDate: localDateToISOString(targetDate), notes };
+      const formData = { name, amount, goal, category, targetDate: targetDate ? localDateToISOString(targetDate) : null, notes };
 
       let success = false;
       if (action === 'update' && id) success = await updateInvestment(id, formData);
@@ -4346,10 +5099,10 @@
 
       if (success) {
           closeModal('newInvestmentModal');
-          if (action === 'add' && success && typeof success === 'object' && success.id) { 
-              openInvestmentDetail(success.id); 
+          if (action === 'add' && success && typeof success === 'object' && success.id) {
+              openInvestmentDetail(success.id);
           } else if (action === 'update' && state.currentInvestment?.id === id) {
-              openInvestmentDetail(id); 
+              openInvestmentDetail(id);
           }
       }
     });
@@ -4413,7 +5166,7 @@
 
         e.currentTarget.classList.add('active');
         targetPane.classList.add('active');
-        void targetPane.offsetWidth;
+        void targetPane.offsetWidth; 
         targetPane.classList.add('show');
       });
     });
@@ -4422,7 +5175,7 @@
   const initApp = async () => {
     try {
       initTheme();
-      initTabs(); 
+      initTabs();
 
       const today = new Date();
       state.year = today.getFullYear();
@@ -4431,10 +5184,13 @@
       $('#yearSelect').value = state.year;
       $('#monthSelect').value = state.month;
 
-      await loadCategoriesAndPaymentMethods(); 
+      // Cria instâncias dos gráficos ANTES de carregar os dados
+      createCharts(); 
+
+      await loadCategoriesAndPaymentMethods();
       await loadCards();
-      await loadInvestments(); 
-      await loadTransactions(); 
+      await loadInvestments();
+      await loadTransactions(); // Esta função chama fullUIRefresh() que chama updateCharts()
 
       initEventListeners(); 
 
@@ -4447,6 +5203,20 @@
 
   document.addEventListener('DOMContentLoaded', initApp);
 
+ </script>
+ 
+ <!-- SCRIPT FINAL INSERIDO DO AJUSTE.TXT -->
+ <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Verifica se o tooltip global existe e o cria se não existir
+    if (!$('#tooltip')) {
+      const tooltip = document.createElement('div');
+      tooltip.id = 'tooltip';
+      tooltip.className = 'chart-tooltip';
+      document.body.appendChild(tooltip);
+    }
+    
+  });
  </script>
 </body>
 </html>
